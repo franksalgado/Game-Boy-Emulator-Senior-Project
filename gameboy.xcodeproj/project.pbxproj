@@ -1,0 +1,602 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		706421E7295C250E006559DF /* gameboyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706421E6295C250E006559DF /* gameboyApp.swift */; };
+		706421E9295C250E006559DF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706421E8295C250E006559DF /* ContentView.swift */; };
+		706421EB295C250F006559DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 706421EA295C250F006559DF /* Assets.xcassets */; };
+		706421EE295C250F006559DF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 706421ED295C250F006559DF /* Preview Assets.xcassets */; };
+		706421F0295C250F006559DF /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706421EF295C250F006559DF /* Persistence.swift */; };
+		706421F3295C250F006559DF /* gameboy.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 706421F1295C250F006559DF /* gameboy.xcdatamodeld */; };
+		706421FE295C250F006559DF /* gameboyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706421FD295C250F006559DF /* gameboyTests.swift */; };
+		70642208295C250F006559DF /* gameboyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70642207295C250F006559DF /* gameboyUITests.swift */; };
+		7064220A295C250F006559DF /* gameboyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70642209295C250F006559DF /* gameboyUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		706421FA295C250F006559DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 706421DB295C250E006559DF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706421E2295C250E006559DF;
+			remoteInfo = gameboy;
+		};
+		70642204295C250F006559DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 706421DB295C250E006559DF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706421E2295C250E006559DF;
+			remoteInfo = gameboy;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		706421E3295C250E006559DF /* gameboy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gameboy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		706421E6295C250E006559DF /* gameboyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameboyApp.swift; sourceTree = "<group>"; };
+		706421E8295C250E006559DF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		706421EA295C250F006559DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		706421ED295C250F006559DF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		706421EF295C250F006559DF /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		706421F2295C250F006559DF /* gameboy.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = gameboy.xcdatamodel; sourceTree = "<group>"; };
+		706421F4295C250F006559DF /* gameboy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = gameboy.entitlements; sourceTree = "<group>"; };
+		706421F9295C250F006559DF /* gameboyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gameboyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		706421FD295C250F006559DF /* gameboyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameboyTests.swift; sourceTree = "<group>"; };
+		70642203295C250F006559DF /* gameboyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gameboyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		70642207295C250F006559DF /* gameboyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameboyUITests.swift; sourceTree = "<group>"; };
+		70642209295C250F006559DF /* gameboyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameboyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		706421E0295C250E006559DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		706421F6295C250F006559DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70642200295C250F006559DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		706421DA295C250E006559DF = {
+			isa = PBXGroup;
+			children = (
+				706421E5295C250E006559DF /* gameboy */,
+				706421FC295C250F006559DF /* gameboyTests */,
+				70642206295C250F006559DF /* gameboyUITests */,
+				706421E4295C250E006559DF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		706421E4295C250E006559DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				706421E3295C250E006559DF /* gameboy.app */,
+				706421F9295C250F006559DF /* gameboyTests.xctest */,
+				70642203295C250F006559DF /* gameboyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		706421E5295C250E006559DF /* gameboy */ = {
+			isa = PBXGroup;
+			children = (
+				706421E6295C250E006559DF /* gameboyApp.swift */,
+				706421E8295C250E006559DF /* ContentView.swift */,
+				706421EA295C250F006559DF /* Assets.xcassets */,
+				706421EF295C250F006559DF /* Persistence.swift */,
+				706421F4295C250F006559DF /* gameboy.entitlements */,
+				706421F1295C250F006559DF /* gameboy.xcdatamodeld */,
+				706421EC295C250F006559DF /* Preview Content */,
+			);
+			path = gameboy;
+			sourceTree = "<group>";
+		};
+		706421EC295C250F006559DF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				706421ED295C250F006559DF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		706421FC295C250F006559DF /* gameboyTests */ = {
+			isa = PBXGroup;
+			children = (
+				706421FD295C250F006559DF /* gameboyTests.swift */,
+			);
+			path = gameboyTests;
+			sourceTree = "<group>";
+		};
+		70642206295C250F006559DF /* gameboyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				70642207295C250F006559DF /* gameboyUITests.swift */,
+				70642209295C250F006559DF /* gameboyUITestsLaunchTests.swift */,
+			);
+			path = gameboyUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		706421E2295C250E006559DF /* gameboy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7064220D295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboy" */;
+			buildPhases = (
+				706421DF295C250E006559DF /* Sources */,
+				706421E0295C250E006559DF /* Frameworks */,
+				706421E1295C250E006559DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = gameboy;
+			productName = gameboy;
+			productReference = 706421E3295C250E006559DF /* gameboy.app */;
+			productType = "com.apple.product-type.application";
+		};
+		706421F8295C250F006559DF /* gameboyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70642210295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboyTests" */;
+			buildPhases = (
+				706421F5295C250F006559DF /* Sources */,
+				706421F6295C250F006559DF /* Frameworks */,
+				706421F7295C250F006559DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				706421FB295C250F006559DF /* PBXTargetDependency */,
+			);
+			name = gameboyTests;
+			productName = gameboyTests;
+			productReference = 706421F9295C250F006559DF /* gameboyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		70642202295C250F006559DF /* gameboyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70642213295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboyUITests" */;
+			buildPhases = (
+				706421FF295C250F006559DF /* Sources */,
+				70642200295C250F006559DF /* Frameworks */,
+				70642201295C250F006559DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70642205295C250F006559DF /* PBXTargetDependency */,
+			);
+			name = gameboyUITests;
+			productName = gameboyUITests;
+			productReference = 70642203295C250F006559DF /* gameboyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		706421DB295C250E006559DF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					706421E2295C250E006559DF = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					706421F8295C250F006559DF = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 706421E2295C250E006559DF;
+					};
+					70642202295C250F006559DF = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 706421E2295C250E006559DF;
+					};
+				};
+			};
+			buildConfigurationList = 706421DE295C250E006559DF /* Build configuration list for PBXProject "gameboy" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 706421DA295C250E006559DF;
+			productRefGroup = 706421E4295C250E006559DF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				706421E2295C250E006559DF /* gameboy */,
+				706421F8295C250F006559DF /* gameboyTests */,
+				70642202295C250F006559DF /* gameboyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		706421E1295C250E006559DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				706421EE295C250F006559DF /* Preview Assets.xcassets in Resources */,
+				706421EB295C250F006559DF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		706421F7295C250F006559DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70642201295C250F006559DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		706421DF295C250E006559DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				706421F3295C250F006559DF /* gameboy.xcdatamodeld in Sources */,
+				706421F0295C250F006559DF /* Persistence.swift in Sources */,
+				706421E9295C250E006559DF /* ContentView.swift in Sources */,
+				706421E7295C250E006559DF /* gameboyApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		706421F5295C250F006559DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				706421FE295C250F006559DF /* gameboyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		706421FF295C250F006559DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70642208295C250F006559DF /* gameboyUITests.swift in Sources */,
+				7064220A295C250F006559DF /* gameboyUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		706421FB295C250F006559DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706421E2295C250E006559DF /* gameboy */;
+			targetProxy = 706421FA295C250F006559DF /* PBXContainerItemProxy */;
+		};
+		70642205295C250F006559DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706421E2295C250E006559DF /* gameboy */;
+			targetProxy = 70642204295C250F006559DF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7064220B295C250F006559DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7064220C295C250F006559DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		7064220E295C250F006559DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = gameboy/gameboy.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"gameboy/Preview Content\"";
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		7064220F295C250F006559DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = gameboy/gameboy.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"gameboy/Preview Content\"";
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboy;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		70642211295C250F006559DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gameboy.app/Contents/MacOS/gameboy";
+			};
+			name = Debug;
+		};
+		70642212295C250F006559DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/gameboy.app/Contents/MacOS/gameboy";
+			};
+			name = Release;
+		};
+		70642214295C250F006559DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = gameboy;
+			};
+			name = Debug;
+		};
+		70642215295C250F006559DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 565LJJWFPG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = frank.gameboyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = gameboy;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		706421DE295C250E006559DF /* Build configuration list for PBXProject "gameboy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7064220B295C250F006559DF /* Debug */,
+				7064220C295C250F006559DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7064220D295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7064220E295C250F006559DF /* Debug */,
+				7064220F295C250F006559DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70642210295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70642211295C250F006559DF /* Debug */,
+				70642212295C250F006559DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70642213295C250F006559DF /* Build configuration list for PBXNativeTarget "gameboyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70642214295C250F006559DF /* Debug */,
+				70642215295C250F006559DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		706421F1295C250F006559DF /* gameboy.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				706421F2295C250F006559DF /* gameboy.xcdatamodel */,
+			);
+			currentVersion = 706421F2295C250F006559DF /* gameboy.xcdatamodel */;
+			path = gameboy.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 706421DB295C250E006559DF /* Project object */;
+}
