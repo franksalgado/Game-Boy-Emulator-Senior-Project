@@ -21,3 +21,4 @@ func BusWrite(address: UInt16, value: UInt8) {
     }
     print("NOT YET IMPLEMENTED");
 }
+print(5)
