@@ -16,10 +16,10 @@
 		7049A2D229635F6800C0E72E /* GameBoyEmulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2D129635F6800C0E72E /* GameBoyEmulatorTests.swift */; };
 		7049A2DC29635F6800C0E72E /* GameBoyEmulatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2DB29635F6800C0E72E /* GameBoyEmulatorUITests.swift */; };
 		7049A2DE29635F6800C0E72E /* GameBoyEmulatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2DD29635F6800C0E72E /* GameBoyEmulatorUITestsLaunchTests.swift */; };
-		7049A2FC296367DB00C0E72E /* Cartridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2F8296367DB00C0E72E /* Cartridge.swift */; };
-		7049A2FD296367DB00C0E72E /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2F9296367DB00C0E72E /* Bus.swift */; };
-		7049A2FE296367DB00C0E72E /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2FA296367DB00C0E72E /* Emulator.swift */; };
-		7049A2FF296367DB00C0E72E /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A2FB296367DB00C0E72E /* CPU.swift */; };
+		7049A304296369A200C0E72E /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A303296369A200C0E72E /* Bus.swift */; };
+		7049A306296369B600C0E72E /* Cartridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A305296369B600C0E72E /* Cartridge.swift */; };
+		7049A308296369D500C0E72E /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A307296369D500C0E72E /* CPU.swift */; };
+		7049A30A29636A0800C0E72E /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7049A30929636A0800C0E72E /* Emulator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,10 +53,10 @@
 		7049A2D729635F6800C0E72E /* GameBoyEmulatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameBoyEmulatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7049A2DB29635F6800C0E72E /* GameBoyEmulatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyEmulatorUITests.swift; sourceTree = "<group>"; };
 		7049A2DD29635F6800C0E72E /* GameBoyEmulatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoyEmulatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		7049A2F8296367DB00C0E72E /* Cartridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cartridge.swift; sourceTree = "<group>"; };
-		7049A2F9296367DB00C0E72E /* Bus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
-		7049A2FA296367DB00C0E72E /* Emulator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
-		7049A2FB296367DB00C0E72E /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		7049A303296369A200C0E72E /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
+		7049A305296369B600C0E72E /* Cartridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cartridge.swift; sourceTree = "<group>"; };
+		7049A307296369D500C0E72E /* CPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		7049A30929636A0800C0E72E /* Emulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +87,6 @@
 		7049A2AE29635F6700C0E72E = {
 			isa = PBXGroup;
 			children = (
-				7049A2F7296367DB00C0E72E /* Emulator */,
 				7049A2B929635F6700C0E72E /* GameBoyEmulator */,
 				7049A2D029635F6800C0E72E /* GameBoyEmulatorTests */,
 				7049A2DA29635F6800C0E72E /* GameBoyEmulatorUITests */,
@@ -108,6 +107,7 @@
 		7049A2B929635F6700C0E72E /* GameBoyEmulator */ = {
 			isa = PBXGroup;
 			children = (
+				7049A3022963690800C0E72E /* Emulator */,
 				7049A2BA29635F6700C0E72E /* GameBoyEmulatorApp.swift */,
 				7049A2BC29635F6700C0E72E /* ContentView.swift */,
 				7049A2BE29635F6800C0E72E /* Assets.xcassets */,
@@ -144,13 +144,13 @@
 			path = GameBoyEmulatorUITests;
 			sourceTree = "<group>";
 		};
-		7049A2F7296367DB00C0E72E /* Emulator */ = {
+		7049A3022963690800C0E72E /* Emulator */ = {
 			isa = PBXGroup;
 			children = (
-				7049A2F8296367DB00C0E72E /* Cartridge.swift */,
-				7049A2F9296367DB00C0E72E /* Bus.swift */,
-				7049A2FA296367DB00C0E72E /* Emulator.swift */,
-				7049A2FB296367DB00C0E72E /* CPU.swift */,
+				7049A303296369A200C0E72E /* Bus.swift */,
+				7049A305296369B600C0E72E /* Cartridge.swift */,
+				7049A307296369D500C0E72E /* CPU.swift */,
+				7049A30929636A0800C0E72E /* Emulator.swift */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -285,14 +285,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7049A2FD296367DB00C0E72E /* Bus.swift in Sources */,
 				7049A2C429635F6800C0E72E /* Persistence.swift in Sources */,
 				7049A2C729635F6800C0E72E /* GameBoyEmulator.xcdatamodeld in Sources */,
+				7049A30A29636A0800C0E72E /* Emulator.swift in Sources */,
+				7049A308296369D500C0E72E /* CPU.swift in Sources */,
 				7049A2BD29635F6700C0E72E /* ContentView.swift in Sources */,
-				7049A2FF296367DB00C0E72E /* CPU.swift in Sources */,
 				7049A2BB29635F6700C0E72E /* GameBoyEmulatorApp.swift in Sources */,
-				7049A2FC296367DB00C0E72E /* Cartridge.swift in Sources */,
-				7049A2FE296367DB00C0E72E /* Emulator.swift in Sources */,
+				7049A304296369A200C0E72E /* Bus.swift in Sources */,
+				7049A306296369B600C0E72E /* Cartridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
