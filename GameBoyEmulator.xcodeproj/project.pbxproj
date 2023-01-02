@@ -87,10 +87,10 @@
 		7049A2AE29635F6700C0E72E = {
 			isa = PBXGroup;
 			children = (
+				7049A2ED2963621E00C0E72E /* Emulator */,
 				7049A2B929635F6700C0E72E /* GameBoyEmulator */,
 				7049A2D029635F6800C0E72E /* GameBoyEmulatorTests */,
 				7049A2DA29635F6800C0E72E /* GameBoyEmulatorUITests */,
-				7049A2ED2963621E00C0E72E /* Emulator */,
 				7049A2B829635F6700C0E72E /* Products */,
 			);
 			sourceTree = "<group>";
