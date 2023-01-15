@@ -77,4 +77,4 @@ private let ROM_TYPES: [UnsafeMutablePointer<CChar>]? = [
     "MBC6",
     "0x21 ???",
     "MBC7+SENSOR+RUMBLE+RAM+BATTERY"
-];
+]
