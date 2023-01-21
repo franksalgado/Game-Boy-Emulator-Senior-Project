@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		708B877F297CAF7A000AA1F7 /* Cartridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 708B877E297CAF7A000AA1F7 /* Cartridge.m */; };
 		70B8ECB82973EFB50008F372 /* Bus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECAE2973EFB50008F372 /* Bus.cpp */; };
 		70B8ECB92973EFB50008F372 /* Cartridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECAF2973EFB50008F372 /* Cartridge.swift */; };
 		70B8ECBA2973EFB50008F372 /* Instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB02973EFB50008F372 /* Instructions.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		708B877E297CAF7A000AA1F7 /* Cartridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cartridge.m; sourceTree = "<group>"; };
 		70B8ECAE2973EFB50008F372 /* Bus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bus.cpp; sourceTree = "<group>"; };
 		70B8ECAF2973EFB50008F372 /* Cartridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cartridge.swift; sourceTree = "<group>"; };
 		70B8ECB02973EFB50008F372 /* Instructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instructions.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				70B8ECB52973EFB50008F372 /* Bus.hpp */,
 				70B8ECB62973EFB50008F372 /* CPU.swift */,
 				70B8ECB72973EFB50008F372 /* Cartridge.hpp */,
+				708B877E297CAF7A000AA1F7 /* Cartridge.m */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -229,7 +232,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					70D21A9F2973EC2800089719 = {
 						CreatedOnToolsVersion = 13.4.1;
@@ -300,6 +303,7 @@
 				70D21AAC2973EC2800089719 /* ViewController.swift in Sources */,
 				70D21AAA2973EC2800089719 /* GameScene.swift in Sources */,
 				70B8ECBE2973EFB50008F372 /* CPU.swift in Sources */,
+				708B877F297CAF7A000AA1F7 /* Cartridge.m in Sources */,
 				70B8ECB82973EFB50008F372 /* Bus.cpp in Sources */,
 				70B8ECBD2973EFB50008F372 /* Emulator.swift in Sources */,
 				70D21AA42973EC2800089719 /* AppDelegate.swift in Sources */,
@@ -387,6 +391,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -447,6 +452,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -473,9 +479,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GameBoyEmulatorSeniorProject/GameBoyEmulatorSeniorProject.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -500,9 +508,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GameBoyEmulatorSeniorProject/GameBoyEmulatorSeniorProject.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -528,6 +538,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -547,6 +558,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
@@ -565,6 +577,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -582,6 +595,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 565LJJWFPG;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;

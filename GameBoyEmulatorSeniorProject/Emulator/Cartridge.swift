@@ -28,20 +28,31 @@ struct RomHeader {
     }*/
 }
 //!!!!!!!!IMPLEMENT
-func CartridgeLoad(cartridge: UnsafeMutablePointer<CChar>?) -> Bool {
+//func CartridgeLoad(cartridge: UnsafeMutablePointer<CChar>?) -> Bool {
     
+//}
+
+struct CartridgeContext {
+    var fileName: [CChar] = Array<CChar>(repeating: 0 , count: 1024);
+    var romSize: UInt32;
+    var romData: UnsafeMutableRawPointer?;
+    var romHeader: UnsafeMutablePointer<RomHeader>?;
 }
+
+
 
 func CartridgeRead(address: UInt16) -> UInt8 {
     //for now only rom tyoe supported
     print("NOT YET IMPLEMENTED");
+    return 0;
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {
     print("NOT YET IMPLEMENTED");
+    
 }
 
-private let ROM_TYPES: [UnsafeMutablePointer<CChar>]? = [
+/*private let ROM_TYPES: [UnsafeMutablePointer<CChar>]? = [
     "ROM ONLY",
     "MBC1",
     "MBC1+RAM",
@@ -77,4 +88,28 @@ private let ROM_TYPES: [UnsafeMutablePointer<CChar>]? = [
     "MBC6",
     "0x21 ???",
     "MBC7+SENSOR+RUMBLE+RAM+BATTERY"
-]
+]*/
+
+
+
+func CartidgeLoad(cartridge: UnsafeMutablePointer<CChar>) -> Bool {
+    let filePointer: UnsafeMutablePointer<FILE> = fopen(cartridge, "r");
+    
+    /*if (filePointer) {
+        print("Failed to open: ", cartridge);
+        return false;
+    }
+    return true;
+    */
+    
+    var context: CartridgeContext;
+    
+    fseek(filePointer, 0, SEEK_END);
+    context.romSize = UInt32(ftell(filePointer));
+    rewind(filePointer);
+    context.romData = malloc(Int(context.romSize));
+    fread(context.romData, Int(context.romSize), 1, filePointer);
+    fclose(filePointer);
+    
+    return true;
+}

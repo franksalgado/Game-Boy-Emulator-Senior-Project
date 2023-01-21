@@ -142,7 +142,3 @@ func SetInstructions() {
     Instructions[0x0E].mode = AddressMode.AM_R_D8;
     Instructions[0x0E].registerOne = RegisterType.RT_C;
 }
-
-
-
-
