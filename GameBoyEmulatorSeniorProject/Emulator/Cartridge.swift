@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+//Use later implement functions to get this shit
 struct RomHeader {
     var entry: [UInt8] = Array<UInt8>(repeating: 0 , count: 4);
     //logo has size 0x30
@@ -27,24 +27,35 @@ struct RomHeader {
     logo: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x30)
     }*/
 }
-//!!!!!!!!IMPLEMENT
-//func CartridgeLoad(cartridge: UnsafeMutablePointer<CChar>?) -> Bool {
-    
-//}
-
 struct CartridgeContext {
-    var fileName: [CChar] = Array<CChar>(repeating: 0 , count: 1024);
     var romSize: UInt32;
-    var romData: UnsafeMutableRawPointer?;
-    var romHeader: UnsafeMutablePointer<RomHeader>?;
+    var romDataInArray: [UInt8];
+    var romDataInMemory: UnsafeMutablePointer<UInt8>;
+}
+
+func getCartridgeContext(fileURL: URL ) -> CartridgeContext {
+    //Get the data from the rom file
+    let data = try! Data(contentsOf: fileURL);
+    //Store data in 8 bit array form
+    let romDataInArray = [UInt8](data);
+    
+    var sizeInBytes: UInt32 = 0;
+    for _ in romDataInArray {
+        sizeInBytes+=1;
+    }
+    
+    let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
+    romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
+    //memcpy(romDataInMemory, romDataInArray, Int(sizeInBytes));
+    let CartridgeContext = CartridgeContext(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
+    return CartridgeContext;
 }
 
 
 
-func CartridgeRead(address: UInt16) -> UInt8 {
+func CartridgeRead(address: UInt16, CartridgeContext: CartridgeContext) -> UInt8 {
     //for now only rom tyoe supported
-    print("NOT YET IMPLEMENTED");
-    return 0;
+    return CartridgeContext.romDataInMemory(address)
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {
@@ -52,64 +63,6 @@ func CartridgeWrite(address: UInt16, value: UInt8) {
     
 }
 
-/*private let ROM_TYPES: [UnsafeMutablePointer<CChar>]? = [
-    "ROM ONLY",
-    "MBC1",
-    "MBC1+RAM",
-    "MBC1+RAM+BATTERY",
-    "0x04 ???",
-    "MBC2",
-    "MBC2+BATTERY",
-    "0x07 ???",
-    "ROM+RAM 1",
-    "ROM+RAM+BATTERY 1",
-    "0x0A ???",
-    "MMM01",
-    "MMM01+RAM",
-    "MMM01+RAM+BATTERY",
-    "0x0E ???",
-    "MBC3+TIMER+BATTERY",
-    "MBC3+TIMER+RAM+BATTERY 2",
-    "MBC3",
-    "MBC3+RAM 2",
-    "MBC3+RAM+BATTERY 2",
-    "0x14 ???",
-    "0x15 ???",
-    "0x16 ???",
-    "0x17 ???",
-    "0x18 ???",
-    "MBC5",
-    "MBC5+RAM",
-    "MBC5+RAM+BATTERY",
-    "MBC5+RUMBLE",
-    "MBC5+RUMBLE+RAM",
-    "MBC5+RUMBLE+RAM+BATTERY",
-    "0x1F ???",
-    "MBC6",
-    "0x21 ???",
-    "MBC7+SENSOR+RUMBLE+RAM+BATTERY"
-]*/
 
 
 
-func CartidgeLoad(cartridge: UnsafeMutablePointer<CChar>) -> Bool {
-    let filePointer: UnsafeMutablePointer<FILE> = fopen(cartridge, "r");
-    
-    /*if (filePointer) {
-        print("Failed to open: ", cartridge);
-        return false;
-    }
-    return true;
-    */
-    
-    var context: CartridgeContext;
-    
-    fseek(filePointer, 0, SEEK_END);
-    context.romSize = UInt32(ftell(filePointer));
-    rewind(filePointer);
-    context.romData = malloc(Int(context.romSize));
-    fread(context.romData, Int(context.romSize), 1, filePointer);
-    fclose(filePointer);
-    
-    return true;
-}

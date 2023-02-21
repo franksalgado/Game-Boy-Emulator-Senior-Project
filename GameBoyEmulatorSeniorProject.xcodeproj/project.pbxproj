@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		708B877F297CAF7A000AA1F7 /* Cartridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 708B877E297CAF7A000AA1F7 /* Cartridge.m */; };
-		70B8ECB82973EFB50008F372 /* Bus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECAE2973EFB50008F372 /* Bus.cpp */; };
+		70597C2129A46FD10021DFBB /* Scraps.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 70597C2029A46FD10021DFBB /* Scraps.rtf */; };
 		70B8ECB92973EFB50008F372 /* Cartridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECAF2973EFB50008F372 /* Cartridge.swift */; };
 		70B8ECBA2973EFB50008F372 /* Instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB02973EFB50008F372 /* Instructions.swift */; };
-		70B8ECBB2973EFB50008F372 /* Cartridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB12973EFB50008F372 /* Cartridge.cpp */; };
 		70B8ECBC2973EFB50008F372 /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB22973EFB50008F372 /* Bus.swift */; };
 		70B8ECBD2973EFB50008F372 /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB32973EFB50008F372 /* Emulator.swift */; };
 		70B8ECBE2973EFB50008F372 /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8ECB62973EFB50008F372 /* CPU.swift */; };
@@ -45,17 +43,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		708B877E297CAF7A000AA1F7 /* Cartridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Cartridge.m; sourceTree = "<group>"; };
-		70B8ECAE2973EFB50008F372 /* Bus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bus.cpp; sourceTree = "<group>"; };
+		70597C2029A46FD10021DFBB /* Scraps.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Scraps.rtf; sourceTree = "<group>"; };
 		70B8ECAF2973EFB50008F372 /* Cartridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cartridge.swift; sourceTree = "<group>"; };
 		70B8ECB02973EFB50008F372 /* Instructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instructions.swift; sourceTree = "<group>"; };
-		70B8ECB12973EFB50008F372 /* Cartridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cartridge.cpp; sourceTree = "<group>"; };
 		70B8ECB22973EFB50008F372 /* Bus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		70B8ECB32973EFB50008F372 /* Emulator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
-		70B8ECB42973EFB50008F372 /* GameBoyEmulator-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GameBoyEmulator-Bridging-Header.h"; sourceTree = "<group>"; };
-		70B8ECB52973EFB50008F372 /* Bus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bus.hpp; sourceTree = "<group>"; };
 		70B8ECB62973EFB50008F372 /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
-		70B8ECB72973EFB50008F372 /* Cartridge.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Cartridge.hpp; sourceTree = "<group>"; };
 		70D21AA02973EC2800089719 /* GameBoyEmulatorSeniorProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoyEmulatorSeniorProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70D21AA32973EC2800089719 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70D21AA52973EC2800089719 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -100,17 +93,12 @@
 		70B8ECAD2973EFB50008F372 /* Emulator */ = {
 			isa = PBXGroup;
 			children = (
-				70B8ECAE2973EFB50008F372 /* Bus.cpp */,
 				70B8ECAF2973EFB50008F372 /* Cartridge.swift */,
+				70597C2029A46FD10021DFBB /* Scraps.rtf */,
 				70B8ECB02973EFB50008F372 /* Instructions.swift */,
-				70B8ECB12973EFB50008F372 /* Cartridge.cpp */,
 				70B8ECB22973EFB50008F372 /* Bus.swift */,
 				70B8ECB32973EFB50008F372 /* Emulator.swift */,
-				70B8ECB42973EFB50008F372 /* GameBoyEmulator-Bridging-Header.h */,
-				70B8ECB52973EFB50008F372 /* Bus.hpp */,
 				70B8ECB62973EFB50008F372 /* CPU.swift */,
-				70B8ECB72973EFB50008F372 /* Cartridge.hpp */,
-				708B877E297CAF7A000AA1F7 /* Cartridge.m */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -272,6 +260,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70597C2129A46FD10021DFBB /* Scraps.rtf in Resources */,
 				70D21AA62973EC2800089719 /* GameScene.sks in Resources */,
 				70D21AAE2973EC2800089719 /* Assets.xcassets in Resources */,
 				70D21AA82973EC2800089719 /* Actions.sks in Resources */,
@@ -303,11 +292,8 @@
 				70D21AAC2973EC2800089719 /* ViewController.swift in Sources */,
 				70D21AAA2973EC2800089719 /* GameScene.swift in Sources */,
 				70B8ECBE2973EFB50008F372 /* CPU.swift in Sources */,
-				708B877F297CAF7A000AA1F7 /* Cartridge.m in Sources */,
-				70B8ECB82973EFB50008F372 /* Bus.cpp in Sources */,
 				70B8ECBD2973EFB50008F372 /* Emulator.swift in Sources */,
 				70D21AA42973EC2800089719 /* AppDelegate.swift in Sources */,
-				70B8ECBB2973EFB50008F372 /* Cartridge.cpp in Sources */,
 				70B8ECBA2973EFB50008F372 /* Instructions.swift in Sources */,
 				70B8ECBC2973EFB50008F372 /* Bus.swift in Sources */,
 				70B8ECB92973EFB50008F372 /* Cartridge.swift in Sources */,
@@ -498,6 +484,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = frank.GameBoyEmulatorSeniorProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "GameBoyEmulatorSeniorProject/Emulator/GameBoyEmulator-Bridging-Header.h";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -527,6 +515,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = frank.GameBoyEmulatorSeniorProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "GameBoyEmulatorSeniorProject/Emulator/GameBoyEmulator-Bridging-Header.h";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
