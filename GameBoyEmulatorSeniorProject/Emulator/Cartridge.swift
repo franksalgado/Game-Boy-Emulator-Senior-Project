@@ -7,7 +7,8 @@
 
 import Foundation
 //Use later implement functions to get this shit
-struct RomHeader {
+struct RomHeaderData {
+    var fileURL: URL;
     var entry: [UInt8] = Array<UInt8>(repeating: 0 , count: 4);
     //logo has size 0x30
     var logo: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x30);
@@ -27,6 +28,9 @@ struct RomHeader {
     logo: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x30)
     }*/
 }
+
+//func getRomHeader()
+
 struct CartridgeContext {
     var romSize: UInt32;
     var romDataInArray: [UInt8];
@@ -51,18 +55,12 @@ func getCartridgeContext(fileURL: URL ) -> CartridgeContext {
     return CartridgeContext;
 }
 
-
-
-func CartridgeRead(address: UInt16, CartridgeContext: CartridgeContext) -> UInt8 {
+func CartridgeRead(address: UInt16) -> UInt8 {
     //for now only rom tyoe supported
-    return CartridgeContext.romDataInMemory(address)
+    return CartridgeContextInstance.romDataInMemory[Int(address)];
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {
     print("NOT YET IMPLEMENTED");
     
 }
-
-
-
-
