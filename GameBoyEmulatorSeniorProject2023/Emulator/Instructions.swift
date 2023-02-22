@@ -106,25 +106,32 @@ enum ConditionType {
 }
 
 struct Instruction {
-    var type: InstructionType;
-    var mode: AddressMode;
-    var registerOne: RegisterType;
-    var registerTwo: RegisterType;
-    var condition: ConditionType;
-    var parameter: UInt8;
+    var instructionType: InstructionType?;
+    var addressMode: AddressMode?;
+    var registerOne: RegisterType?;
+    var registerTwo: RegisterType?;
+    var condition: ConditionType?;
+    var parameter: UInt8?;
+    /*
     init() {
-        type = InstructionType.IN_NOP;
-        mode = AddressMode.AM_IMP;
+        instructionType = InstructionType.IN_NOP;
+        addressMode = AddressMode.AM_IMP;
         registerOne = RegisterType.RT_NONE;
         registerTwo = RegisterType.RT_NONE;
         condition = ConditionType.CT_NONE;
         parameter = 0;
     }
+     */
 }
+
+
+
+
+/*
 //Array Instructions
 var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);
 //Gameboy CPU (LR35902) instruction set
-//https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+
 func SetInstructions() {
    // var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);
     Instructions[0x00].type = InstructionType.IN_NOP;
@@ -141,4 +148,27 @@ func SetInstructions() {
     Instructions[0x0E].type = InstructionType.IN_LD;
     Instructions[0x0E].mode = AddressMode.AM_R_D8;
     Instructions[0x0E].registerOne = RegisterType.RT_C;
+}
+*/
+
+func GenerateOpcodes() -> [Instruction] {
+    //https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+    var table = Array(repeating: Instruction(), count: 0xF)
+    table[0x00] = Instruction(instructionType: InstructionType.IN_NOP, addressMode: AddressMode.AM_IMP);
+    
+    table[0x05] = Instruction(instructionType: InstructionType.IN_DEC, addressMode: AddressMode.AM_R, registerOne: RegisterType.RT_B);
+    
+    table[0x0E] = Instruction(instructionType: InstructionType.IN_LD, addressMode: AddressMode.AM_R_D8, registerOne: RegisterType.RT_C);
+    
+    table[0xAF] = Instruction(instructionType: InstructionType.IN_XOR, addressMode: AddressMode.AM_R, registerOne: RegisterType.RT_A);
+    
+    table[0xC3] = Instruction(instructionType: InstructionType.IN_JP, addressMode: AddressMode.AM_D16);
+    
+    return table;
+}
+var InstructionsTable = GenerateOpcodes();
+
+func InstructionByOpcode(opcode: UInt8) -> UnsafeMutablePointer<Instruction> {
+    
+    
 }

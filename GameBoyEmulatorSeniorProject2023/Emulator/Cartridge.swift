@@ -55,7 +55,11 @@ func getCartridgeContext(fileURL: URL ) -> CartridgeContext {
     return CartridgeContext;
 }
 
-func CartridgeRead(address: UInt16, CartridgeContextInstance: CartridgeContext) -> UInt8 {
+var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb")!
+var CartridgeContextInstance = getCartridgeContext(fileURL: fileURL)
+
+
+func CartridgeRead(address: UInt16) -> UInt8 {
     //for now only rom tyoe supported
     return CartridgeContextInstance.romDataInMemory[Int(address)];
 }

@@ -26,7 +26,7 @@ struct CPURegisters {
     var pc: UInt16;
     init() {
         //find better way to do this;(
-        a = 0;
+        a = 0x01;
         f = 0;
         b = 0;
         c = 0;
@@ -35,7 +35,7 @@ struct CPURegisters {
         h = 0;
         l = 0;
         sp = 0;
-        pc = 0;
+        pc = 0x100;
     }
     
 }
@@ -46,11 +46,13 @@ struct CPUContext {
     //current fetch
     var fetchData: UInt16;
     var memoryDestination: UInt16;
+    var destinationIsMemory: Bool;
     var currentOpcode: UInt8;
     
     var currentInstruction: UnsafeMutablePointer<Instruction>?;
     var halted: Bool;
     var stepping: Bool;
+    var intMasterEnabled: Bool;
     /* init(){
     fetchData: 0, memoryDestination: 0, currentOpcode: 0, currentInstruction: NULL, halted: false, stepping: false
     }*/
@@ -62,6 +64,14 @@ struct CPUContext {
 var Context = CPUContext(fetchData: 0, memoryDestination: 0, currentOpcode: 0, halted: false, stepping: false);
 func CPUInitialze() {
 
+}
+
+func CPUStep {
+    
+}
+
+func CPUReadRegister(RegisterType: RegisterType) -> UInt16 {
+    
 }
 
 //void cou init
