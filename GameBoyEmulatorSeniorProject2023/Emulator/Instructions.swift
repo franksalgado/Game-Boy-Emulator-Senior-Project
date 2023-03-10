@@ -7,111 +7,11 @@
 
 import Foundation
 
-enum AddressMode {
-    case AM_IMP,
-    AM_R_D16,
-    AM_R_R,
-    AM_MR_R,
-    AM_R,
-    AM_R_D8,
-    AM_R_MR,
-    AM_R_HLI,
-    AM_R_HLD,
-    AM_HLI_R,
-    AM_HLD_R,
-    AM_R_A8,
-    AM_A8_R,
-    AM_HL_SPR,
-    AM_D16,
-    AM_D8,
-    AM_D16_R,
-    AM_MR_D8,
-    AM_MR,
-    AM_A16_R,
-    AM_R_A16
-}
-
-enum RegisterType {
-    case RT_NONE,
-    RT_A,
-    RT_F,
-    RT_B,
-    RT_C,
-    RT_D,
-    RT_E,
-    RT_H,
-    RT_L,
-    RT_AF,
-    RT_BC,
-    RT_DE,
-    RT_HL,
-    RT_SP,
-    RT_PC
-}
-
-enum InstructionType {
-    case IN_NONE,
-    IN_NOP,
-    IN_LD,
-    IN_INC,
-    IN_DEC,
-    IN_RLCA,
-    IN_ADD,
-    IN_RRCA,
-    IN_STOP,
-    IN_RLA,
-    IN_JR,
-    IN_RRA,
-    IN_DAA,
-    IN_CPL,
-    IN_SCF,
-    IN_CCF,
-    IN_HALT,
-    IN_ADC,
-    IN_SUB,
-    IN_SBC,
-    IN_AND,
-    IN_XOR,
-    IN_OR,
-    IN_CP,
-    IN_POP,
-    IN_JP,
-    IN_PUSH,
-    IN_RET,
-    IN_CB,
-    IN_CALL,
-    IN_RETI,
-    IN_LDH,
-    IN_JPHL,
-    IN_DI,
-    IN_EI,
-    IN_RST,
-    IN_ERR,
-    //CB instructions
-    IN_RLC,
-    IN_RRC,
-    IN_RL,
-    IN_RR,
-    IN_SLA,
-    IN_SRA,
-    IN_SWAP,
-    IN_SRL,
-    IN_BIT,
-    IN_RES,
-    IN_SET
-}
-
-enum ConditionType {
-    case CT_NONE, CT_NZ, CT_Z, CT_NC, CT_C
-}
 
 struct Instruction {
-    var instructionType: InstructionType?;
-    var addressMode: AddressMode?;
-    var registerOne: RegisterType?;
-    var registerTwo: RegisterType?;
-    var condition: ConditionType?;
-    var parameter: UInt8?;
+    var name: String;
+    //returns void. Pointer to address when called this function will execute
+    var instructionFunction:
     /*
     init() {
         instructionType = InstructionType.IN_NOP;
@@ -123,52 +23,73 @@ struct Instruction {
     }
      */
 }
-
-
-
-
-/*
-//Array Instructions
-var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);
-//Gameboy CPU (LR35902) instruction set
-
-func SetInstructions() {
-   // var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);
-    Instructions[0x00].type = InstructionType.IN_NOP;
-    Instructions[0x00].mode = AddressMode.AM_IMP;
-    
-    Instructions[0x01].type = InstructionType.IN_LD;
-    Instructions[0x01].mode = AddressMode.AM_R_D16;
-    Instructions[0x01].registerOne = RegisterType.RT_BC;
-    
-    Instructions[0x05].type = InstructionType.IN_DEC;
-    Instructions[0x05].mode = AddressMode.AM_R;
-    Instructions[0x05].registerOne = RegisterType.RT_B;
-    
-    Instructions[0x0E].type = InstructionType.IN_LD;
-    Instructions[0x0E].mode = AddressMode.AM_R_D8;
-    Instructions[0x0E].registerOne = RegisterType.RT_C;
-}
-*/
-
+//https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+//This is an array containing every Game Boy CPU instruction. Position is according to the table found at the site above
 func GenerateOpcodes() -> [Instruction] {
-    //https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
-    var table = Array(repeating: Instruction(), count: 0xF)
-    table[0x00] = Instruction(instructionType: InstructionType.IN_NOP, addressMode: AddressMode.AM_IMP);
+    var table = Array(repeating: Instruction(), count: 0x100)
+    table[0x00] = Instruction(name: "NOP", instructionFunction: <#T##_#>);
     
-    table[0x05] = Instruction(instructionType: InstructionType.IN_DEC, addressMode: AddressMode.AM_R, registerOne: RegisterType.RT_B);
-    
-    table[0x0E] = Instruction(instructionType: InstructionType.IN_LD, addressMode: AddressMode.AM_R_D8, registerOne: RegisterType.RT_C);
-    
-    table[0xAF] = Instruction(instructionType: InstructionType.IN_XOR, addressMode: AddressMode.AM_R, registerOne: RegisterType.RT_A);
-    
-    table[0xC3] = Instruction(instructionType: InstructionType.IN_JP, addressMode: AddressMode.AM_D16);
+    table[0x01] =
     
     return table;
 }
+
 var InstructionsTable = GenerateOpcodes();
 
+
+//maybe delete
 func InstructionByOpcode(opcode: UInt8) -> UnsafeMutablePointer<Instruction> {
-    
+    let addressOfInstruction = UnsafeMutablePointer<Instruction>.allocate(capacity: 1);
+    addressOfInstruction.initialize(to: InstructionsTable[Int(opcode)]);
+    return addressOfInstruction;
+}
+
+//Data fetching instructions
+//Fetch 16 bit address to jump to. Since 8 bit value is stored at an address we have to combine the two bytes by
+func FetchD16(CPUContextInstance: CPUContext) -> UInt16 {
+    var lowByte: UInt16 = UInt16(BusRead(address: CPUContextInstance.registersState.pc));
+    emulator cycle
+    var highByte: UInt16 = UInt16(BusRead(address: CPUContextInstance.registersState.pc+1));
+    emulator cycle
+    CPUContextInstance.registersState.pc+=2;
+    return lowByte | (highByte << 8);
+}
+
+
+//Performs no operation
+func NOP(CPUContextInstance: CPUContext) -> Void {
     
 }
+// This instruction Decrements the B register by 1
+func DecB(CPUContextInstance: CPUContext) -> Void {
+    //We may fetch data from a 16 bit register. In this case we are fetching from an 8 bit register so we have to convert to UInt16. fetchdata is of type UInt16
+    CPUContextInstance.fetchData = UInt16(CPUContextInstance.registersState.b);
+    
+    TODO
+}
+
+//Jump To Address A16 If Z Flag Is Reset 0xC2
+func JPNZa16(CPUContextInstance: CPUContext) -> Void {
+    TODO
+}
+
+
+
+func XORA(CPUContextInstance: CPUContext) -> Void {
+    CPUContextInstance.registersState.a
+}
+
+
+// Jump to address a16 0xC3
+func JPa16(CPUContextInstance: CPUContext) -> Void {
+    CPUContextInstance.registersState.pc = FetchD16(CPUContextInstance: CPUContextInstance);
+    emulator cycle
+    
+}
+
+
+
+
+
+
+

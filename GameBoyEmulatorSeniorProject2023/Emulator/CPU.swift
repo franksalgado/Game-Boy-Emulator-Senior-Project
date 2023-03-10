@@ -21,11 +21,10 @@ struct CPURegisters {
     var h: UInt8;
     var l: UInt8;
     
-    //stack pointer and register counter are both 16 bit registers
+    //stack pointer and progam counter are both 16 bit registers
     var sp: UInt16;
     var pc: UInt16;
     init() {
-        //find better way to do this;(
         a = 0x01;
         f = 0;
         b = 0;
@@ -39,8 +38,8 @@ struct CPURegisters {
     }
     
 }
-
-struct CPUContext {
+//class to be mutable and contain same values inside and outide of classes;)
+class CPUContext {
     var registersState = CPURegisters();
     
     //current fetch
@@ -48,26 +47,36 @@ struct CPUContext {
     var memoryDestination: UInt16;
     var destinationIsMemory: Bool;
     var currentOpcode: UInt8;
-    
-    var currentInstruction: UnsafeMutablePointer<Instruction>?;
+    var currentInstuction: UnsafeMutableRawPointer;
+    //var currentInstruction: UnsafeMutablePointer<Instruction>?;
     var halted: Bool;
     var stepping: Bool;
-    var intMasterEnabled: Bool;
-    /* init(){
-    fetchData: 0, memoryDestination: 0, currentOpcode: 0, currentInstruction: NULL, halted: false, stepping: false
-    }*/
+    var interruptMasterEnabled: Bool;
+     init(){
+         fetchData = 0;
+         memoryDestination = 0;
+         destinationIsMemory = false;
+         currentOpcode = 0;
+         halted = false;
+         stepping = false;
+         interruptMasterEnabled = false;
+    }
 }
 
 
 
 
-var Context = CPUContext(fetchData: 0, memoryDestination: 0, currentOpcode: 0, halted: false, stepping: false);
-func CPUInitialze() {
+var CPUContextInstance = CPUContext();
 
-}
 
-func CPUStep {
-    
+func CPUStep(CPUContextInstance: CPUContext ) -> Bool{
+    if !CPUContextInstance.halted {
+        CPUContextInstance.currentOpcode = BusRead(address: CPUContextInstance.registersState.pc);
+        CPUContextInstance.registersState.pc+=1;
+        //set equal to the function address in Instruction struct at [CPUContextInstance.currentOpcode]
+        CPUContextInstance.currentInstuction =
+    }
+    return false;
 }
 
 func CPUReadRegister(RegisterType: RegisterType) -> UInt16 {

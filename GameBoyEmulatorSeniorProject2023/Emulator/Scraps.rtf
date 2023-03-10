@@ -1,0 +1,185 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2707
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red252\green95\blue163;\red31\green31\blue36;\red255\green255\blue255;
+\red93\green216\blue255;\red65\green161\blue192;\red108\green121\blue134;\red158\green241\blue221;\red208\green168\blue255;
+}
+{\*\expandedcolortbl;;\csgenericrgb\c98839\c37355\c63833;\csgenericrgb\c12054\c12284\c14131;\csgenericrgb\c100000\c100000\c100000\c85000;
+\csgenericrgb\c36295\c84643\c99897;\csgenericrgb\c25490\c63137\c75294;\csgenericrgb\c42394\c47462\c52518;\csgenericrgb\c62145\c94386\c86819;\csgenericrgb\c81681\c65692\c99927;
+}
+\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf2 \cb3 enum
+\f1\b0 \cf4  \cf5 AddressMode\cf4  \{\
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 AM_IMP\cf4 ,\
+    \cf6 AM_R_D16\cf4 ,\
+    \cf6 AM_R_R\cf4 ,\
+    \cf6 AM_MR_R\cf4 ,\
+    \cf6 AM_R\cf4 ,\
+    \cf6 AM_R_D8\cf4 ,\
+    \cf6 AM_R_MR\cf4 ,\
+    \cf6 AM_R_HLI\cf4 ,\
+    \cf6 AM_R_HLD\cf4 ,\
+    \cf6 AM_HLI_R\cf4 ,\
+    \cf6 AM_HLD_R\cf4 ,\
+    \cf6 AM_R_A8\cf4 ,\
+    \cf6 AM_A8_R\cf4 ,\
+    \cf6 AM_HL_SPR\cf4 ,\
+    \cf6 AM_D16\cf4 ,\
+    \cf6 AM_D8\cf4 ,\
+    \cf6 AM_D16_R\cf4 ,\
+    \cf6 AM_MR_D8\cf4 ,\
+    \cf6 AM_MR\cf4 ,\
+    \cf6 AM_A16_R\cf4 ,\
+    \cf6 AM_R_A16\cf4 \
+\}\
+\
+
+\f0\b \cf2 enum
+\f1\b0 \cf4  \cf5 RegisterType\cf4  \{\
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 RT_NONE\cf4 ,\
+    \cf6 RT_A\cf4 ,\
+    \cf6 RT_F\cf4 ,\
+    \cf6 RT_B\cf4 ,\
+    \cf6 RT_C\cf4 ,\
+    \cf6 RT_D\cf4 ,\
+    \cf6 RT_E\cf4 ,\
+    \cf6 RT_H\cf4 ,\
+    \cf6 RT_L\cf4 ,\
+    \cf6 RT_AF\cf4 ,\
+    \cf6 RT_BC\cf4 ,\
+    \cf6 RT_DE\cf4 ,\
+    \cf6 RT_HL\cf4 ,\
+    \cf6 RT_SP\cf4 ,\
+    \cf6 RT_PC\cf4 \
+\}\
+\
+
+\f0\b \cf2 enum
+\f1\b0 \cf4  \cf5 InstructionType\cf4  \{\
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 IN_NONE\cf4 ,\
+    \cf6 IN_NOP\cf4 ,\
+    \cf6 IN_LD\cf4 ,\
+    \cf6 IN_INC\cf4 ,\
+    \cf6 IN_DEC\cf4 ,\
+    \cf6 IN_RLCA\cf4 ,\
+    \cf6 IN_ADD\cf4 ,\
+    \cf6 IN_RRCA\cf4 ,\
+    \cf6 IN_STOP\cf4 ,\
+    \cf6 IN_RLA\cf4 ,\
+    \cf6 IN_JR\cf4 ,\
+    \cf6 IN_RRA\cf4 ,\
+    \cf6 IN_DAA\cf4 ,\
+    \cf6 IN_CPL\cf4 ,\
+    \cf6 IN_SCF\cf4 ,\
+    \cf6 IN_CCF\cf4 ,\
+    \cf6 IN_HALT\cf4 ,\
+    \cf6 IN_ADC\cf4 ,\
+    \cf6 IN_SUB\cf4 ,\
+    \cf6 IN_SBC\cf4 ,\
+    \cf6 IN_AND\cf4 ,\
+    \cf6 IN_XOR\cf4 ,\
+    \cf6 IN_OR\cf4 ,\
+    \cf6 IN_CP\cf4 ,\
+    \cf6 IN_POP\cf4 ,\
+    \cf6 IN_JP\cf4 ,\
+    \cf6 IN_PUSH\cf4 ,\
+    \cf6 IN_RET\cf4 ,\
+    \cf6 IN_CB\cf4 ,\
+    \cf6 IN_CALL\cf4 ,\
+    \cf6 IN_RETI\cf4 ,\
+    \cf6 IN_LDH\cf4 ,\
+    \cf6 IN_JPHL\cf4 ,\
+    \cf6 IN_DI\cf4 ,\
+    \cf6 IN_EI\cf4 ,\
+    \cf6 IN_RST\cf4 ,\
+    \cf6 IN_ERR\cf4 ,\
+    \cf7 //CB instructions\cf4 \
+    \cf6 IN_RLC\cf4 ,\
+    \cf6 IN_RRC\cf4 ,\
+    \cf6 IN_RL\cf4 ,\
+    \cf6 IN_RR\cf4 ,\
+    \cf6 IN_SLA\cf4 ,\
+    \cf6 IN_SRA\cf4 ,\
+    \cf6 IN_SWAP\cf4 ,\
+    \cf6 IN_SRL\cf4 ,\
+    \cf6 IN_BIT\cf4 ,\
+    \cf6 IN_RES\cf4 ,\
+    \cf6 IN_SET\cf4 \
+\}\
+\
+
+\f0\b \cf2 enum
+\f1\b0 \cf4  \cf5 ConditionType\cf4  \{\
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 CT_NONE\cf4 , \cf6 CT_NZ\cf4 , \cf6 CT_Z\cf4 , \cf6 CT_NC\cf4 , \cf6 CT_C\cf4 \
+\}\
+\
+
+\f0\b \cf2 struct
+\f1\b0 \cf4  \cf5 Instruction\cf4  \{\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 instructionType\cf4 : \cf8 InstructionType\cf4 ?;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 addressMode\cf4 : \cf8 AddressMode\cf4 ?;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 registerOne\cf4 : \cf8 RegisterType\cf4 ?;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 registerTwo\cf4 : \cf8 RegisterType\cf4 ?;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 condition\cf4 : \cf8 ConditionType\cf4 ?;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf6 parameter\cf4 : \cf9 UInt8\cf4 ?;\
+    \cf7 /*\cf4 \
+\cf7     init() \{\cf4 \
+\cf7         instructionType = InstructionType.IN_NOP;\cf4 \
+\cf7         addressMode = AddressMode.AM_IMP;\cf4 \
+\cf7         registerOne = RegisterType.RT_NONE;\cf4 \
+\cf7         registerTwo = RegisterType.RT_NONE;\cf4 \
+\cf7         condition = ConditionType.CT_NONE;\cf4 \
+\cf7         parameter = 0;\cf4 \
+\cf7     \}\cf4 \
+\cf7      */\cf4 \
+\}\
+\
+\
+\
+\
+\cf7 /*\cf4 \
+\cf7 //Array Instructions\cf4 \
+\cf7 var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);\cf4 \
+\cf7 //Gameboy CPU (LR35902) instruction set\cf4 \
+\
+\cf7 func SetInstructions() \{\cf4 \
+\cf7    // var Instructions = Array<Instruction>(repeating: Instruction.init() , count: 0x100);\cf4 \
+\cf7     Instructions[0x00].type = InstructionType.IN_NOP;\cf4 \
+\cf7     Instructions[0x00].mode = AddressMode.AM_IMP;\cf4 \
+\cf7     \cf4 \
+\cf7     Instructions[0x01].type = InstructionType.IN_LD;\cf4 \
+\cf7     Instructions[0x01].mode = AddressMode.AM_R_D16;\cf4 \
+\cf7     Instructions[0x01].registerOne = RegisterType.RT_BC;\cf4 \
+\cf7     \cf4 \
+\cf7     Instructions[0x05].type = InstructionType.IN_DEC;\cf4 \
+\cf7     Instructions[0x05].mode = AddressMode.AM_R;\cf4 \
+\cf7     Instructions[0x05].registerOne = RegisterType.RT_B;\cf4 \
+\cf7     \cf4 \
+\cf7     Instructions[0x0E].type = InstructionType.IN_LD;\cf4 \
+\cf7     Instructions[0x0E].mode = AddressMode.AM_R_D8;\cf4 \
+\cf7     Instructions[0x0E].registerOne = RegisterType.RT_C;\cf4 \
+\cf7 \}\cf4 \
+\cf7 */\cf4 \
+}

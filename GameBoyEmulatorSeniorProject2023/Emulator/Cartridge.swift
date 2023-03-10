@@ -6,30 +6,22 @@
 //
 
 import Foundation
-//Use later implement functions to get this shit
+//Use later implement functions to get this shit. 
 struct RomHeaderData {
     var fileURL: URL;
     var entry: [UInt8] = Array<UInt8>(repeating: 0 , count: 4);
     //logo has size 0x30
     var logo: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x30);
     var title: [CChar] = Array<CChar>(repeating: 0 , count: 16);
-    var newLicenseCode: UInt16;
-    var sgbFlag: UInt8;
-    var type: UInt8;
     var romSize: UInt8;
     var ramSize: UInt8;
-    var destinationCode: UInt8;
-    var licenseCode: UInt8;
-    var version: UInt8;
-    var checksum: UInt8;
-    var globalChecksum: UInt16;
    /* init() {
     entry = Array<UInt8>(repeating: 0 , count: 4);
     logo: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x30)
     }*/
 }
 
-//func getRomHeader()
+//func getRomHeaderData()
 
 struct CartridgeContext {
     var romSize: UInt32;
@@ -37,7 +29,7 @@ struct CartridgeContext {
     var romDataInMemory: UnsafeMutablePointer<UInt8>;
 }
 
-func getCartridgeContext(fileURL: URL ) -> CartridgeContext {
+func InitializeCartridgeContext(fileURL: URL ) -> CartridgeContext {
     //Get the data from the rom file
     let data = try! Data(contentsOf: fileURL);
     //Store data in 8 bit array form
@@ -56,7 +48,7 @@ func getCartridgeContext(fileURL: URL ) -> CartridgeContext {
 }
 
 var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb")!
-var CartridgeContextInstance = getCartridgeContext(fileURL: fileURL)
+var CartridgeContextInstance = InitializeCartridgeContext(fileURL: fileURL)
 
 
 func CartridgeRead(address: UInt16) -> UInt8 {
