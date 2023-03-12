@@ -43,7 +43,7 @@ class CPUContext {
     var registersState = CPURegisters();
     
     //current fetch
-    var fetchData: UInt16;
+    //var fetchData: UInt16;
     var memoryDestination: UInt16;
     var destinationIsMemory: Bool;
     var currentOpcode: UInt8;
@@ -51,15 +51,15 @@ class CPUContext {
     //var currentInstruction: UnsafeMutablePointer<Instruction>?;
     var halted: Bool;
     var stepping: Bool;
-    var interruptMasterEnabled: Bool;
+    var interruptMasterEnable: Bool;
      init(){
-         fetchData = 0;
+         //fetchData = 0;
          memoryDestination = 0;
          destinationIsMemory = false;
          currentOpcode = 0;
          halted = false;
          stepping = false;
-         interruptMasterEnabled = false;
+         interruptMasterEnable = false;
     }
 }
 
