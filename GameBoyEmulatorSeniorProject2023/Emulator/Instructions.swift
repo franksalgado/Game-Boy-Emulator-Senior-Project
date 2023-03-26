@@ -396,11 +396,189 @@ func DECA() -> Void {
         halfCarry = 0;
     }
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
+}
+
+//Put the value of B into into B register 0x40
+func LDBB() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.b;
+}
+
+//Put the value of C into into B register 0x41
+func LDBC() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.c;
+}
+
+//Put the value of D into into B register 0x42
+func LDBD() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.d;
+}
+
+//Put the value of E into into B register 0x43
+func LDBE() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.e;
+}
+
+//Put the value of H into into B register 0x44
+func LDBEH() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.h;
+}
+
+//Put the value of L into into B register 0x45
+func LDBL() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.l;
+}
+
+//Put the value of A into into B register 0x47
+func LDBA() -> Void {
+    CPUStateInstance.registersState.b = CPUStateInstance.registersState.a;
+}
+
+//Put the value of B into into C register 0x48
+func LDCB() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.b;
+}
+
+// Put the value of C into C register 0x49
+func LDCC() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.c;
+}
+
+
+// Put the value of D into C register 0x4A
+func LDCD() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.d;
+}
+
+// Put the value of E into C register 0x4B
+func LDCE() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.e;
+}
+
+// Put the value of H into C register 0x4C
+func LDCH() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.h;
+}
+
+// Put the value of L into C register 0x4D
+func LDCL() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.l;
+}
+
+// Put the value of A into C register 0x4F
+func LDCA() -> Void {
+    CPUStateInstance.registersState.c = CPUStateInstance.registersState.a;
+}
+
+// Put the value of B into D register 0x50
+func LDDB() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.b;
+}
+
+// Put the value of C into D register 0x51
+func LDDC() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.c;
+}
+
+// Put the value of D into D register 0x52
+func LDDD() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.d;
+}
+
+// Put the value of E into D register 0x53
+func LDDE() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.e;
+}
+
+// Put the value of H into D register 0x54
+func LDDH() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.h;
+}
+
+// Put the value of L into D register 0x55
+func LDDL() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.l;
+}
+
+// Put the value of A into D register 0x57
+func LDDA() -> Void {
+    CPUStateInstance.registersState.d = CPUStateInstance.registersState.a;
+}
+
+// Put the value of B into E register 0x58
+func LDEB() -> Void {
+    CPUStateInstance.registersState.e = CPUStateInstance.registersState.b;
+}
+
+// Put the value of C into E register 0x59
+func LDEC() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.c;
+}
+
+// Put the value of D into E register 0x5A
+func LDED() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.d;
+}
+
+// Put the value of E into E register 0x5B
+func LDEE() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.e;
+}
+
+// Put the value of H into E register 0x5C
+func LDEH() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.h;
+}
+
+// Put the value of L into E register 0x5D
+func LDEL() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.l;
+}
+
+// Put the value of A into E register 0x5F
+func LDEA() -> Void {
+CPUStateInstance.registersState.e = CPUStateInstance.registersState.a;
 }
 
 
 
+
+
+
+//Put the value of B into into A register 0x78
+func LDAB() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.b;
+}
+
+//Put the value of C into into A register 0x79
+func LDAC() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.c;
+}
+
+//Put the value of D into A register 0x7A
+func LDAD() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.d;
+}
+
+//Put the value of E into A register 0x7B
+func LDAE() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.e;
+}
+
+//Put the value of H into A register 0x7C
+func LDAH() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.h;
+}
+
+//Put the value of L into A register 0x7D
+func LDAL() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.l;
+}
+
+//Put the value of A into A register 0x7F
+func LDAA() -> Void {
+    CPUStateInstance.registersState.a = CPUStateInstance.registersState.a;
+}
 
 //Add the value stored in B register to A register. 0x80
 func ADDAB() -> Void {
@@ -434,7 +612,7 @@ func ADDAB() -> Void {
     }
     
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
 
@@ -470,7 +648,7 @@ func ADDAC() -> Void {
     }
     
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
 //Add the value stored in D register to A register. 0x82
@@ -505,7 +683,7 @@ func ADDAD() -> Void {
     }
     
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
 //Add the value stored in E register to A register. 0x83
@@ -540,7 +718,7 @@ func ADDAE() -> Void {
     }
     
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
 //Add the value stored in H register to A register. 0x84
@@ -575,7 +753,7 @@ func ADDAH() -> Void {
     }
     
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
 //Add the value stored in L register to A register. 0x85
@@ -610,12 +788,267 @@ func ADDAL() -> Void {
     }
     
     
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
+}
+
+//Add the value stored in A register to A register. 0x87
+func ADDAA() -> Void {
+    var halfCarry: UInt8;
+    var add = CPUStateInstance.registersState.a;
+    if ((CPUStateInstance.registersState.a & 0xF) + (add & 0xF)) >= 0x10 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a += add;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
+}
+
+//Subtract the value stored in B register from value in A register. 0x90
+func SUBB() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.b;
+
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
 
+//Subtract the value stored in C register from value in A register. 0x91
+func SUBC() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.c;
 
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
 
+//Subtract the value stored in D register from value in A register. 0x92
+func SUBD() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.d;
+
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
+
+//Subtract the value stored in E register from value in A register. 0x93
+func SUBE() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.e;
+
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
+
+//Subtract the value stored in H register from value in A register. 0x94
+func SUBH() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.h;
+
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
+
+//Subtract the value stored in L register from value in A register. 0x95
+func SUBL() -> Void {
+    var halfCarry: UInt8;
+    var subtract = CPUStateInstance.registersState.l;
+
+    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+        halfCarry = 1;
+    }
+    else{
+        halfCarry = 0;
+    }
+    
+    var carryFlag: UInt8;
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    else{
+        carryFlag = 0;
+    }
+    
+    CPUStateInstance.registersState.a -= subtract;
+    
+    var value = CPUStateInstance.registersState.a;
+    var equalToZero: UInt8;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    else{
+        equalToZero = 0;
+    }
+    
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
+
+//Subtract the value stored in A register from value in A register. 0x97
+func SUBA() -> Void {
+    CPUStateInstance.registersState.a = 0;
+    CPUStateInstance.registersState.f = 0b11000000;
+    //SetFlagsRegister(z: 1 , n: 1, h: 0, c: 0)
+}
 
 // 0xA8 - 0xAD
 func XORB() -> Void {
