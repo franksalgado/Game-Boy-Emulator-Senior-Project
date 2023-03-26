@@ -33,13 +33,13 @@ struct CPURegisters {
         e = 0;
         h = 0;
         l = 0;
-        sp = 0;
+        sp = 0xFFFE;
         pc = 0x100;
     }
     
 }
 //class to be mutable and contain same values inside and outide of classes;)
-class CPUContext {
+class CPUState {
     var registersState = CPURegisters();
     
     //current fetch
@@ -52,6 +52,8 @@ class CPUContext {
     var halted: Bool;
     var stepping: Bool;
     var interruptMasterEnable: Bool;
+    var enablingIME: Bool;
+    var interruptEnableRegister: UInt8;
      init(){
          //fetchData = 0;
          memoryDestination = 0;
@@ -60,28 +62,49 @@ class CPUContext {
          halted = false;
          stepping = false;
          interruptMasterEnable = false;
+         interruptEnableRegister = 0;
     }
 }
 
 
 
 
-var CPUContextInstance = CPUContext();
+var CPUStateInstance = CPUState();
 
 
-func CPUStep(CPUContextInstance: CPUContext ) -> Bool{
-    if !CPUContextInstance.halted {
-        CPUContextInstance.currentOpcode = BusRead(address: CPUContextInstance.registersState.pc);
-        CPUContextInstance.registersState.pc+=1;
-        //set equal to the function address in Instruction struct at [CPUContextInstance.currentOpcode]
-        CPUContextInstance.currentInstuction =
+func CPUStep(CPUStateInstance: CPUState ) -> Bool{
+    if !CPUStateInstance.halted {
+        CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
+        CPUStateInstance.registersState.pc+=1;
+        //set equal to the function address in Instruction struct at [CPUStateInstance.currentOpcode]
+        //CPUStateInstance.currentInstuction =
     }
     return false;
 }
 
-func CPUReadRegister(RegisterType: RegisterType) -> UInt16 {
-    
+func GetInterruptEnableRegister() -> UInt8 {
+    return CPUStateInstance.interruptEnableRegister;
+}
+
+func SetInterruptEnableRegister(value: UInt8) -> Void {
+    CPUStateInstance.interruptEnableRegister = value;
 }
 
 //void cou init
 //voud cpu step function not implemented yet
+
+
+//set bits
+func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
+    var flagsArray: [UInt8] = [z, n, h, c];
+    var sum: UInt8 = 7;
+    for bit in flagsArray {
+        if bit == 1 {
+            CPUStateInstance.registersState.f |= (1 << sum);
+        }
+        else if bit == 0 {
+            CPUStateInstance.registersState.f &= ~(1 << sum);
+        }
+        sum-=1;
+    }
+}

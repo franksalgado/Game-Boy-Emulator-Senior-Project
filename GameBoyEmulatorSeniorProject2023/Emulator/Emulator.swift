@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct EmulatorContext {
+struct EmulatorState {
     var paused: Bool;
     var running: Bool;
     var ticks: UInt64;

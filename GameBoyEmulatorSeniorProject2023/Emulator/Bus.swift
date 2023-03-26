@@ -23,18 +23,76 @@ import Foundation
 // 0xFF80 - 0xFFFE : Zero Page
 
 func BusRead(address: UInt16) -> UInt8 {
-    if (address < 0x8000) {
+    if address < 0x8000 {
         return CartridgeRead(address: address);
     }
-    print("NOT YET IMPLEMENTED");
-    return 0;
+    else if address < 0xA000 {
+       // implement
+    }
+    else if address < 0xC000 {
+        return CartridgeRead(address: address);
+    }
+    else if address < 0xE000 {
+        return WorkingRAMRead(address: address)
+    }
+    else if address < 0xFE00 {
+        //implement
+    }
+    else if address < 0xFEA0 {
+       // ppu
+    }
+    else if address < 0xFF00 {
+        //unusable
+    }
+    else if address < 0xFF80 {
+        //unusable
+    }
+    else if address == 0xFFFF {
+        return GetInterruptEnableRegister();
+    }
+    return HighRAMRead(address: address);
 }
 
 func BusWrite(address: UInt16, value: UInt8) {
     if (address < 0x8000) {
-       // CartridgeWrite(address, value);
-        return;
+        CartridgeWrite(address: address, value: value);
     }
-    print("NOT YET IMPLEMENTED");
+    else if address < 0xA000 {
+        //implement
+    }
+    else if address < 0xC000 {
+        CartridgeWrite(address: address, value: value);
+    }
+    else if address < 0xE000 {
+        WorkingRAMWrite(address: address, value: value);
+    }
+    else if address < 0xFE00 {
+        //implement
+    }
+    else if address < 0xFEA0 {
+        ////ppu
+    }
+    else if address < 0xFF00 {
+        //unusable
+    }
+    else if address < 0xFF80 {
+        //unusable
+    }
+    else if address == 0xFFFF {
+        SetInterruptEnableRegister(value: value);
+    }
+    else{
+        return HighRAMWrite(address: address, value: value);
+    }
 }
 
+func BusRead16Bit(address: UInt16) -> UInt16 {
+    var lowByte: UInt16 = UInt16(BusRead(address: address));
+    var highByte: UInt16 = UInt16(BusRead(address: address+1));
+    return lowByte | (highByte << 8);
+}
+
+func BusWrite16Bit(address: UInt16, value: UInt16) {
+    BusWrite(address: address + 1, value: UInt8(value >> 8) & 0xFF);
+    //BusWrite(address: address, value: value & 0xFF);
+}

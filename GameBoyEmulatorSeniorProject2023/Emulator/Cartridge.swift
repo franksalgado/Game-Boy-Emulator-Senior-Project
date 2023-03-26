@@ -23,13 +23,13 @@ struct RomHeaderData {
 
 //func getRomHeaderData()
 
-struct CartridgeContext {
+struct CartridgeState {
     var romSize: UInt32;
     var romDataInArray: [UInt8];
     var romDataInMemory: UnsafeMutablePointer<UInt8>;
 }
 
-func InitializeCartridgeContext(fileURL: URL ) -> CartridgeContext {
+func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
     //Get the data from the rom file
     let data = try! Data(contentsOf: fileURL);
     //Store data in 8 bit array form
@@ -43,17 +43,17 @@ func InitializeCartridgeContext(fileURL: URL ) -> CartridgeContext {
     let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
     romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
     //memcpy(romDataInMemory, romDataInArray, Int(sizeInBytes));
-    let CartridgeContext = CartridgeContext(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
-    return CartridgeContext;
+    let CartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
+    return CartridgeState;
 }
 
 var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb")!
-var CartridgeContextInstance = InitializeCartridgeContext(fileURL: fileURL)
+var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL)
 
 
 func CartridgeRead(address: UInt16) -> UInt8 {
     //for now only rom tyoe supported
-    return CartridgeContextInstance.romDataInMemory[Int(address)];
+    return CartridgeStateInstance.romDataInMemory[Int(address)];
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {
