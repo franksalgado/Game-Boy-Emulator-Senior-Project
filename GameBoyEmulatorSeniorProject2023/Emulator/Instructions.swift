@@ -44,7 +44,7 @@ func InstructionByOpcode(opcode: UInt8) -> UnsafeMutablePointer<Instruction> {
 
 //Data fetching instructions
 //Fetch 16 bit address to jump to. Since 8 bit value is stored at an address we have to combine the two bytes by
-func FetchD16(CPUStateInstance: CPUState) -> UInt16 {
+func FetchD16() -> UInt16 {
     var lowByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc));
     // emulator cycle
     var highByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc+1));
@@ -120,7 +120,7 @@ func LDBd8() -> Void {
     CPUStateInstance.registersState.pc+=1;
 }
 
-//0x07
+//0x07 change for prefix cb to be reused
 func RLCA() -> Void {
     var carryFlag: UInt8 = 0;
     if CPUStateInstance.registersState.c & 0b10000000 == 0b10000000 {
@@ -197,7 +197,22 @@ func STOP0() -> Void {
 
 
 
-
+//0x0F Rotate A right. Old bit 0 to Carry flag.
+func RRCA() -> Void {
+    var carryFlag: UInt8 = 0;
+    if CPUStateInstance.registersState.c & 1 == 1 {
+        carryFlag = 1;
+    }
+    CPUStateInstance.registersState.a >>= 1;
+    if carryFlag == 1 {
+        CPUStateInstance.registersState.a |= (1 << 7);
+    }
+    var equalToZero: UInt8 = 0;
+    if CPUStateInstance.registersState.a == 0 {
+        equalToZero = 1;
+    }
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
 
 
 // This function increments D register by 1. 0x14
@@ -303,6 +318,18 @@ func LDEd8() -> Void {
     CPUStateInstance.registersState.e = BusRead(address: CPUStateInstance.registersState.pc);
     //emulator cycles
     CPUStateInstance.registersState.pc+=1;
+}
+
+//0x1F
+func RRA() -> Void {
+    var carryFlag: UInt8 = CPUStateInstance.registersState.a & 1;
+    CPUStateInstance.registersState.a >>= 1;
+    if CPUStateInstance.registersState.f & (1 << 4) == (1 << 4) {
+        carryFlag = 1;
+        CPUStateInstance.registersState.a |= (1 << 7);
+    }
+    SetFlagsRegister(z: 0, n: 0, h: 0, c: carryFlag);
+    
 }
 
 
@@ -411,6 +438,11 @@ func LDLd8() -> Void {
     CPUStateInstance.registersState.pc+=1;
 }
 
+//0x2F. This is the complement of A register
+func CPL() -> Void {
+    CPUStateInstance.registersState.a = ~CPUStateInstance.registersState.a;
+}
+
 
 // This instruction Decrements the stack pointer register by 1 0x3B
 func DECSP() -> Void {
@@ -479,6 +511,15 @@ func LDAd8() -> Void {
     CPUStateInstance.registersState.a = BusRead(address: CPUStateInstance.registersState.pc);
     //emulator cycles
     CPUStateInstance.registersState.pc+=1;
+}
+
+//0x3F This instruction complements the carry flag.
+func CCF() -> Void {
+    var carryFlag: UInt8 = 1;
+    if CPUStateInstance.registersState.f & (1 << 4) == (1 << 4) {
+        carryFlag = 0;
+    }
+    SetFlagsRegister(z: 2, n: 0, h: 0, c: carryFlag)
 }
 
 //Put the value of B into into B register 0x40
@@ -1545,7 +1586,7 @@ func CPH() -> Void {
 }
 
 //0xBD
-func CPL() -> Void {
+func CPLBD() -> Void {
     var subtract = CPUStateInstance.registersState.l;
     var value = CPUStateInstance.registersState.a - subtract;
     var equalToZero: UInt8 = 0;
@@ -1595,7 +1636,7 @@ func JPNZa16() -> Void {
 
 // Jump to address a16 0xC3
 func JPa16() -> Void {
-    CPUStateInstance.registersState.pc = FetchD16(CPUStateInstance: CPUStateInstance);
+    CPUStateInstance.registersState.pc = FetchD16();
     //emulator cycle
     
 }
@@ -1632,6 +1673,15 @@ func RSTn(_ CPUStateInstance: CPUState, _ address: UInt16) -> Void {
     StackPush16Bit(data: CPUStateInstance.registersState.pc);
     CPUStateInstance.registersState.pc = address;
         //emu cyc
+}
+
+//0xCD
+func CALLa16() -> Void {
+    var fetchedD16 = FetchD16();
+    //emulator cyc 2
+    StackPush16Bit(data: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc = fetchedD16;
+    //emu cyc
 }
 
 //0xCE
@@ -1756,6 +1806,12 @@ func XORd8() -> Void {
     }
 }
 
+
+//0xF3
+func DI() -> Void {
+    CPUStateInstance.interruptMasterEnable = false;
+}
+
 //0xF6
 func ORd8() -> Void {
     CPUStateInstance.registersState.a |= BusRead(address: CPUStateInstance.registersState.pc);
@@ -1767,6 +1823,11 @@ func ORd8() -> Void {
     else {
         CPUStateInstance.registersState.f = 0b00000000;
     }
+}
+
+//0xFB
+func FI() -> Void {
+    CPUStateInstance.enablingIME = true;
 }
 
 //0xFE

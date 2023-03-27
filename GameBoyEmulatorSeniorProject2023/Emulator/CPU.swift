@@ -47,7 +47,7 @@ class CPUState {
     var memoryDestination: UInt16;
     var destinationIsMemory: Bool;
     var currentOpcode: UInt8;
-    var currentInstuction: UnsafeMutableRawPointer;
+    //var currentInstuction: UnsafeMutableRawPointer;
     //var currentInstruction: UnsafeMutablePointer<Instruction>?;
     var halted: Bool;
     var stepping: Bool;
@@ -62,6 +62,7 @@ class CPUState {
          halted = false;
          stepping = false;
          interruptMasterEnable = false;
+         enablingIME = false;
          interruptEnableRegister = 0;
     }
 }
