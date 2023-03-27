@@ -11,7 +11,7 @@ import Foundation
 struct Instruction {
     var name: String;
     //returns void. Pointer to address when called this function will execute
-    var instructionFunction:
+    //var instructionFunction:
     /*
     init() {
      
@@ -20,6 +20,7 @@ struct Instruction {
 }
 //https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 //This is an array containing every Game Boy CPU instruction. Position is according to the table found at the site above
+/*
 func GenerateOpcodes() -> [Instruction] {
     var table = Array(repeating: Instruction(), count: 0x100)
     table[0x00] = Instruction(name: "NOP", instructionFunction: <#T##_#>);
@@ -30,7 +31,7 @@ func GenerateOpcodes() -> [Instruction] {
 }
 
 var InstructionsTable = GenerateOpcodes();
-
+*/
 
 //maybe delete
 /*
@@ -64,7 +65,7 @@ func NOP() -> Void {
 //0x02
 func LDBCA() -> Void {
     // emulator cycles 1
-    BusWrite16Bit(address: <#T##UInt16#>, value: CPUStateInstance.registersState.a)
+    //BusWrite16Bit(address: <#T##UInt16#>, value: CPUStateInstance.registersState.a)
 }
 
 // This function increments B register by 1. 0x04
@@ -121,7 +122,7 @@ func LDBd8() -> Void {
 
 //0x07
 func RLCA() -> Void {
-    var carryFlag: UInt8;
+    var carryFlag: UInt8 = 0;
     if CPUStateInstance.registersState.c & 0b10000000 == 0b10000000 {
         carryFlag = 1;
     }
@@ -985,11 +986,13 @@ func ADDAA() -> Void {
 }
 
 
-//0x88
-func ADCAB() -> Void {
+
+
+//0x88-0x8D. 0x8F, 0xCE
+func ADCAb8Bit(_ CPUStateInstance: CPUState, add: UInt8) -> Void {
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.b;
+    //var add = CPUStateInstance.registersState.d;
     var carryFlagValue: UInt8 = (1 << 4);
 
     if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
@@ -1001,34 +1004,8 @@ func ADCAB() -> Void {
         halfCarry = 1;
     }
     
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
+    if (Int(CPUStateInstance.registersState.a) + Int(add) + Int(carryFlagValue))  > 0xFF {
         carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
-
-//0x89
-func ADCAC() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.c;
-    var carryFlagValue: UInt8 = (1 << 4);
-
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
     }
     
     CPUStateInstance.registersState.a +=  add + carryFlagValue;
@@ -1037,170 +1014,17 @@ func ADCAC() -> Void {
         equalToZero = 1;
     }
     
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
     SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
 }
 
-//0x8A
-func ADCAD() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.d;
-    var carryFlagValue: UInt8 = (1 << 4);
 
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
-    }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
-
-//0x8B
-func ADCAE() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.e;
-    var carryFlagValue: UInt8 = (1 << 4);
-
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
-    }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
-
-//0x8C
-func ADCAH() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.h;
-    var carryFlagValue: UInt8 = (1 << 4);
-
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
-    }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
-
-//0x8D
-func ADCAL() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.l;
-    var carryFlagValue: UInt8 = (1 << 4);
-
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
-    }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
-
-//0x8F
-func ADCAA() -> Void {
-    var halfCarry: UInt8 = 0;
-    var carryFlag: UInt8 = 0;
-    var add = CPUStateInstance.registersState.a;
-    var carryFlagValue: UInt8 = (1 << 4);
-
-    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
-        carryFlagValue = 0;
-    }
-    
-    if (CPUStateInstance.registersState.a & 0xF) +
-    (add & 0xF) + carryFlagValue > 0xF {
-        halfCarry = 1;
-    }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    
-    
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
-    }
-    
-    SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
-}
 
 //Subtract the value stored in B register from value in A register. 0x90
 func SUBB() -> Void {
     var halfCarry: UInt8 = 0;
     var subtract = CPUStateInstance.registersState.b;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1226,7 +1050,7 @@ func SUBC() -> Void {
     var halfCarry: UInt8 = 0;
     var subtract = CPUStateInstance.registersState.c;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1252,7 +1076,7 @@ func SUBD() -> Void {
     var halfCarry: UInt8 = 0;
     var subtract = CPUStateInstance.registersState.d;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1278,7 +1102,7 @@ func SUBE() -> Void {
     var halfCarry: UInt8 = 0;
     var subtract = CPUStateInstance.registersState.e;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1304,7 +1128,7 @@ func SUBH() -> Void {
     var halfCarry: UInt8 = 0
     let subtract = CPUStateInstance.registersState.h
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1
     }
     
@@ -1331,7 +1155,7 @@ func SUBL() -> Void {
     var halfCarry: UInt8 = 0;
     var subtract = CPUStateInstance.registersState.l;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1358,6 +1182,46 @@ func SUBA() -> Void {
     CPUStateInstance.registersState.f = 0b11000000;
     //SetFlagsRegister(z: 1 , n: 1, h: 0, c: 0)
 }
+
+
+
+
+
+
+
+//0x98 - 0x9F exclude 16 bit one
+func SBCAn8Bit(_ CPUStateInstance: CPUState, _ subtract: UInt8 ) -> Void {
+    var halfCarry: UInt8 = 0;
+    var carryFlag: UInt8 = 0;
+    //var subtract = CPUStateInstance.registersState.b;
+    var carryFlagValue: UInt8 = (1 << 4);
+
+    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
+        carryFlagValue = 0;
+    }
+    
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF) - Int(carryFlagValue)) < 0x0 {
+        halfCarry = 1;
+    }
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract) - Int(carryFlagValue)) < 0x0 {
+        carryFlag = 1;
+    }
+    
+    CPUStateInstance.registersState.a -=  subtract + carryFlagValue;
+    var equalToZero: UInt8 = 0;
+    if CPUStateInstance.registersState.a == 0 {
+        equalToZero = 1;
+    }
+    
+    /*
+    if CPUStateInstance.registersState.a > 0xFF {
+        carryFlag = 1;
+    }
+    */
+    SetFlagsRegister(z: equalToZero, n: 1, h: halfCarry, c: carryFlag);
+}
+
 
 
 // 0xA0 - 0xA5
@@ -1762,6 +1626,13 @@ func ADDAd8() -> Void {
 
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
+//0xC7, D7, E7, F7, CF, DF, EF, FF,
+func RSTn(_ CPUStateInstance: CPUState, _ address: UInt16) -> Void {
+    // emulator cycles 2
+    StackPush16Bit(data: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc = address;
+        //emu cyc
+}
 
 //0xCE
 func ADCAd8() -> Void {
@@ -1781,13 +1652,14 @@ func ADCAd8() -> Void {
         halfCarry = 1;
     }
     
+    if (Int(CPUStateInstance.registersState.a) + Int(add) + Int(carryFlagValue))  > 0xFF {
+        carryFlag = 1;
+    }
+    
     CPUStateInstance.registersState.a +=  add + carryFlagValue;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
-    }
-    if CPUStateInstance.registersState.a > 0xFF {
-        carryFlag = 1;
     }
     
     SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
@@ -1801,7 +1673,7 @@ func SUBd8() -> Void {
     //emulator cycles
     CPUStateInstance.registersState.pc+=1;
 
-    if ((CPUStateInstance.registersState.a & 0xF) - (subtract & 0xF)) < 0x0 {
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
     
@@ -1821,6 +1693,42 @@ func SUBd8() -> Void {
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
+//0xDE
+func SBCAd8( ) -> Void {
+    var halfCarry: UInt8 = 0;
+    var carryFlag: UInt8 = 0;
+    var subtract = BusRead(address: CPUStateInstance.registersState.pc);
+    //emulator cycles
+    CPUStateInstance.registersState.pc+=1;
+    var carryFlagValue: UInt8 = (1 << 4);
+
+    if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
+        carryFlagValue = 0;
+    }
+    
+    if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF) - Int(carryFlagValue)) < 0x0 {
+        halfCarry = 1;
+    }
+    
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract) - Int(carryFlagValue)) < 0x0 {
+        carryFlag = 1;
+    }
+    
+    CPUStateInstance.registersState.a -=  subtract + carryFlagValue;
+    var equalToZero: UInt8 = 0;
+    if CPUStateInstance.registersState.a == 0 {
+        equalToZero = 1;
+    }
+    
+    /*
+    if CPUStateInstance.registersState.a > 0xFF {
+        carryFlag = 1;
+    }
+    */
+    SetFlagsRegister(z: equalToZero, n: 1, h: halfCarry, c: carryFlag);
+}
+
+
 //0xE6
 func ANDd8() -> Void {
     CPUStateInstance.registersState.a &= BusRead(address: CPUStateInstance.registersState.pc);
@@ -1831,6 +1739,20 @@ func ANDd8() -> Void {
     }
     else {
         CPUStateInstance.registersState.f = 0b00100000;
+    }
+}
+
+//0xEE
+func XORd8() -> Void {
+    var value = BusRead(address: CPUStateInstance.registersState.pc);
+        // emu cyc
+    CPUStateInstance.registersState.pc+=1;
+    if CPUStateInstance.registersState.a == value {
+        CPUStateInstance.registersState.a = 0;
+        CPUStateInstance.registersState.f = 0b1000000;
+    } else {
+        CPUStateInstance.registersState.a ^= value;
+        CPUStateInstance.registersState.f = 0;
     }
 }
 
@@ -1845,4 +1767,28 @@ func ORd8() -> Void {
     else {
         CPUStateInstance.registersState.f = 0b00000000;
     }
+}
+
+//0xFE
+func CPd8() -> Void {
+    var subtract = BusRead(address: CPUStateInstance.registersState.pc);
+    //emulator cyc
+    CPUStateInstance.registersState.pc+=1;
+    var value = CPUStateInstance.registersState.a - subtract;
+    var equalToZero: UInt8 = 0;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    
+    var halfCarry: UInt8 = 0;
+    if (Int(CPUStateInstance.registersState.a & 0x0F) - Int(subtract & 0x0F)) < 0x0 {
+        halfCarry = 1;
+    }
+    
+    var carryFlag: UInt8 = 0;
+    if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
+        carryFlag = 1;
+    }
+    
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
