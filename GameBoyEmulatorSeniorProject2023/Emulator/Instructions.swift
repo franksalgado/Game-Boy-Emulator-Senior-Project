@@ -55,6 +55,36 @@ func FetchD16() -> UInt16 {
 
 
 
+func IsZFlagSet() -> Bool {
+    if CPUStateInstance.registersState.f & (1 << 7) == (1 << 7) {
+        return true;
+    }
+    return false;
+}
+
+func IsNFlagSet() -> Bool {
+    if CPUStateInstance.registersState.f & (1 << 6) == (1 << 6) {
+        return true;
+    }
+    return false;
+}
+
+func IsHFlagSet() -> Bool {
+    if CPUStateInstance.registersState.f & (1 << 5) == (1 << 5) {
+        return true;
+    }
+    return false;
+}
+
+func IsCFlagSet() -> Bool {
+    if CPUStateInstance.registersState.f & (1 << 4) == (1 << 4) {
+        return true;
+    }
+    return false;
+}
+
+
+
 
 
 // Performs no operation 0x00
@@ -123,7 +153,7 @@ func LDBd8() -> Void {
 //0x07 change for prefix cb to be reused
 func RLCA() -> Void {
     var carryFlag: UInt8 = 0;
-    if CPUStateInstance.registersState.c & 0b10000000 == 0b10000000 {
+    if CPUStateInstance.registersState.a & (1 << 7) == (1 << 7) {
         carryFlag = 1;
     }
     CPUStateInstance.registersState.a = (CPUStateInstance.registersState.a << 1)
@@ -200,7 +230,7 @@ func STOP0() -> Void {
 //0x0F Rotate A right. Old bit 0 to Carry flag.
 func RRCA() -> Void {
     var carryFlag: UInt8 = 0;
-    if CPUStateInstance.registersState.c & 1 == 1 {
+    if CPUStateInstance.registersState.a & 1 == 1 {
         carryFlag = 1;
     }
     CPUStateInstance.registersState.a >>= 1;
@@ -267,6 +297,26 @@ func LDDd8() -> Void {
     CPUStateInstance.registersState.pc+=1;
 }
 
+//0x17
+func RLA() -> Void {
+    var carryFlag: UInt8 = CPUStateInstance.registersState.a & (1 << 7);
+    CPUStateInstance.registersState.a <<= 1;
+    if IsCFlagSet() {
+        //carryFlag = 1;
+        CPUStateInstance.registersState.a |= 1;
+    }
+    SetFlagsRegister(z: 0, n: 0, h: 0, c: carryFlag);
+
+}
+
+//0x18 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
+func JRr8() -> Void {
+    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc += 1
+    //emu cyc
+    CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+    //emu cyc
+}
 
 // This function increments E register by 1. 0x1C
 func INCE() -> Void {
@@ -324,12 +374,23 @@ func LDEd8() -> Void {
 func RRA() -> Void {
     var carryFlag: UInt8 = CPUStateInstance.registersState.a & 1;
     CPUStateInstance.registersState.a >>= 1;
-    if CPUStateInstance.registersState.f & (1 << 4) == (1 << 4) {
-        carryFlag = 1;
+    if IsCFlagSet() {
+        //carryFlag = 1;
         CPUStateInstance.registersState.a |= (1 << 7);
     }
     SetFlagsRegister(z: 0, n: 0, h: 0, c: carryFlag);
     
+}
+
+//0x20 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
+func JRNZr8() -> Void {
+    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc += 1
+    //emu cyc
+    if !IsZFlagSet() {
+        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        //emu cyc
+    }
 }
 
 
@@ -384,6 +445,17 @@ func LDHd8() -> Void {
     CPUStateInstance.registersState.h = BusRead(address: CPUStateInstance.registersState.pc);
     //emulator cycles
     CPUStateInstance.registersState.pc+=1;
+}
+
+//0x28 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
+func JRZr8() -> Void {
+    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc += 1
+    //emu cyc
+    if IsZFlagSet() {
+        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        //emu cyc
+    }
 }
 
 // This function increments L register by 1. 0x2C
@@ -443,6 +515,32 @@ func CPL() -> Void {
     CPUStateInstance.registersState.a = ~CPUStateInstance.registersState.a;
 }
 
+//0x30 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
+func JRNCr8() -> Void {
+    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc += 1
+    //emu cyc
+    if !IsCFlagSet() {
+        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        //emu cyc
+    }
+}
+
+//0x37 Set carry flag
+func SCF() -> Void {
+    SetFlagsRegister(z: 2, n: 0, h: 0, c: 1)
+}
+
+//0x38 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
+func JRCr8() -> Void {
+    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    CPUStateInstance.registersState.pc += 1
+    //emu cyc
+    if IsCFlagSet() {
+        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        //emu cyc
+    }
+}
 
 // This instruction Decrements the stack pointer register by 1 0x3B
 func DECSP() -> Void {
@@ -516,7 +614,7 @@ func LDAd8() -> Void {
 //0x3F This instruction complements the carry flag.
 func CCF() -> Void {
     var carryFlag: UInt8 = 1;
-    if CPUStateInstance.registersState.f & (1 << 4) == (1 << 4) {
+    if IsCFlagSet() {
         carryFlag = 0;
     }
     SetFlagsRegister(z: 2, n: 0, h: 0, c: carryFlag)
@@ -1629,9 +1727,27 @@ func CPA() -> Void {
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
+//0xC0
+func RETNZ() -> Void {
+    //emu cyc
+    if !IsZFlagSet() {
+        var lowByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        var highByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
+    }
+}
+
 //Jump To Address A16 If Z Flag Is Reset 0xC2
 func JPNZa16() -> Void {
-    //TODO
+    if !IsZFlagSet() {
+        JPa16()
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
 }
 
 // Jump to address a16 0xC3
@@ -1639,6 +1755,17 @@ func JPa16() -> Void {
     CPUStateInstance.registersState.pc = FetchD16();
     //emulator cycle
     
+}
+
+//0xC4
+func CALLNZa16() -> Void {
+    if !IsZFlagSet() {
+        CALLa16();
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
 }
 
 //Add 8 bit value from BusRead to register to A register. 0xC6
@@ -1667,12 +1794,55 @@ func ADDAd8() -> Void {
 
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
-//0xC7, D7, E7, F7, CF, DF, EF, FF,
+//0xC7, 0xD7, 0xE7, 0xF7, 0xCF, 0xDF, 0xEF, 0xFF,
 func RSTn(_ CPUStateInstance: CPUState, _ address: UInt16) -> Void {
     // emulator cycles 2
     StackPush16Bit(data: CPUStateInstance.registersState.pc);
     CPUStateInstance.registersState.pc = address;
         //emu cyc
+}
+
+//0xC8
+func RETZ() -> Void {
+    //emu cyc
+    if IsZFlagSet() {
+        var lowByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        var highByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
+    }
+}
+
+//0xC9
+func RET() -> Void {
+    var lowByte: UInt16 = UInt16(StackPop());
+    //emu cyc
+    var highByte: UInt16 = UInt16(StackPop());
+    //emu cyc
+    CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
+}
+
+//0xCA
+func JPZa16() -> Void {
+    if IsZFlagSet() {
+        JPa16()
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
+}
+
+//0xCC
+func CALLZa16() -> Void {
+    if IsZFlagSet() {
+        CALLa16();
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
 }
 
 //0xCD
@@ -1715,6 +1885,39 @@ func ADCAd8() -> Void {
     SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
 }
 
+//0xD0
+func RETNC() -> Void {
+    //emu cyc
+    if !IsCFlagSet() {
+        var lowByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        var highByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
+    }
+}
+
+//Jump To Address A16 If Z Flag Is Reset 0xD2
+func JPNCa16() -> Void {
+    if !IsCFlagSet() {
+        JPa16()
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
+}
+
+//0xD4
+func CALLNCa16() -> Void {
+    if !IsCFlagSet() {
+        CALLa16();
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
+}
 
 //Subtract the value BusRead from value in A register. 0xD6
 func SUBd8() -> Void {
@@ -1741,6 +1944,46 @@ func SUBd8() -> Void {
         equalToZero = 1;
     }
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+}
+
+//0xD8
+func RETC() -> Void {
+    //emu cyc
+    if IsCFlagSet() {
+        var lowByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        var highByte: UInt16 = UInt16(StackPop());
+        //emu cyc
+        CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
+    }
+}
+
+//0xD9
+func RETI() -> Void {
+    RET();
+    CPUStateInstance.interruptMasterEnable = true;
+}
+
+//0xDA
+func JPCa16() -> Void {
+    if IsCFlagSet() {
+        JPa16();
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
+}
+
+//0xDC
+func CALLCa16() -> Void {
+    if IsCFlagSet() {
+        CALLa16();
+    }
+    else {
+        // emu cyc 2
+        CPUStateInstance.registersState.pc += 2;
+    }
 }
 
 //0xDE
@@ -1778,6 +2021,15 @@ func SBCAd8( ) -> Void {
     SetFlagsRegister(z: equalToZero, n: 1, h: halfCarry, c: carryFlag);
 }
 
+//0xE0
+func LDHa8A() -> Void {
+    var address = UInt16(BusRead(address: 0xFF00 | CPUStateInstance.registersState.pc));
+    //emu cyc
+    BusWrite(address: address, value: CPUStateInstance.registersState.a);
+    
+    CPUStateInstance.registersState.pc += 1;
+    //emu cyc
+}
 
 //0xE6
 func ANDd8() -> Void {
@@ -1806,6 +2058,14 @@ func XORd8() -> Void {
     }
 }
 
+//0xF0
+func LDHAa8() -> Void {
+    var fetchedData = UInt16(BusRead(address: CPUStateInstance.registersState.pc));
+    //emu cyc
+    CPUStateInstance.registersState.a = BusRead(address: 0xFF00 | fetchedData);
+    CPUStateInstance.registersState.pc += 1;
+    //emu cyc
+}
 
 //0xF3
 func DI() -> Void {
