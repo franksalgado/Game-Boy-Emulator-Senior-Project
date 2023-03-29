@@ -155,8 +155,8 @@ func LDBCd16() -> Void {
 
 //0x02
 func LDBCA() -> Void {
+    BusWrite(address: GetBCRegister(), value: CPUStateInstance.registersState.a)
     // emulator cycles 1
-    //BusWrite16Bit(address: <#T##UInt16#>, value: CPUStateInstance.registersState.a)
 }
 
 //0x03
@@ -240,6 +240,36 @@ func LDa16SP() -> Void {
     BusWrite16Bit(address: FetchD16(), value: CPUStateInstance.registersState.sp);
     //emu cyc
     //emu cyc
+}
+
+//0x09 0x19 0x29 0x39
+func ADDHLnn(_ CPUStateInstance: CPUState, _ register: UInt16) -> Void {
+    var value = GetHLRegister() + register;
+    var halfCarry: UInt8 = 0;
+    var carryFlag: UInt8 = 0;
+    if (GetHLRegister() & 0xFFF) + (register & 0xFFF) >= 0x1000 {
+        halfCarry = 1;
+    }
+    if UInt32(GetHLRegister()) + UInt32(register) >= 0x10000 {
+        carryFlag = 1;
+    }
+    //emu cyc
+    SetHLRegister(value: value);
+    SetFlagsRegister(z: 2, n: 0, h: halfCarry, c: carryFlag);
+}
+
+//0x0A 0x1A 0x2A 0x3A
+func LDAnn(_ CPUStateInstance: CPUState, _ register: UInt16) -> Void {
+    CPUStateInstance.registersState.a = BusRead(address: register);
+    //emu cyc
+    if CPUStateInstance.currentOpcode == 0x2A {
+        let value = register + 1;
+        SetHLRegister(value: value);
+    }
+    if CPUStateInstance.currentOpcode == 0x3A {
+        let value = register - 1;
+        SetHLRegister(value: value);
+    }
 }
 
 //0x0B
@@ -330,6 +360,11 @@ func LDDEd16() -> Void {
     SetDERegister(value: FetchD16());
 }
 
+//0x12
+func LDDEA() -> Void {
+    BusWrite(address: GetDERegister(), value: CPUStateInstance.registersState.a)
+    // emulator cycles 1
+}
 
 //0x13
 func INCDE() -> Void {
@@ -499,6 +534,13 @@ func LDHLd16() -> Void {
     SetHLRegister(value: FetchD16());
 }
 
+//0x22
+func LDHLIncA() -> Void {
+    BusWrite(address: GetHLRegister(), value: CPUStateInstance.registersState.a)
+    // emulator cycles 1
+    let value = GetHLRegister() + 1;
+           SetHLRegister(value: value);
+}
 
 //0x23
 func INCHL() -> Void {
@@ -674,6 +716,14 @@ func JRNCr8() -> Void {
 func LDSPa16() -> Void {
     CPUStateInstance.registersState.sp = FetchD16();
     //emu cyc
+}
+
+//0x32
+func LDHLDecA() -> Void {
+    BusWrite(address: GetHLRegister(), value: CPUStateInstance.registersState.a)
+    // emulator cycles 1
+    let value = GetHLRegister() - 1;
+           SetHLRegister(value: value);
 }
 
 //0x33
@@ -2042,6 +2092,13 @@ func RETNZ() -> Void {
     }
 }
 
+//0xC1
+func POPBC() -> Void {
+    SetBCRegister(value: StackPop16Bit());
+    //emu cyc
+    //emu cyc
+}
+
 //Jump To Address A16 If Z Flag Is Reset 0xC2
 func JPNZa16() -> Void {
     if !IsZFlagSet() {
@@ -2069,6 +2126,12 @@ func CALLNZa16() -> Void {
         // emu cyc 2
         CPUStateInstance.registersState.pc += 2;
     }
+}
+
+//0xC5
+func PUSHBC() -> Void {
+    StackPush16Bit(data: GetBCRegister());
+    //emu cyc 3
 }
 
 //Add 8 bit value from BusRead to register to A register. 0xC6
@@ -2200,6 +2263,13 @@ func RETNC() -> Void {
     }
 }
 
+//0xD1
+func POPDE() -> Void {
+    SetDERegister(value: StackPop16Bit());
+    //emu cyc
+    //emu cyc
+}
+
 //Jump To Address A16 If Z Flag Is Reset 0xD2
 func JPNCa16() -> Void {
     if !IsCFlagSet() {
@@ -2220,6 +2290,12 @@ func CALLNCa16() -> Void {
         // emu cyc 2
         CPUStateInstance.registersState.pc += 2;
     }
+}
+
+//0xD5
+func PUSHDE() -> Void {
+    StackPush16Bit(data: GetDERegister());
+    //emu cyc 3
 }
 
 //Subtract the value BusRead from value in A register. 0xD6
@@ -2334,12 +2410,25 @@ func LDHa8A() -> Void {
     //emu cyc
 }
 
+//0xE1
+func POPHL() -> Void {
+    SetHLRegister(value: StackPop16Bit());
+    //emu cyc
+    //emu cyc
+}
+
 //0xE2
 func LDCAE2() -> Void {
     //can also be addition?
     var address = 0xFF00 | UInt16(CPUStateInstance.registersState.c);
     BusWrite(address: address , value: CPUStateInstance.registersState.a);
     //emu cyc
+}
+
+//0xE5
+func PUSHHL() -> Void {
+    StackPush16Bit(data: GetHLRegister());
+    //emu cyc 3
 }
 
 //0xE6
@@ -2405,6 +2494,13 @@ func LDHAa8() -> Void {
     //emu cyc
 }
 
+//0xF1 lower 4 bits of f reg are not used and w FFF0
+func POPAF() -> Void {
+    SetAFRegister(value: StackPop16Bit() & 0xFFF0);
+    //emu cyc
+    //emu cyc
+}
+
 //0xF2
 func LDACF2() -> Void {
     //can also be addition?
@@ -2417,6 +2513,12 @@ func LDACF2() -> Void {
 //0xF3
 func DI() -> Void {
     CPUStateInstance.interruptMasterEnable = false;
+}
+
+//0xF5
+func PUSHAF() -> Void {
+    StackPush16Bit(data: GetAFRegister());
+    //emu cyc 3
 }
 
 //0xF6

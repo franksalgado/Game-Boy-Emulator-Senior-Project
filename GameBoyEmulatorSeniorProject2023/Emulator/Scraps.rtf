@@ -2,10 +2,10 @@
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;\red252\green95\blue163;\red31\green31\blue36;\red255\green255\blue255;
 \red93\green216\blue255;\red65\green161\blue192;\red108\green121\blue134;\red158\green241\blue221;\red208\green168\blue255;
-}
+\red103\green183\blue164;\red208\green191\blue105;\red103\green183\blue164;}
 {\*\expandedcolortbl;;\csgenericrgb\c98839\c37355\c63833;\csgenericrgb\c12054\c12284\c14131;\csgenericrgb\c100000\c100000\c100000\c85000;
 \csgenericrgb\c36295\c84643\c99897;\csgenericrgb\c25490\c63137\c75294;\csgenericrgb\c42394\c47462\c52518;\csgenericrgb\c62145\c94386\c86819;\csgenericrgb\c81681\c65692\c99927;
-}
+\csgenericrgb\c40538\c71705\c64209;\csgenericrgb\c81498\c74939\c41233;\csgenericrgb\c40392\c71765\c64314;}
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \deftab593
 \pard\tx593\pardeftab593\pardirnatural\partightenfactor0
@@ -181,5 +181,25 @@
 \cf7     Instructions[0x0E].mode = AddressMode.AM_R_D8;\cf4 \
 \cf7     Instructions[0x0E].registerOne = RegisterType.RT_C;\cf4 \
 \cf7 \}\cf4 \
-\cf7 */\cf4 \
+\cf7 */\
+\
+\
+\
+\
+
+\f0\b \cf2 if
+\f1\b0 \cf4  CPUStateInstance.\cf10 \cb3 currentOpcode\cf4 \cb3  == \cf11 \cb3 0x2A\cf4 \cb3  \{\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  value = register + \cf11 \cb3 1\cf4 \cb3 ;\
+        \cf12 \cb3 SetHLRegister\cf4 \cb3 (\cf12 \cb3 value\cf4 \cb3 : value);\
+    \}\
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  CPUStateInstance.\cf10 \cb3 currentOpcode\cf4 \cb3  == \cf11 \cb3 0x3A\cf4 \cb3  \{\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  value = register - \cf11 \cb3 1\cf4 \cb3 ;\
+        \cf12 \cb3 SetHLRegister\cf4 \cb3 (\cf12 \cb3 value\cf4 \cb3 : value);\
+    \}\
 }
