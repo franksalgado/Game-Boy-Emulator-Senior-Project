@@ -299,7 +299,7 @@ func INCC() -> Void {
         halfCarry = 0;
     }
     
-    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2);
 }
 
 // This instruction Decrements the C register by 1 0x0D
@@ -731,6 +731,49 @@ func INCSP() -> Void {
     CPUStateInstance.registersState.sp += 1;
 }
 
+//0x34
+func INCHL0x34() -> Void {
+    var value = BusRead(address: GetHLRegister()) + 1;
+    //emu cyc
+    //emu cyc
+    BusWrite(address: GetHLRegister(), value: value);
+    var equalToZero: UInt8 = 0;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    var halfCarry: UInt8 = 0;
+    if value & 0x0F == 0 {
+        halfCarry = 1;
+    }
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2)
+}
+//0x35
+func DECHL0x35() -> Void {
+    var value = BusRead(address: GetHLRegister()) - 1;
+    //emu cyc
+    //emu cyc
+    BusWrite(address: GetHLRegister(), value: value);
+    var equalToZero: UInt8 = 0;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    var halfCarry: UInt8 = 0;
+    
+    if value & 0x0F == 0x0F {
+        halfCarry = 1;
+    }
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2)
+}
+//0x36
+func LDHLd8() -> Void {
+    var value = BusRead(address: CPUStateInstance.registersState.pc);
+    //emu cyc
+    CPUStateInstance.registersState.pc += 1;
+    BusWrite(address: GetHLRegister(), value: value);
+    //emu cyc
+}
+
+
 //0x37 Set carry flag
 func SCF() -> Void {
     SetFlagsRegister(z: 2, n: 0, h: 0, c: 1);
@@ -855,6 +898,12 @@ func LDBL() -> Void {
     CPUStateInstance.registersState.b = CPUStateInstance.registersState.l;
 }
 
+//0x46
+func LDBHL() -> Void {
+    CPUStateInstance.registersState.b = BusRead(address: GetHLRegister());
+    //emu cyc
+}
+
 //Put the value of A into into B register 0x47
 func LDBA() -> Void {
     CPUStateInstance.registersState.b = CPUStateInstance.registersState.a;
@@ -929,6 +978,12 @@ func LDDH() -> Void {
 // Put the value of L into D register 0x55
 func LDDL() -> Void {
     CPUStateInstance.registersState.d = CPUStateInstance.registersState.l;
+}
+
+//0x56
+func LDDHL() -> Void {
+    CPUStateInstance.registersState.d = BusRead(address: GetHLRegister());
+    //emu cyc
 }
 
 // Put the value of A into D register 0x57
@@ -1006,6 +1061,12 @@ func LDHH() -> Void {
 // Put the value of L into H register 0x65
 func LDHL() -> Void {
     CPUStateInstance.registersState.h = CPUStateInstance.registersState.l;
+}
+
+//0x66
+func LDHHL() -> Void {
+    CPUStateInstance.registersState.h = BusRead(address: GetHLRegister());
+    //emu cyc
 }
 
 // Put the value of A into H register 0x67
@@ -2199,7 +2260,13 @@ func JPZa16() -> Void {
         CPUStateInstance.registersState.pc += 2;
     }
 }
-
+//0xCB
+func PREFIXCB() -> Void {
+    var value = BusRead(address: CPUStateInstance.registersState.pc);
+    //emu cyc
+    CPUStateInstance.registersState.pc += 1;
+    
+}
 //0xCC
 func CALLZa16() -> Void {
     if IsZFlagSet() {
@@ -2465,6 +2532,12 @@ func ADDSPr8() -> Void {
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
 }
 
+//0xE9
+func JPHL() -> Void {
+    CPUStateInstance.registersState.pc = GetHLRegister();
+    //emu cyc maybe double check
+}
+
 //0xEA
 func LDa16A() -> Void {
     BusWrite(address: FetchD16(), value: CPUStateInstance.registersState.a);
@@ -2533,6 +2606,33 @@ func ORd8() -> Void {
         CPUStateInstance.registersState.f = 0b00000000;
     }
 }
+
+//0xF8
+func LDHLSPPlusR8() -> Void {
+    //emu cyc
+    //emu cyc maybe
+    var value = BusRead(address: CPUStateInstance.registersState.pc);
+    var halfCarry: UInt8 = 0;
+    var carryFlag: UInt8 = 0;
+    if (CPUStateInstance.registersState.sp & 0xF) + UInt16(value & 0xF) > 0x10 {
+        halfCarry = 1;
+    }
+    
+    if UInt16(CPUStateInstance.registersState.sp & 0xFF) + UInt16(value & 0xFF) >= 0x100 {
+        carryFlag = 1;
+    }
+   
+    CPUStateInstance.registersState.pc += 1;
+    SetHLRegister(value: UInt16(Int8(value)) + CPUStateInstance.registersState.sp);
+    SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
+}
+
+//0xF9
+func LDSPHL() -> Void {
+    CPUStateInstance.registersState.sp = GetHLRegister();
+    //emu cyc maybe
+}
+
 //0xFA
 func LDAa16() -> Void {
     CPUStateInstance.registersState.a = BusRead(address: FetchD16());
