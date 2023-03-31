@@ -47,8 +47,8 @@ func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
     return CartridgeState;
 }
 
-var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb")!
-var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL)
+var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb")!;
+var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL);
 
 
 func CartridgeRead(address: UInt16) -> UInt8 {

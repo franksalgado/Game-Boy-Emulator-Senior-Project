@@ -10,37 +10,290 @@ import Foundation
 
 struct Instruction {
     var name: String;
-    //returns void. Pointer to address when called this function will execute
-    //var instructionFunction:
-    /*
-    init() {
-     
-    }
-     */
+    //Void function cooresponding to the isntruction
+    var instructionFunction: (()->Void);
 }
 //https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 //This is an array containing every Game Boy CPU instruction. Position is according to the table found at the site above
-/*
+
 func GenerateOpcodes() -> [Instruction] {
-    var table = Array(repeating: Instruction(), count: 0x100)
-    table[0x00] = Instruction(name: "NOP", instructionFunction: <#T##_#>);
-    
-    table[0x01] =
+    var table = Array(repeating: Instruction(name: "Empty Spot", instructionFunction: EmptySpot), count: 0x100);
+    table[0x00] = Instruction(name: "NOP", instructionFunction: NOP);
+    table[0x01] = Instruction(name: "LDBCd16", instructionFunction: LDBCd16);
+    table[0x02] = Instruction(name: "LDBCA", instructionFunction: LDBCA);
+    table[0x03] = Instruction(name: "INCBC", instructionFunction: INCBC);
+    table[0x04] = Instruction(name: "INCB", instructionFunction: INCB);
+    table[0x05] = Instruction(name: "DECB", instructionFunction: DECB);
+    table[0x06] = Instruction(name: "LDBd8", instructionFunction: LDBd8);
+    table[0x07] = Instruction(name: "RLCA", instructionFunction: RLCA);
+    table[0x08] = Instruction(name: "LDa16SP", instructionFunction: LDa16SP);
+    table[0x09] = Instruction(name: "ADDHLBC", instructionFunction: { ADDHLnn(register: GetBCRegister()) });
+    table[0x0a] = Instruction(name: "LDAAddressBC", instructionFunction: { LDAnn(register: GetBCRegister()) });
+    table[0x0b] = Instruction(name: "DECBC", instructionFunction: DECBC);
+    table[0x0c] = Instruction(name: "INCC", instructionFunction: INCC);
+    table[0x0d] = Instruction(name: "DECC", instructionFunction: DECC);
+    table[0x0e] = Instruction(name: "LDCd8", instructionFunction: LDCd8);
+    table[0x0f] = Instruction(name: "RRCA", instructionFunction: RRCA);
+    table[0x10] = Instruction(name: "STOP0", instructionFunction: STOP0);
+    table[0x11] = Instruction(name: "LDDEd16", instructionFunction: LDDEd16);
+    table[0x12] = Instruction(name: "LDDEA", instructionFunction: LDDEA);
+    table[0x13] = Instruction(name: "INCDE", instructionFunction: INCDE);
+    table[0x14] = Instruction(name: "INCD", instructionFunction: INCD);
+    table[0x15] = Instruction(name: "DECD", instructionFunction: DECD);
+    table[0x16] = Instruction(name: "LDDd8", instructionFunction: LDDd8);
+    table[0x17] = Instruction(name: "RLA", instructionFunction: RLA);
+    table[0x18] = Instruction(name: "JRr8", instructionFunction: JRr8);
+    table[0x19] = Instruction(name: "ADDHLDE", instructionFunction: { ADDHLnn(register: GetDERegister()) });
+    table[0x1a] = Instruction(name: "LDAAddressDE", instructionFunction: { LDAnn(register: GetDERegister()) });
+    table[0x1b] = Instruction(name: "DECDE", instructionFunction: DECDE);
+    table[0x1c] = Instruction(name: "INCE", instructionFunction: INCE);
+    table[0x1d] = Instruction(name: "DECE", instructionFunction: DECE);
+    table[0x1e] = Instruction(name: "LDEd8", instructionFunction: LDEd8);
+    table[0x1f] = Instruction(name: "RRA", instructionFunction: RRA);
+    table[0x20] = Instruction(name: "JRNZr8", instructionFunction: JRNZr8);
+    table[0x21] = Instruction(name: "LDHLd16", instructionFunction: LDHLd16);
+    table[0x22] = Instruction(name: "LDHLIncA", instructionFunction: LDHLIncA);
+    table[0x23] = Instruction(name: "INCHL", instructionFunction: INCHL);
+    table[0x24] = Instruction(name: "INCH", instructionFunction: INCH);
+    table[0x25] = Instruction(name: "DECH", instructionFunction: DECH);
+    table[0x26] = Instruction(name: "LDHd8", instructionFunction: LDHd8);
+    table[0x27] = Instruction(name: "DAA", instructionFunction: DAA);
+    table[0x28] = Instruction(name: "JRZr8", instructionFunction: JRZr8);
+    table[0x29] = Instruction(name: "ADDHLHL", instructionFunction: { ADDHLnn(register: GetHLRegister()) });
+    table[0x2a] = Instruction(name: "LDAAddressHLInc", instructionFunction: { LDAnn(register: GetHLRegister()) });
+    table[0x2b] = Instruction(name: "DECHL", instructionFunction: DECHL);
+    table[0x2c] = Instruction(name: "INCL", instructionFunction: INCL);
+    table[0x2d] = Instruction(name: "DECL", instructionFunction: DECL);
+    table[0x2e] = Instruction(name: "LDLd8", instructionFunction: LDLd8);
+    table[0x2f] = Instruction(name: "CPL", instructionFunction: CPL);
+    table[0x30] = Instruction(name: "JRNCr8", instructionFunction: JRNCr8);
+    table[0x31] = Instruction(name: "LDSPa16", instructionFunction: LDSPa16);
+    table[0x32] = Instruction(name: "LDHLDecA", instructionFunction: LDHLDecA);
+    table[0x33] = Instruction(name: "INCSP", instructionFunction: INCSP);
+    table[0x34] = Instruction(name: "INCHL0x34", instructionFunction: INCHL0x34);
+    table[0x35] = Instruction(name: "DECHL0x35", instructionFunction: DECHL0x35);
+    table[0x36] = Instruction(name: "LDHLd8", instructionFunction: LDHLd8);
+    table[0x37] = Instruction(name: "SCF", instructionFunction: SCF);
+    table[0x38] = Instruction(name: "JRCr8", instructionFunction: JRCr8);
+    table[0x39] = Instruction(name: "ADDHLSP", instructionFunction: { ADDHLnn(register: CPUStateInstance.registersState.sp) });
+    table[0x3a] = Instruction(name: "LDAAddressHLDec", instructionFunction: { LDAnn(register: GetHLRegister()) });
+    table[0x3b] = Instruction(name: "DECSP", instructionFunction: DECSP);
+    table[0x3c] = Instruction(name: "INCA", instructionFunction: INCA);
+    table[0x3d] = Instruction(name: "DECA", instructionFunction: DECA);
+    table[0x3e] = Instruction(name: "LDAd8", instructionFunction: LDAd8);
+    table[0x3f] = Instruction(name: "CCF", instructionFunction: CCF);
+    table[0x40] = Instruction(name: "LDBB", instructionFunction: LDBB);
+    table[0x41] = Instruction(name: "LDBC", instructionFunction: LDBC);
+    table[0x42] = Instruction(name: "LDBD", instructionFunction: LDBD);
+    table[0x43] = Instruction(name: "LDBE", instructionFunction: LDBE);
+    table[0x44] = Instruction(name: "LDBEH", instructionFunction: LDBEH);
+    table[0x45] = Instruction(name: "LDBL", instructionFunction: LDBL);
+    table[0x46] = Instruction(name: "LDBHL", instructionFunction: LDBHL);
+    table[0x47] = Instruction(name: "LDBA", instructionFunction: LDBA);
+    table[0x48] = Instruction(name: "LDCB", instructionFunction: LDCB);
+    table[0x49] = Instruction(name: "LDCC", instructionFunction: LDCC);
+    table[0x4a] = Instruction(name: "LDCD", instructionFunction: LDCD);
+    table[0x4b] = Instruction(name: "LDCE", instructionFunction: LDCE);
+    table[0x4c] = Instruction(name: "LDCH", instructionFunction: LDCH);
+    table[0x4d] = Instruction(name: "LDCL", instructionFunction: LDCL);
+    table[0x4e] = Instruction(name: "LDCHL", instructionFunction: LDCHL);
+    table[0x4f] = Instruction(name: "LDCA", instructionFunction: LDCA);
+    table[0x50] = Instruction(name: "LDDB", instructionFunction: LDDB);
+    table[0x51] = Instruction(name: "LDDC", instructionFunction: LDDC);
+    table[0x52] = Instruction(name: "LDDD", instructionFunction: LDDD);
+    table[0x53] = Instruction(name: "LDDE", instructionFunction: LDDE);
+    table[0x54] = Instruction(name: "LDDH", instructionFunction: LDDH);
+    table[0x55] = Instruction(name: "LDDL", instructionFunction: LDDL);
+    table[0x56] = Instruction(name: "LDDHL", instructionFunction: LDDHL);
+    table[0x57] = Instruction(name: "LDDA", instructionFunction: LDDA);
+    table[0x58] = Instruction(name: "LDEB", instructionFunction: LDEB);
+    table[0x59] = Instruction(name: "LDEC", instructionFunction: LDEC);
+    table[0x5a] = Instruction(name: "LDED", instructionFunction: LDED);
+    table[0x5b] = Instruction(name: "LDEE", instructionFunction: LDEE);
+    table[0x5c] = Instruction(name: "LDEH", instructionFunction: LDEH);
+    table[0x5d] = Instruction(name: "LDEL", instructionFunction: LDEL);
+    table[0x5e] = Instruction(name: "LDEHL", instructionFunction: LDEHL);
+    table[0x5f] = Instruction(name: "LDEA", instructionFunction: LDEA);
+    table[0x60] = Instruction(name: "LDHB", instructionFunction: LDHB);
+    table[0x61] = Instruction(name: "LDHC", instructionFunction: LDHC);
+    table[0x62] = Instruction(name: "LDHD", instructionFunction: LDHD);
+    table[0x63] = Instruction(name: "LDHE", instructionFunction: LDHE);
+    table[0x64] = Instruction(name: "LDHH", instructionFunction: LDHH);
+    table[0x65] = Instruction(name: "LDHL", instructionFunction: LDHL);
+    table[0x66] = Instruction(name: "LDHHL", instructionFunction: LDHHL);
+    table[0x67] = Instruction(name: "LDHA", instructionFunction: LDHA);
+    table[0x68] = Instruction(name: "LDLB", instructionFunction: LDLB);
+    table[0x69] = Instruction(name: "LDLC", instructionFunction: LDLC);
+    table[0x6a] = Instruction(name: "LDLD", instructionFunction: LDLD);
+    table[0x6b] = Instruction(name: "LDLE", instructionFunction: LDLE);
+    table[0x6c] = Instruction(name: "LDLH", instructionFunction: LDLH);
+    table[0x6d] = Instruction(name: "LDLL", instructionFunction: LDLL);
+    table[0x6e] = Instruction(name: "LDLHL", instructionFunction: LDLHL);
+    table[0x6f] = Instruction(name: "LDLA", instructionFunction: LDLA);
+    table[0x70] = Instruction(name: "LDHLB", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.b) });
+    table[0x71] = Instruction(name: "LDHLC", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.c) });
+    table[0x72] = Instruction(name: "LDHLD", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.d) });
+    table[0x73] = Instruction(name: "LDHLE", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.e) });
+    table[0x74] = Instruction(name: "LDHLH", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.h) });
+    table[0x75] = Instruction(name: "LDHLL", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.l) });
+    table[0x76] = Instruction(name: "HALT", instructionFunction: HALT);
+    table[0x77] = Instruction(name: "LDHLA", instructionFunction: {LDHLn(register: CPUStateInstance.registersState.A) });
+    table[0x78] = Instruction(name: "LDAB", instructionFunction: LDAB);
+    table[0x79] = Instruction(name: "LDAC", instructionFunction: LDAC);
+    table[0x7a] = Instruction(name: "LDAD", instructionFunction: LDAD);
+    table[0x7b] = Instruction(name: "LDAE", instructionFunction: LDAE);
+    table[0x7c] = Instruction(name: "LDAH", instructionFunction: LDAH);
+    table[0x7d] = Instruction(name: "LDAL", instructionFunction: LDAL);
+    table[0x7e] = Instruction(name: "LDAHL", instructionFunction: LDAHL);
+    table[0x7f] = Instruction(name: "LDAA", instructionFunction: LDAA);
+    table[0x80] = Instruction(name: "ADDAB", instructionFunction: ADDAB);
+    table[0x81] = Instruction(name: "ADDAC", instructionFunction: ADDAC);
+    table[0x82] = Instruction(name: "ADDAD", instructionFunction: ADDAD);
+    table[0x83] = Instruction(name: "ADDAE", instructionFunction: ADDAE);
+    table[0x84] = Instruction(name: "ADDAH", instructionFunction: ADDAH);
+    table[0x85] = Instruction(name: "ADDAL", instructionFunction: ADDAL);
+    table[0x86] = Instruction(name: "ADDAHL", instructionFunction: ADDAHL);
+    table[0x87] = Instruction(name: "ADDAA", instructionFunction: ADDAA);
+    table[0x88] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x89] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8a] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8b] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8c] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8d] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8e] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x8f] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x90] = Instruction(name: "SUBB", instructionFunction: SUBB);
+    table[0x91] = Instruction(name: "SUBC", instructionFunction: SUBC);
+    table[0x92] = Instruction(name: "SUBD", instructionFunction: SUBD);
+    table[0x93] = Instruction(name: "SUBE", instructionFunction: SUBE);
+    table[0x94] = Instruction(name: "SUBH", instructionFunction: SUBH);
+    table[0x95] = Instruction(name: "SUBL", instructionFunction: SUBL);
+    table[0x96] = Instruction(name: "SUBHL", instructionFunction: SUBHL);
+    table[0x97] = Instruction(name:"SUBA", instructionFunction: SUBA);
+    table[0x98] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x99] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9a] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9b] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9c] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9d] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9e] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0x9f] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xa0] = Instruction(name: "ANDB", instructionFunction: ANDB);
+    table[0xa1] = Instruction(name: "ANDC", instructionFunction: ANDC);
+    table[0xa2] = Instruction(name: "ANDD", instructionFunction: ANDD);
+    table[0xa3] = Instruction(name: "ANDE", instructionFunction: ANDE);
+    table[0xa4] = Instruction(name: "ANDH", instructionFunction: ANDH);
+    table[0xa5] = Instruction(name: "ANDL", instructionFunction: ANDL);
+    table[0xa6] = Instruction(name: "ANDHL", instructionFunction: ANDHL);
+    table[0xa7] = Instruction(name: "ANDA", instructionFunction: ANDA);
+    table[0xa8] = Instruction(name: "XORB", instructionFunction: XORB);
+    table[0xa9] = Instruction(name: "XORC", instructionFunction: XORC);
+    table[0xaa] = Instruction(name: "XORD", instructionFunction: XORD);
+    table[0xab] = Instruction(name: "XORE", instructionFunction: XORE);
+    table[0xac] = Instruction(name: "XORH", instructionFunction: XORH);
+    table[0xad] = Instruction(name: "XORL", instructionFunction: XORL);
+    table[0xae] = Instruction(name: "XORHL", instructionFunction: XORHL);
+    table[0xaf] = Instruction(name: "XORA", instructionFunction: XORA);
+    table[0xb0] = Instruction(name: "ORB", instructionFunction: ORB);
+    table[0xb1] = Instruction(name: "ORC", instructionFunction: ORC);
+    table[0xb2] = Instruction(name: "ORD", instructionFunction: ORD);
+    table[0xb3] = Instruction(name: "ORE", instructionFunction: ORE);
+    table[0xb4] = Instruction(name: "ORH", instructionFunction: ORH);
+    table[0xb5] = Instruction(name: "ORL", instructionFunction: ORL);
+    table[0xb6] = Instruction(name: "ORHL", instructionFunction: ORHL);
+    table[0xb7] = Instruction(name: "ORA", instructionFunction: ORA);
+    table[0xb8] = Instruction(name: "CPB", instructionFunction: CPB);
+    table[0xb9] = Instruction(name: "CPC", instructionFunction: CPC);
+    table[0xba] = Instruction(name: "CPD", instructionFunction: CPD);
+    table[0xbb] = Instruction(name: "CPE", instructionFunction: CPE);
+    table[0xbc] = Instruction(name: "CPH", instructionFunction: CPH);
+    table[0xbd] = Instruction(name: "CPLBD", instructionFunction: CPLBD);
+    table[0xbe] = Instruction(name: "CPLHL", instructionFunction: CPLHL);
+    table[0xbf] = Instruction(name: "CPA", instructionFunction: CPA);
+    table[0xc0] = Instruction(name: "RETNZ", instructionFunction: RETNZ);
+    table[0xc1] = Instruction(name: "POPBC", instructionFunction: POPBC);
+    table[0xc2] = Instruction(name: "JPNZa16", instructionFunction: JPNZa16);
+    table[0xc3] = Instruction(name: "JPa16", instructionFunction: JPa16);
+    table[0xc4] = Instruction(name: "CALLNZa16", instructionFunction: CALLNZa16);
+    table[0xc5] = Instruction(name: "PUSHBC", instructionFunction: PUSHBC);
+    table[0xc6] = Instruction(name: "ADDAd8", instructionFunction: ADDAd8);
+    table[0xc7] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xc8] = Instruction(name: "RETZ", instructionFunction: RETZ);
+    table[0xc9] = Instruction(name: "RET", instructionFunction: RET);
+    table[0xca] = Instruction(name: "JPZa16", instructionFunction: JPZa16);
+    table[0xcb] = Instruction(name: "PREFIXCB", instructionFunction: PREFIXCB);
+    table[0xcc] = Instruction(name: "CALLZa16", instructionFunction: CALLZa16);
+    table[0xcd] = Instruction(name: "CALLa16", instructionFunction: CALLa16);
+    table[0xce] = Instruction(name: "ADCAd8", instructionFunction: ADCAd8);
+    table[0xcf] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xd0] = Instruction(name: "RETNC", instructionFunction: RETNC);
+    table[0xd1] = Instruction(name: "POPDE", instructionFunction: POPDE);
+    table[0xd2] = Instruction(name: "JPNCa16", instructionFunction: JPNCa16);
+    table[0xd3] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xd4] = Instruction(name: "CALLNCa16", instructionFunction: CALLNCa16);
+    table[0xd5] = Instruction(name: "PUSHDE", instructionFunction: PUSHDE);
+    table[0xd6] = Instruction(name: "SUBd8", instructionFunction: SUBd8);
+    table[0xd7] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xd8] = Instruction(name: "RETC", instructionFunction: RETC);
+    table[0xd9] = Instruction(name: "RETI", instructionFunction: RETI);
+    table[0xda] = Instruction(name: "JPCa16", instructionFunction: JPCa16);
+    table[0xdb] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xdc] = Instruction(name: "CALLCa16", instructionFunction: CALLCa16);
+    table[0xdd] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xde] = Instruction(name: "SBCAd8", instructionFunction: SBCAd8);
+    table[0xdf] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xe0] = Instruction(name: "LDHa8A", instructionFunction: LDHa8A);
+    table[0xe1] = Instruction(name: "POPHL", instructionFunction: POPHL);
+    table[0xe2] = Instruction(name: "LDCAE2", instructionFunction: LDCAE2);
+    table[0xe3] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xe4] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xe5] = Instruction(name: "PUSHHL", instructionFunction: PUSHHL);
+    table[0xe6] = Instruction(name: "", instructionFunction: ANDd8);
+    table[0xe7] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xe8] = Instruction(name: "ADDSPr8", instructionFunction: ADDSPr8);
+    table[0xe9] = Instruction(name: "JPHL", instructionFunction: JPHL);
+    table[0xea] = Instruction(name: "LDa16A", instructionFunction: LDa16A);
+    table[0xeb] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xec] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xed] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xee] = Instruction(name: "XORd8", instructionFunction: XORd8);
+    table[0xef] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xf0] = Instruction(name: "LDHAa8", instructionFunction: LDHAa8);
+    table[0xf1] = Instruction(name: "POPAF", instructionFunction: POPAF);
+    table[0xf2] = Instruction(name: "LDACF2", instructionFunction: LDACF2);
+    table[0xf3] = Instruction(name: "DI", instructionFunction: DI);
+    table[0xf4] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xf5] = Instruction(name: "PUSHAF", instructionFunction: PUSHAF);
+    table[0xf6] = Instruction(name: "ORd8", instructionFunction: ORd8);
+    table[0xf7] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xf8] = Instruction(name: "LDHLSPPlusR8", instructionFunction: LDHLSPPlusR8);
+    table[0xf9] = Instruction(name: "LDSPHL", instructionFunction: LDSPHL);
+    table[0xfa] = Instruction(name: "LDAa16", instructionFunction: LDAa16);
+    table[0xfb] = Instruction(name: "FI", instructionFunction: FI);
+    table[0xfc] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xfd] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
+    table[0xfe] = Instruction(name: "", instructionFunction: CPd8);
+    table[0xff] = Instruction(name: "", instructionFunction: <#T##(() -> Void)##(() -> Void)##() -> Void#>);
     
     return table;
 }
 
 var InstructionsTable = GenerateOpcodes();
-*/
 
-//maybe delete
-/*
-func InstructionByOpcode(opcode: UInt8) -> UnsafeMutablePointer<Instruction> {
-    let addressOfInstruction = UnsafeMutablePointer<Instruction>.allocate(capacity: 1);
-    addressOfInstruction.initialize(to: InstructionsTable[Int(opcode)]);
-    return addressOfInstruction;
+//set bits
+func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
+    let flagsArray: [UInt8] = [z, n, h, c];
+    var sum: UInt8 = 7;
+    for bit in flagsArray {
+        if bit == 1 {
+            CPUStateInstance.registersState.f |= (1 << sum);
+        }
+        else if bit == 0 {
+            CPUStateInstance.registersState.f &= ~(1 << sum);
+        }
+        sum-=1;
+    }
 }
- */
 
 //Data fetching instructions
 //Fetch 16 bit address to jump to. Since 8 bit value is stored at an address we have to combine the two bytes by
@@ -141,7 +394,10 @@ func SetDERegister(value: UInt16) -> Void {
 
 
 
-
+func EmptySpot() -> Void {
+    print("😳\n");
+    exit(-5);
+}
 
 // Performs no operation 0x00
 func NOP() -> Void {
@@ -243,7 +499,7 @@ func LDa16SP() -> Void {
 }
 
 //0x09 0x19 0x29 0x39
-func ADDHLnn(_ CPUStateInstance: CPUState, _ register: UInt16) -> Void {
+func ADDHLnn(register: UInt16) -> Void {
     var value = GetHLRegister() + register;
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
@@ -259,7 +515,7 @@ func ADDHLnn(_ CPUStateInstance: CPUState, _ register: UInt16) -> Void {
 }
 
 //0x0A 0x1A 0x2A 0x3A
-func LDAnn(_ CPUStateInstance: CPUState, _ register: UInt16) -> Void {
+func LDAnn(register: UInt16) -> Void {
     CPUStateInstance.registersState.a = BusRead(address: register);
     //emu cyc
     if CPUStateInstance.currentOpcode == 0x2A {
@@ -332,13 +588,6 @@ func LDCd8() -> Void {
     CPUStateInstance.registersState.pc+=1;
 }
 
-func STOP0() -> Void {
-    print("stopping")
-    exit(-5);
-}
-
-
-
 //0x0F Rotate A right. Old bit 0 to Carry flag.
 func RRCA() -> Void {
     var carryFlag: UInt8 = 0;
@@ -355,6 +604,13 @@ func RRCA() -> Void {
     }
     SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
 }
+
+//0x10
+func STOP0() -> Void {
+    print("stopping")
+    exit(-5);
+}
+
 //0x11
 func LDDEd16() -> Void {
     SetDERegister(value: FetchD16());
@@ -439,10 +695,10 @@ func RLA() -> Void {
 
 //0x18 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRr8() -> Void {
-    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    var fetchedData = Int8(BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     //emu cyc
-    CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+    CPUStateInstance.registersState.pc = UInt16(Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
     //emu cyc
 }
 
@@ -520,11 +776,11 @@ func RRA() -> Void {
 
 //0x20 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRNZr8() -> Void {
-    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    var fetchedData = Int8(BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     //emu cyc
     if !IsZFlagSet() {
-        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        CPUStateInstance.registersState.pc = UInt16(Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
         //emu cyc
     }
 }
@@ -628,11 +884,11 @@ func DAA() -> Void {
 
 //0x28 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRZr8() -> Void {
-    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    var fetchedData = Int8(BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     //emu cyc
     if IsZFlagSet() {
-        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        CPUStateInstance.registersState.pc = UInt16(Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
         //emu cyc
     }
 }
@@ -704,11 +960,11 @@ func CPL() -> Void {
 
 //0x30 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRNCr8() -> Void {
-    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    var fetchedData = Int8(BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     //emu cyc
     if !IsCFlagSet() {
-        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        CPUStateInstance.registersState.pc = UInt16(Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
         //emu cyc
     }
 }
@@ -781,11 +1037,11 @@ func SCF() -> Void {
 
 //0x38 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRCr8() -> Void {
-    var fetchedData = BusRead(address: CPUStateInstance.registersState.pc);
+    var fetchedData = Int8(BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     //emu cyc
     if IsCFlagSet() {
-        CPUStateInstance.registersState.pc += UInt16(Int8(fetchedData));
+        CPUStateInstance.registersState.pc = UInt16(Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
         //emu cyc
     }
 }
@@ -1116,7 +1372,7 @@ func LDLA() -> Void {
 }
 
 //0x70-0x75, 0x77
-func LDHLn(_ CPUStateInstance: CPUState, _ register: UInt8) {
+func LDHLn(register: UInt8) {
     BusWrite(address: GetHLRegister(), value: register);
     //emu cyc
 }
@@ -2262,9 +2518,11 @@ func JPZa16() -> Void {
 }
 //0xCB
 func PREFIXCB() -> Void {
-    var value = BusRead(address: CPUStateInstance.registersState.pc);
+    let value = BusRead(address: CPUStateInstance.registersState.pc);
     //emu cyc
     CPUStateInstance.registersState.pc += 1;
+    print("Not yet implemented prefix cb");
+    exit(-5)
     
 }
 //0xCC
@@ -2524,7 +2782,7 @@ func ADDSPr8() -> Void {
         carryFlag = 1;
     }
     
-    CPUStateInstance.registersState.sp += UInt16(Int8(BusRead(address:  CPUStateInstance.registersState.sp)));
+    CPUStateInstance.registersState.sp = UInt16(Int(CPUStateInstance.registersState.sp) + Int(Int8(BusRead(address:  CPUStateInstance.registersState.sp))));
     //emu cyc
     CPUStateInstance.registersState.sp += 1;
     //emu cyc
@@ -2623,7 +2881,7 @@ func LDHLSPPlusR8() -> Void {
     }
    
     CPUStateInstance.registersState.pc += 1;
-    SetHLRegister(value: UInt16(Int8(value)) + CPUStateInstance.registersState.sp);
+    SetHLRegister(value: UInt16(Int(Int8(value)) + Int(CPUStateInstance.registersState.sp)));
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
 }
 
