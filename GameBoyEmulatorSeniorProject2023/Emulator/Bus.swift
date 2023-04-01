@@ -93,6 +93,6 @@ func BusRead16Bit(address: UInt16) -> UInt16 {
 }
 
 func BusWrite16Bit(address: UInt16, value: UInt16) {
-    BusWrite(address: address, value: UInt8(value & 0xFF));
     BusWrite(address: address + 1, value: UInt8(value >> 8));
+    BusWrite(address: address, value: UInt8(value & 0xFF));
 }

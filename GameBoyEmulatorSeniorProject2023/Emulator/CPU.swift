@@ -58,14 +58,12 @@ class CPUState {
 }
 var CPUStateInstance = CPUState();
 
-func CPUStep(CPUStateInstance: CPUState ) -> Bool{
+func CPUStep() -> Bool{
     if !CPUStateInstance.halted {
         CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
-        print(CPUStateInstance, "First print");
         //emu cyc
         CPUStateInstance.registersState.pc+=1;
         InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
-        print(CPUStateInstance, "second print");
     }
     return false;
 }

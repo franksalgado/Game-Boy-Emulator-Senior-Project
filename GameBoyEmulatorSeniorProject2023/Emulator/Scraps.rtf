@@ -101,4 +101,13 @@
     \cf12 \cb3 BusWrite\cf2 \cb3 (\cf12 \cb3 address\cf2 \cb3 : \cf12 \cb3 GetHLRegister\cf2 \cb3 (), \cf12 \cb3 value\cf2 \cb3 : value);\
 
 \f1\b \cf4 var
-\f0\b0 \cf2  \cf6 fileURL\cf2 : \cf8 URL\cf2  = \cf8 URL\cf2 (\cf13 \cb3 string\cf2 \cb3 : \cf14 \cb3 "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb"\cf2 \cb3 )!}
+\f0\b0 \cf2  \cf6 fileURL\cf2 : \cf8 URL\cf2  = \cf8 URL\cf2 (\cf13 \cb3 string\cf2 \cb3 : \cf14 \cb3 "file:///Users/franksalgado/Documents/Tetris%20(World)%20(Rev%201).gb"\cf2 \cb3 )!\
+\
+\
+\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
+
+\fs26 \cf2 \cb3  
+\f1\b \cf4 var
+\f0\b0 \cf2  fetchedData = \cf8 Int8\cf2 (\cf13 bitPattern\cf2 : \cf12 BusRead\cf2 (\cf12 address\cf2 : \cf10 CPUStateInstance\cf2 .\cf10 registersState\cf2 .\cf10 pc\cf2 ));\
+\
+\cf10 CPUStateInstance\cf2 .\cf10 registersState\cf2 .\cf10 pc\cf2  = \cf8 UInt16\cf2 (\cf8 truncatingIfNeeded\cf2 : \cf8 Int\cf2 (\cf10 CPUStateInstance\cf2 .\cf10 registersState\cf2 .\cf10 pc\cf2 ) + \cf8 Int\cf2 (fetchedData));}
