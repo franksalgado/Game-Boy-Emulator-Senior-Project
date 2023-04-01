@@ -1998,7 +1998,7 @@ func ORA() -> Void {
 //0xB8
 func CPB() -> Void {
     let subtract = CPUStateInstance.registersState.b;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2017,7 +2017,7 @@ func CPB() -> Void {
 //0xB9
 func CPC() -> Void {
     let subtract = CPUStateInstance.registersState.c;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2036,7 +2036,7 @@ func CPC() -> Void {
 //0xBA
 func CPD() -> Void {
     let subtract = CPUStateInstance.registersState.d;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2058,7 +2058,7 @@ func CPD() -> Void {
 //0xBB
 func CPE() -> Void {
     let subtract = CPUStateInstance.registersState.e;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2080,7 +2080,7 @@ func CPE() -> Void {
 //0xBC
 func CPH() -> Void {
     let subtract = CPUStateInstance.registersState.h;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2102,7 +2102,7 @@ func CPH() -> Void {
 //0xBD
 func CPLBD() -> Void {
     let subtract = CPUStateInstance.registersState.l;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2125,7 +2125,7 @@ func CPLBD() -> Void {
 func CPLHL() -> Void {
     let subtract = BusRead(address: GetHLRegister());
     //emu cyc
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2147,7 +2147,7 @@ func CPLHL() -> Void {
 //0xBF
 func CPA() -> Void {
     let subtract = CPUStateInstance.registersState.a;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
@@ -2496,10 +2496,10 @@ func SBCAd8( ) -> Void {
 
 //0xE0
 func LDHa8A() -> Void {
-    var address = UInt16(BusRead(address: 0xFF00 | CPUStateInstance.registersState.pc));
+    let value: UInt16 = CPUStateInstance.registersState.pc
+    var address: UInt16 = UInt16(BusRead(address: value)) | 0xFF00;
     //emu cyc
     BusWrite(address: address, value: CPUStateInstance.registersState.a);
-    
     CPUStateInstance.registersState.pc += 1;
     //emu cyc
 }
@@ -2672,10 +2672,10 @@ func FI() -> Void {
 
 //0xFE
 func CPd8() -> Void {
-    let subtract = BusRead(address: CPUStateInstance.registersState.pc);
+    var subtract = BusRead(address: CPUStateInstance.registersState.pc);
     //emulator cyc
     CPUStateInstance.registersState.pc+=1;
-    let value = CPUStateInstance.registersState.a - subtract;
+    let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
