@@ -45,7 +45,7 @@ func BusRead(address: UInt16) -> UInt8 {
         //unusable
     }
     else if address < 0xFF80 {
-        //unusable
+        return IORead(address: address);
     }
     else if address == 0xFFFF {
         return GetInterruptEnableRegister();
@@ -76,7 +76,7 @@ func BusWrite(address: UInt16, value: UInt8) {
         //unusable
     }
     else if address < 0xFF80 {
-        //unusable
+        IOWrite(address: address, value: value);
     }
     else if address == 0xFFFF {
         SetInterruptEnableRegister(value: value);

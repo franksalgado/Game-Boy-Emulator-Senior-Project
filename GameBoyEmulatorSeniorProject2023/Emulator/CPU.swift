@@ -47,6 +47,7 @@ class CPUState {
     var interruptMasterEnable: Bool;
     var enablingIME: Bool;
     var interruptEnableRegister: UInt8;
+    var interruptFlags: UInt8;
      init(){
          currentOpcode = 0;
          halted = false;
@@ -54,6 +55,7 @@ class CPUState {
          interruptMasterEnable = false;
          enablingIME = false;
          interruptEnableRegister = 0;
+         interruptFlags = 0;
     }
 }
 var CPUStateInstance = CPUState();
@@ -65,7 +67,20 @@ func CPUStep() -> Bool{
         CPUStateInstance.registersState.pc+=1;
         InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
     }
-    return false;
+    else {
+        //emu cyc
+        if CPUStateInstance.interruptFlags != 0 {
+            CPUStateInstance.halted = false;
+        }
+        if CPUStateInstance.interruptMasterEnable {
+            
+            CPUStateInstance.enablingIME = false;
+        }
+        if CPUStateInstance.enablingIME {
+            CPUStateInstance.interruptMasterEnable = true;
+        }
+    }
+    return true;
 }
 
 func GetInterruptEnableRegister() -> UInt8 {
@@ -74,4 +89,16 @@ func GetInterruptEnableRegister() -> UInt8 {
 
 func SetInterruptEnableRegister(value: UInt8) -> Void {
     CPUStateInstance.interruptEnableRegister = value;
+}
+
+func GetInterruptFlags() -> UInt8 {
+    return CPUStateInstance.interruptFlags;
+}
+
+func SetInterruptFlags(value: UInt8) -> Void {
+    CPUStateInstance.interruptFlags = value;
+}
+
+func RequestInterrupt(InterruptTypes: InterruptTypes) {
+    CPUStateInstance.interruptFlags |= InterruptTypes.rawValue;
 }
