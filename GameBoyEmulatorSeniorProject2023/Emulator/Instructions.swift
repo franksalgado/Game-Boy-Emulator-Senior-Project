@@ -2285,13 +2285,264 @@ func JPZa16() -> Void {
         CPUStateInstance.registersState.pc += 2;
     }
 }
+
+//CB instruction table functions
+func GetRegisterValueCB(register: String) -> UInt8 {
+    if register == "b" {
+        return CPUStateInstance.registersState.b;
+    } else if register == "c" {
+        return CPUStateInstance.registersState.c;
+    } else if register == "d" {
+        return CPUStateInstance.registersState.d;
+    } else if register == "e" {
+        return CPUStateInstance.registersState.e;
+    } else if register == "h" {
+        return CPUStateInstance.registersState.h;
+    } else if register == "l" {
+        return CPUStateInstance.registersState.l;
+    } else if register == "(hl)" {
+        return BusRead(address: GetHLRegister());
+    } else {
+        return CPUStateInstance.registersState.a;
+    }
+
+}
+func SetRegisterValueCB(register: String, value: UInt8) -> Void {
+    switch register {
+    case "b":
+        CPUStateInstance.registersState.b = value;
+    case "c":
+        CPUStateInstance.registersState.c = value;
+    case "d":
+        CPUStateInstance.registersState.d = value;
+    case "e":
+        CPUStateInstance.registersState.e = value;
+    case "h":
+        CPUStateInstance.registersState.h = value;
+    case "l":
+        CPUStateInstance.registersState.l = value;
+    case "(hl)":
+        BusWrite(address: GetHLRegister(), value: value);
+    default:
+        CPUStateInstance.registersState.a = value;
+    }
+}
+
+func RLCCB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & (1 << 7) == (1 << 7) {
+        carryFlag = 1;
+    }
+    value <<= 1;
+    value |= carryFlag;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func RRCCB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & 1 == 1 {
+        carryFlag = 1;
+    }
+    value >>= 1;
+    value |= (carryFlag << 7);
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func RLCB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & (1 << 7) == (1 << 7) {
+        carryFlag = 1;
+    }
+    value <<= 1;
+    if IsCFlagSet() {
+        value |= 1;
+    }
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func RRCB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & 1 == 1 {
+        carryFlag = 1;
+    }
+    value >>= 1;
+    if IsCFlagSet() {
+        value |= (1 << 7);
+    }
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func SLACB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & (1 << 7) == (1 << 7) {
+        carryFlag = 1;
+    }
+    value <<= 1;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func SRACB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & 1 == 1 {
+        carryFlag = 1;
+    }
+    value >>= 1;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func SWAPCB(register: String) -> Void {
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = ((GetRegisterValueCB(register: register) & 0xF0) >> 4) | ((GetRegisterValueCB(register: register) & 0x0F) << 4);
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: 0);
+}
+
+func SRLCB(register: String) -> Void {
+    var carryFlag: UInt8 = 0;
+    var equalToZero: UInt8 = 0;
+    var value: UInt8 = GetRegisterValueCB(register: register);
+    if value & 1 == 1 {
+        carryFlag = 1;
+    }
+    value >>= 1;
+    if value == 0 {
+        equalToZero = 1;
+    }
+    SetRegisterValueCB(register: register, value: value);
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+}
+
+func BITCB(bit: UInt8, register: String) -> Void {
+    var bitValue: UInt8 = 1;
+    let value: UInt8 = GetRegisterValueCB(register: register);
+    if value & (1 << bit) == (1 << bit) {
+        bitValue = 0;
+    }
+    SetFlagsRegister(z: bitValue, n: 0, h: 1, c: 2);
+}
+
+func RESCB(bit: UInt8, register: String) -> Void {
+    var value: UInt8 = GetRegisterValueCB(register: register) & ~(1 << bit);
+    SetRegisterValueCB(register: register, value: value);
+}
+
+func SETCB(bit: UInt8, register: String) -> Void {
+    var value: UInt8 = GetRegisterValueCB(register: register) | (1 << bit);
+    SetRegisterValueCB(register: register, value: value);
+}
+
+func GetRegisterCB(opcode: UInt8) -> String {
+    var register: String;
+    if opcode & 0b111 == 0x00 {
+        register = "b";
+    }
+    else if opcode & 0b111 == 0x01 {
+        register = "c";
+    }
+    else if opcode & 0b111 == 0x02 {
+        register = "d";
+    }
+    else if opcode & 0b111 == 0x03 {
+        register = "e";
+    }
+    else if opcode & 0b111 == 0x04 {
+        register = "h";
+    }
+    else if opcode & 0b111 == 0x05 {
+        register = "l";
+    }
+    else if opcode & 0b111 == 0x06 {
+        //emu cyc 2
+        register = "(hl)";
+        //address = BusRead(address: GetHLRegister());
+    }
+    else {
+        register = "a";
+    }
+    return register;
+}
+
 //0xCB
 func PREFIXCB() -> Void {
-    let value = BusRead(address: CPUStateInstance.registersState.pc);
-    //emu cyc
+    let opcode = BusRead(address: CPUStateInstance.registersState.pc);
+    //emu cyc maybe
     CPUStateInstance.registersState.pc += 1;
-    print("Not yet implemented prefix cb");
-    exit(-5)
+    var register: String = GetRegisterCB(opcode: opcode);
+    //var address: UInt8?;
+    var bit: UInt8 = (opcode >> 3) & 0b111;
+    //emu cyc
+    if opcode <= 0x07 {
+        RLCCB(register: register);
+    }
+    else if opcode <= 0x0F {
+        RRCCB(register: register);
+    }
+    else if opcode <= 0x17 {
+        RLCB(register: register);
+    }
+    else if opcode <= 0x1F {
+        RRCB(register: register);
+    }
+    else if opcode <= 0x27 {
+        SLACB(register: register);
+    }
+    else if opcode <= 0x2F {
+        SRACB(register: register);
+    }
+    else if opcode <= 0x37 {
+        SWAPCB(register: register);
+    }
+    else if opcode <= 0x3F {
+        SRLCB(register: register);
+    }
+    else if opcode <= 0x7F {
+        BITCB(bit: bit, register: register);
+    }
+    else if opcode <= 0xBF {
+        RESCB(bit: bit, register: register);
+    }
+    else if opcode <= 0xFF {
+        SETCB(bit: bit, register: register);
+    }
     
 }
 //0xCC
