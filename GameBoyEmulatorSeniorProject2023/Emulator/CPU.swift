@@ -63,12 +63,12 @@ var CPUStateInstance = CPUState();
 func CPUStep() -> Bool{
     if !CPUStateInstance.halted {
         CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc+=1;
         InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
     }
     else {
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         if CPUStateInstance.interruptFlags != 0 {
             CPUStateInstance.halted = false;
         }

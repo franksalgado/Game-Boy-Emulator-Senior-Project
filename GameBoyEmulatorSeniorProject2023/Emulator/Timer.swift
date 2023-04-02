@@ -24,7 +24,7 @@ struct TimerState {
 
 var TimerStateInstance = TimerState();
 
-func timerTick() -> Void {
+func TimerTick() -> Void {
     var previousDiv = TimerStateInstance.div;
     TimerStateInstance.div += 1;
     var timerUpdate: Bool = false;

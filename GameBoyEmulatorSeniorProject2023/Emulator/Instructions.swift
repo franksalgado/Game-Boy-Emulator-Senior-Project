@@ -288,9 +288,9 @@ func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
 //Fetch 16 bit address to jump to. Since 8 bit value is stored at an address we have to combine the two bytes by
 func FetchD16() -> UInt16 {
     let lowByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc));
-    // emulator cycle
+    EmulatorCycles(CPUCycles: 1);
     let highByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc+1));
-    // emulator cycle
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc += 2;
     return lowByte | (highByte << 8);
 }
@@ -401,19 +401,19 @@ func LDBCd16() -> Void {
 //0x02 Set the address (BC) equal to the value of register a
 func LDBCA() -> Void {
     BusWrite(address: GetBCRegister(), value: CPUStateInstance.registersState.a)
-    // emulator cycles 1
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x03 Increment the BC register by 1
 func INCBC() -> Void {
-    let value = GetBCRegister() + 1;
+    let value = GetBCRegister() &+ 1;
     SetBCRegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // This function increments B register by 1. 0x04
 func INCB() -> Void {
-    CPUStateInstance.registersState.b += 1;
+    CPUStateInstance.registersState.b &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.b == 0 {
         equalToZero = 1;
@@ -428,7 +428,7 @@ func INCB() -> Void {
 
 // This instruction Decrements the B register by 1 0x05
 func DECB() -> Void {
-    CPUStateInstance.registersState.b -= 1;
+    CPUStateInstance.registersState.b &-= 1;
     let value = CPUStateInstance.registersState.b;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -444,8 +444,8 @@ func DECB() -> Void {
 //0x06 Set the value of register b to the value from the bus at address (pc)
 func LDBd8() -> Void {
     CPUStateInstance.registersState.b = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x07 Rotate left. The old 7th bit will be put in teh carry flag
@@ -468,8 +468,8 @@ func RLCA() -> Void {
 //0x08 Write sp value to address (a16
 func LDa16SP() -> Void {
     BusWrite16Bit(address: FetchD16(), value: CPUStateInstance.registersState.sp);
-    //emu cyc
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x09 0x19 0x29 0x39 Add 16 bit register value to carry flag
@@ -483,7 +483,7 @@ func ADDHLnn(register: UInt16) -> Void {
     if UInt32(GetHLRegister()) + UInt32(register) >= 0x10000 {
         carryFlag = 1;
     }
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     SetHLRegister(value: UInt16(value & 0xFFFF));
     SetFlagsRegister(z: 2, n: 0, h: halfCarry, c: carryFlag);
 }
@@ -492,28 +492,28 @@ func ADDHLnn(register: UInt16) -> Void {
 //Opcodes 0x2A and 0x3A increment hl or dec hl as well
 func LDAnn(register: UInt16) -> Void {
     CPUStateInstance.registersState.a = BusRead(address: register);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if CPUStateInstance.currentOpcode == 0x2A {
-        let value = register + 1;
+        let value = register &+ 1;
         SetHLRegister(value: value);
     }
     if CPUStateInstance.currentOpcode == 0x3A {
-        let value = register - 1;
+        let value = register &- 1;
         SetHLRegister(value: value);
     }
 }
 
 //0x0B
 func DECBC() -> Void {
-    let value = GetBCRegister() - 1;
+    let value = GetBCRegister() &- 1;
     SetBCRegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 
 
 // This function increments C register by 1. 0x0C
 func INCC() -> Void {
-    CPUStateInstance.registersState.c += 1;
+    CPUStateInstance.registersState.c &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.c == 0 {
         equalToZero = 1;
@@ -529,7 +529,7 @@ func INCC() -> Void {
 
 // This instruction Decrements the C register by 1 0x0D
 func DECC() -> Void {
-    CPUStateInstance.registersState.c -= 1;
+    CPUStateInstance.registersState.c &-= 1;
     let value = CPUStateInstance.registersState.c;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -545,8 +545,8 @@ func DECC() -> Void {
 //0x0E
 func LDCd8() -> Void {
     CPUStateInstance.registersState.c = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x0F Rotate A right. Old bit 0 to Carry flag.
@@ -569,7 +569,7 @@ func RRCA() -> Void {
 
 //0x10
 func STOP0() -> Void {
-    print("stopping")
+    print("stopping 🥶");
     exit(-5);
 }
 
@@ -581,19 +581,19 @@ func LDDEd16() -> Void {
 //0x12
 func LDDEA() -> Void {
     BusWrite(address: GetDERegister(), value: CPUStateInstance.registersState.a);
-    // emulator cycles 1
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x13
 func INCDE() -> Void {
-    let value = GetDERegister() + 1;
+    let value = GetDERegister() &+ 1;
     SetDERegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // This function increments D register by 1. 0x14
 func INCD() -> Void {
-    CPUStateInstance.registersState.d += 1;
+    CPUStateInstance.registersState.d &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.d == 0 {
         equalToZero = 1;
@@ -607,7 +607,7 @@ func INCD() -> Void {
 
 // This instruction Decrements the D register by 1 0x15
 func DECD() -> Void {
-    CPUStateInstance.registersState.d -= 1;
+    CPUStateInstance.registersState.d &-= 1;
     let value = CPUStateInstance.registersState.d;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -624,7 +624,7 @@ func DECD() -> Void {
 //0x16
 func LDDd8() -> Void {
     CPUStateInstance.registersState.d = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc+=1;
 }
 
@@ -644,20 +644,20 @@ func RLA() -> Void {
 func JRr8() -> Void {
     var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x1B
 func DECDE() -> Void {
-    let value = GetDERegister() - 1;
+    let value = GetDERegister() &- 1;
     SetDERegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 // This function increments E register by 1. 0x1C
 func INCE() -> Void {
-    CPUStateInstance.registersState.e += 1;
+    CPUStateInstance.registersState.e &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.e == 0 {
         equalToZero = 1;
@@ -671,7 +671,7 @@ func INCE() -> Void {
 
 // This instruction Decrements the E register by 1 0x1D
 func DECE() -> Void {
-    CPUStateInstance.registersState.e -= 1;
+    CPUStateInstance.registersState.e &-= 1;
     let value = CPUStateInstance.registersState.e;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -688,8 +688,8 @@ func DECE() -> Void {
 //0x1E
 func LDEd8() -> Void {
     CPUStateInstance.registersState.e = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x1F
@@ -708,10 +708,10 @@ func RRA() -> Void {
 func JRNZr8() -> Void {
     var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if !IsZFlagSet() {
         CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
     }
 }
 
@@ -723,21 +723,21 @@ func LDHLd16() -> Void {
 //0x22
 func LDHLIncA() -> Void {
     BusWrite(address: GetHLRegister(), value: CPUStateInstance.registersState.a)
-    // emulator cycles 1
+    EmulatorCycles(CPUCycles: 1);
     let value = GetHLRegister() + 1;
            SetHLRegister(value: value);
 }
 
 //0x23
 func INCHL() -> Void {
-    let value = GetHLRegister() + 1;
+    let value = GetHLRegister() &+ 1;
     SetHLRegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // This function increments H register by 1. 0x24
 func INCH() -> Void {
-    CPUStateInstance.registersState.h += 1;
+    CPUStateInstance.registersState.h &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.h == 0 {
         equalToZero = 1;
@@ -747,12 +747,12 @@ func INCH() -> Void {
     if CPUStateInstance.registersState.h & 0x0F == 0 {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2);
 }
 
 // This instruction Decrements the H register by 1 0x25
 func DECH() -> Void {
-    CPUStateInstance.registersState.h -= 1;
+    CPUStateInstance.registersState.h &-= 1;
     let value = CPUStateInstance.registersState.h;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -765,7 +765,7 @@ func DECH() -> Void {
     if value & 0x0F == 0x0F {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
 }
 
 //0x26
@@ -792,51 +792,50 @@ func DAA() -> Void {
         CPUStateInstance.registersState.a =  CPUStateInstance.registersState.a &- u;
     }
     else {
-        CPUStateInstance.registersState.a += u;
+        CPUStateInstance.registersState.a &+= u;
     }
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
     }
-    SetFlagsRegister(z: equalToZero, n: 2, h: 0, c: carryFlag)
+    SetFlagsRegister(z: equalToZero, n: 2, h: 0, c: carryFlag);
 }
 
 //0x28 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRZr8() -> Void {
     var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if IsZFlagSet() {
         CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
     }
 }
 
 //0x2B
 func DECHL() -> Void {
-    let value = GetHLRegister() - 1;
+    let value = GetHLRegister() &- 1;
     SetHLRegister(value: value);
-    //emulator cycle
+    EmulatorCycles(CPUCycles: 1);
 }
 
 
 // This function increments L register by 1. 0x2C
 func INCL() -> Void {
-    CPUStateInstance.registersState.l += 1;
+    CPUStateInstance.registersState.l &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.l == 0 {
         equalToZero = 1;
     }
     var halfCarry: UInt8 = 0;
-    
     if CPUStateInstance.registersState.l & 0x0F == 0 {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2);
 }
 
 // This instruction Decrements the L register by 1 0x2D
 func DECL() -> Void {
-    CPUStateInstance.registersState.l -= 1;
+    CPUStateInstance.registersState.l &-= 1;
     let value = CPUStateInstance.registersState.l;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -847,14 +846,14 @@ func DECL() -> Void {
     if value & 0x0F == 0x0F {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
 }
 
 //0x2E
 func LDLd8() -> Void {
     CPUStateInstance.registersState.l = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x2F. This is the complement of A register
@@ -866,23 +865,23 @@ func CPL() -> Void {
 func JRNCr8() -> Void {
     var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if !IsCFlagSet() {
         CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
     }
 }
 //0x31
 func LDSPa16() -> Void {
     CPUStateInstance.registersState.sp = FetchD16();
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x32
 func LDHLDecA() -> Void {
     BusWrite(address: GetHLRegister(), value: CPUStateInstance.registersState.a)
-    // emulator cycles 1
-    let value = GetHLRegister() - 1;
+    EmulatorCycles(CPUCycles: 1);
+    let value = GetHLRegister() &- 1;
            SetHLRegister(value: value);
 }
 
@@ -893,9 +892,8 @@ func INCSP() -> Void {
 
 //0x34
 func INCHL0x34() -> Void {
-    let value = BusRead(address: GetHLRegister()) + 1;
-    //emu cyc
-    //emu cyc
+    let value = BusRead(address: GetHLRegister()) &+ 1;
+    EmulatorCycles(CPUCycles: 2);
     BusWrite(address: GetHLRegister(), value: value);
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -905,32 +903,30 @@ func INCHL0x34() -> Void {
     if value & 0x0F == 0 {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: 2);
 }
 //0x35
 func DECHL0x35() -> Void {
-    let value:UInt32 = UInt32(BusRead(address: GetHLRegister())) - 1;
-    //emu cyc
-    //emu cyc
+    let value:UInt32 = UInt32(BusRead(address: GetHLRegister())) &- 1;
+    EmulatorCycles(CPUCycles: 2);
     BusWrite(address: GetHLRegister(), value: UInt8(value & 0xFF));
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
     var halfCarry: UInt8 = 0;
-    
     if value & 0x0F == 0x0F {
         halfCarry = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
 }
 //0x36
 func LDHLd8() -> Void {
     let value = BusRead(address: CPUStateInstance.registersState.pc);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc += 1;
     BusWrite(address: GetHLRegister(), value: value);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 
@@ -943,17 +939,17 @@ func SCF() -> Void {
 func JRCr8() -> Void {
     var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if IsCFlagSet() {
         CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
     }
 }
 
 // This instruction Decrements the stack pointer register by 1 0x3B
 func DECSP() -> Void {
-    CPUStateInstance.registersState.sp -= 1;
-    //emulator cycles
+    CPUStateInstance.registersState.sp &-= 1;
+    EmulatorCycles(CPUCycles: 1);
     let value = CPUStateInstance.registersState.sp;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -969,7 +965,7 @@ func DECSP() -> Void {
 
 // This function increments A register by 1. 0x3C
 func INCA() -> Void {
-    CPUStateInstance.registersState.a += 1;
+    CPUStateInstance.registersState.a &+= 1;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
@@ -983,7 +979,7 @@ func INCA() -> Void {
 
 // This instruction Decrements the A register by 1 0x3D
 func DECA() -> Void {
-    CPUStateInstance.registersState.a -= 1;
+    CPUStateInstance.registersState.a &-= 1;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -999,8 +995,8 @@ func DECA() -> Void {
 //0x3E
 func LDAd8() -> Void {
     CPUStateInstance.registersState.a = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x3F This instruction complements the carry flag.
@@ -1045,7 +1041,7 @@ func LDBL() -> Void {
 //0x46
 func LDBHL() -> Void {
     CPUStateInstance.registersState.b = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //Put the value of A into into B register 0x47
@@ -1086,7 +1082,7 @@ func LDCL() -> Void {
 // 0x4E
 func LDCHL() -> Void {
     CPUStateInstance.registersState.c = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // Put the value of A into C register 0x4F
@@ -1127,7 +1123,7 @@ func LDDL() -> Void {
 //0x56
 func LDDHL() -> Void {
     CPUStateInstance.registersState.d = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // Put the value of A into D register 0x57
@@ -1168,7 +1164,7 @@ func LDEL() -> Void {
 //0x5E
 func LDEHL() -> Void {
     CPUStateInstance.registersState.e = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // Put the value of A into E register 0x5F
@@ -1210,7 +1206,7 @@ func LDHL() -> Void {
 //0x66
 func LDHHL() -> Void {
     CPUStateInstance.registersState.h = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 // Put the value of A into H register 0x67
@@ -1252,7 +1248,7 @@ func LDLL() -> Void {
 //0x6E
 func LDLHL() -> Void {
     CPUStateInstance.registersState.l = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 // Put the value of A into L register 0x6F
 func LDLA() -> Void {
@@ -1262,7 +1258,7 @@ func LDLA() -> Void {
 //0x70-0x75, 0x77
 func LDHLn(register: UInt8) {
     BusWrite(address: GetHLRegister(), value: register);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 
@@ -1305,7 +1301,7 @@ func LDAL() -> Void {
 //0x7E
 func LDAHL() -> Void {
     CPUStateInstance.registersState.a = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //Put the value of A into A register 0x7F
@@ -1316,7 +1312,6 @@ func LDAA() -> Void {
 //Add the value stored in B register to A register. 0x80
 func ADDAB() -> Void {
     var halfCarry: UInt8 = 0;
-    
     if ((CPUStateInstance.registersState.a & 0xF) + (CPUStateInstance.registersState.b & 0xF)) >= 0x10 {
         halfCarry = 1;
     }
@@ -1324,14 +1319,11 @@ func ADDAB() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(CPUStateInstance.registersState.b & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += CPUStateInstance.registersState.b
+    CPUStateInstance.registersState.a &+= CPUStateInstance.registersState.b;
     let value = CPUStateInstance.registersState.a;
-    var equalToZero: UInt8;
+    var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
-    }
-    else{
-        equalToZero = 0;
     }
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag);
 }
@@ -1342,20 +1334,16 @@ func ADDAC() -> Void {
     if ((CPUStateInstance.registersState.a & 0xF) + (add & 0xF)) >= 0x10 {
         halfCarry = 1;
     }
-    else{
-        halfCarry = 0;
-    }
     var carryFlag: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag);
 }
 
@@ -1370,7 +1358,7 @@ func ADDAD() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1387,11 +1375,10 @@ func ADDAE() -> Void {
         halfCarry = 1;
     }
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1411,7 +1398,7 @@ func ADDAH() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1431,7 +1418,7 @@ func ADDAL() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1444,7 +1431,7 @@ func ADDAL() -> Void {
 func ADDAHL() -> Void {
     var halfCarry: UInt8 = 0;
     let add = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if ((CPUStateInstance.registersState.a & 0xF) + (add & 0xF)) >= 0x10 {
         halfCarry = 1;
     }
@@ -1452,7 +1439,7 @@ func ADDAHL() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
@@ -1473,7 +1460,7 @@ func ADDAA() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a += add;
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1482,35 +1469,27 @@ func ADDAA() -> Void {
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 
-
-
-
 //0x88-0x8D. 0x8E 0x8F, 0xCE
 func ADCA8Bit(register: UInt8) -> Void {
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
     //var add = CPUStateInstance.registersState.d;
     var carryFlagValue: UInt8 = (1 << 4);
-    
     if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
         carryFlagValue = 0;
     }
-    
     if (CPUStateInstance.registersState.a & 0xF) +
         (register & 0xF) + carryFlagValue > 0xF {
         halfCarry = 1;
     }
-    
     if (Int(CPUStateInstance.registersState.a) + Int(register) + Int(carryFlagValue))  > 0xFF {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a +=  register + carryFlagValue;
+    CPUStateInstance.registersState.a &+=  register &+ carryFlagValue;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
 }
 
@@ -1520,19 +1499,14 @@ func ADCA8Bit(register: UInt8) -> Void {
 func SUBB() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = CPUStateInstance.registersState.b;
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -1541,30 +1515,23 @@ func SUBB() -> Void {
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
-
 //Subtract the value stored in C register from value in A register. 0x91
 func SUBC() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = CPUStateInstance.registersState.c;
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
@@ -1572,25 +1539,19 @@ func SUBC() -> Void {
 func SUBD() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = CPUStateInstance.registersState.d;
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
@@ -1598,51 +1559,39 @@ func SUBD() -> Void {
 func SUBE() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = CPUStateInstance.registersState.e;
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 // Subtract the value stored in H register from value in A register. 0x94
 func SUBH() -> Void {
     var halfCarry: UInt8 = 0
     let subtract = CPUStateInstance.registersState.h
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
-        halfCarry = 1
+        halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
-        carryFlag = 1
+        carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract
-    
-    let value = CPUStateInstance.registersState.a
+    CPUStateInstance.registersState.a &-= subtract
+    let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0
     if value == 0 {
-        equalToZero = 1
+        equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero, n: 1, h: halfCarry, c: carryFlag)
 }
 
@@ -1655,21 +1604,17 @@ func SUBL() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
     
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
@@ -1677,25 +1622,20 @@ func SUBL() -> Void {
 func SUBHL() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
 
@@ -1703,14 +1643,8 @@ func SUBHL() -> Void {
 func SUBA() -> Void {
     CPUStateInstance.registersState.a = 0;
     CPUStateInstance.registersState.f = 0b11000000;
-    //SetFlagsRegister(z: 1 , n: 1, h: 0, c: 0)
+    SetFlagsRegister(z: 1 , n: 1, h: 0, c: 0);
 }
-
-
-
-
-
-
 
 //0x98 - 0x9F
 func SBCAn(register: UInt8 ) -> Void {
@@ -1718,25 +1652,20 @@ func SBCAn(register: UInt8 ) -> Void {
     var carryFlag: UInt8 = 0;
     //var subtract = CPUStateInstance.registersState.b;
     var carryFlagValue: UInt8 = (1 << 4);
-    
     if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
         carryFlagValue = 0;
     }
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(register & 0xF) - Int(carryFlagValue)) < 0x0 {
         halfCarry = 1;
     }
-    
     if (Int(CPUStateInstance.registersState.a) - Int(register) - Int(carryFlagValue)) < 0x0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -=  register + carryFlagValue;
+    CPUStateInstance.registersState.a &-=  register &+ carryFlagValue;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
     }
-    
     /*
      if CPUStateInstance.registersState.a > 0xFF {
      carryFlag = 1;
@@ -1744,8 +1673,6 @@ func SBCAn(register: UInt8 ) -> Void {
      */
     SetFlagsRegister(z: equalToZero, n: 1, h: halfCarry, c: carryFlag);
 }
-
-
 
 // 0xA0 - 0xA5
 func ANDB() -> Void {
@@ -1812,7 +1739,7 @@ func ANDL() -> Void {
 
 func ANDHL() -> Void {
     CPUStateInstance.registersState.a &= BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if CPUStateInstance.registersState.a == 0 {
         CPUStateInstance.registersState.f = 0b10100000;
     }
@@ -1830,7 +1757,6 @@ func ANDA() -> Void {
         CPUStateInstance.registersState.f = 0b00100000;
     }
 }
-
 
 // 0xA8 - 0xAD
 func XORB() -> Void {
@@ -1896,7 +1822,7 @@ func XORL() -> Void {
 
 func XORHL() -> Void {
     let value = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if CPUStateInstance.registersState.a == value {
         CPUStateInstance.registersState.a = 0;
         CPUStateInstance.registersState.f = 0b1000000;
@@ -1934,6 +1860,7 @@ func ORC() -> Void {
         CPUStateInstance.registersState.f = 0b00000000;
     }
 }
+
 func ORD() -> Void {
     CPUStateInstance.registersState.a |= CPUStateInstance.registersState.d;
     if CPUStateInstance.registersState.a == 0 {
@@ -1977,7 +1904,7 @@ func ORL() -> Void {
 //0xB6
 func ORHL() -> Void {
     CPUStateInstance.registersState.a |= BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if CPUStateInstance.registersState.a == 0 {
         CPUStateInstance.registersState.f = 0b10000000;
     }
@@ -2011,7 +1938,7 @@ func CPB() -> Void {
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xB9
@@ -2030,7 +1957,7 @@ func CPC() -> Void {
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBA
@@ -2052,7 +1979,7 @@ func CPD() -> Void {
         carryFlag = 1;
     }
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBB
@@ -2074,7 +2001,7 @@ func CPE() -> Void {
         carryFlag = 1;
     }
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBC
@@ -2096,7 +2023,7 @@ func CPH() -> Void {
         carryFlag = 1;
     }
     
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBD
@@ -2107,41 +2034,35 @@ func CPLBD() -> Void {
     if value == 0 {
         equalToZero = 1;
     }
-    
     var halfCarry: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a & 0x0F) - Int(subtract & 0x0F)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBE
 func CPLHL() -> Void {
     let subtract = BusRead(address: GetHLRegister());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     var halfCarry: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a & 0x0F) - Int(subtract & 0x0F)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xBF
@@ -2152,28 +2073,25 @@ func CPA() -> Void {
     if value == 0 {
         equalToZero = 1;
     }
-    
     var halfCarry: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a & 0x0F) - Int(subtract & 0x0F)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
+    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag);
 }
 
 //0xC0
 func RETNZ() -> Void {
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if !IsZFlagSet() {
         let lowByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         let highByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
     }
 }
@@ -2181,8 +2099,7 @@ func RETNZ() -> Void {
 //0xC1
 func POPBC() -> Void {
     SetBCRegister(value: StackPop16Bit());
-    //emu cyc
-    //emu cyc
+    EmulatorCycles(CPUCycles: 2);
 }
 
 //Jump To Address A16 If Z Flag Is Reset 0xC2
@@ -2191,7 +2108,7 @@ func JPNZa16() -> Void {
         JPa16()
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2199,8 +2116,7 @@ func JPNZa16() -> Void {
 // Jump to address a16 0xC3
 func JPa16() -> Void {
     CPUStateInstance.registersState.pc = FetchD16();
-    //emulator cycle
-    
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xC4
@@ -2209,7 +2125,7 @@ func CALLNZa16() -> Void {
         CALLa16();
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2217,15 +2133,15 @@ func CALLNZa16() -> Void {
 //0xC5
 func PUSHBC() -> Void {
     StackPush16Bit(data: GetBCRegister());
-    //emu cyc 3
+    EmulatorCycles(CPUCycles: 3);
 }
 
 //Add 8 bit value from BusRead to register to A register. 0xC6
 func ADDAd8() -> Void {
     var halfCarry: UInt8 = 0;
     let add = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 3);
+    CPUStateInstance.registersState.pc += 1;
     if ((CPUStateInstance.registersState.a & 0xF) + (add & 0xF)) >= 0x10 {
         halfCarry = 1;
     }
@@ -2235,23 +2151,20 @@ func ADDAd8() -> Void {
     if (Int(CPUStateInstance.registersState.a & 0xFF) + Int(add & 0xFF)) >= 0x100 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a += add;
-    
+    CPUStateInstance.registersState.a &+= add;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 0, h: halfCarry, c: carryFlag)
 }
 //0xC7, 0xD7, 0xE7, 0xF7, 0xCF, 0xDF, 0xEF, 0xFF,
 func RSTnH(address: UInt16) -> Void {
-    // emulator cycles 2
+    EmulatorCycles(CPUCycles: 2);
     StackPush16Bit(data: CPUStateInstance.registersState.pc);
     CPUStateInstance.registersState.pc = address;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xC8
@@ -2259,9 +2172,9 @@ func RETZ() -> Void {
     //emu cyc
     if IsZFlagSet() {
         let lowByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         let highByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
     }
 }
@@ -2269,9 +2182,9 @@ func RETZ() -> Void {
 //0xC9
 func RET() -> Void {
     let lowByte: UInt16 = UInt16(StackPop());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     let highByte: UInt16 = UInt16(StackPop());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
 }
 
@@ -2281,7 +2194,7 @@ func JPZa16() -> Void {
         JPa16()
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2491,7 +2404,7 @@ func GetRegisterCB(opcode: UInt8) -> String {
         register = "l";
     }
     else if opcode & 0b111 == 0x06 {
-        //emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         register = "(hl)";
         //address = BusRead(address: GetHLRegister());
     }
@@ -2509,7 +2422,7 @@ func PREFIXCB() -> Void {
     var register: String = GetRegisterCB(opcode: opcode);
     //var address: UInt8?;
     var bit: UInt8 = (opcode >> 3) & 0b111;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if opcode <= 0x07 {
         RLCCB(register: register);
     }
@@ -2551,7 +2464,7 @@ func CALLZa16() -> Void {
         CALLa16();
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2559,10 +2472,10 @@ func CALLZa16() -> Void {
 //0xCD
 func CALLa16() -> Void {
     let fetchedD16 = FetchD16();
-    //emulator cyc 2
+    EmulatorCycles(CPUCycles: 2);
     StackPush16Bit(data: CPUStateInstance.registersState.pc);
     CPUStateInstance.registersState.pc = fetchedD16;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xCE
@@ -2570,40 +2483,35 @@ func ADCAd8() -> Void {
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
     let add = BusRead(address: CPUStateInstance.registersState.pc);
-    //emu cyc
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
     var carryFlagValue: UInt8 = (1 << 4);
-    
     if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
         carryFlagValue = 0;
     }
-    
     if (CPUStateInstance.registersState.a & 0xF) +
         (add & 0xF) + carryFlagValue > 0xF {
         halfCarry = 1;
     }
-    
     if (Int(CPUStateInstance.registersState.a) + Int(add) + Int(carryFlagValue))  > 0xFF {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a +=  add + carryFlagValue;
+    CPUStateInstance.registersState.a &+=  add &+ carryFlagValue;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
     }
-    
     SetFlagsRegister(z: equalToZero, n: 0, h: halfCarry, c: carryFlag);
 }
 
 //0xD0
 func RETNC() -> Void {
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if !IsCFlagSet() {
         let lowByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         let highByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
     }
 }
@@ -2611,8 +2519,7 @@ func RETNC() -> Void {
 //0xD1
 func POPDE() -> Void {
     SetDERegister(value: StackPop16Bit());
-    //emu cyc
-    //emu cyc
+    EmulatorCycles(CPUCycles: 2);
 }
 
 //Jump To Address A16 If Z Flag Is Reset 0xD2
@@ -2621,7 +2528,7 @@ func JPNCa16() -> Void {
         JPa16()
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2632,7 +2539,7 @@ func CALLNCa16() -> Void {
         CALLa16();
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2640,28 +2547,24 @@ func CALLNCa16() -> Void {
 //0xD5
 func PUSHDE() -> Void {
     StackPush16Bit(data: GetDERegister());
-    //emu cyc 3
+    EmulatorCycles(CPUCycles: 3);
 }
 
 //Subtract the value BusRead from value in A register. 0xD6
 func SUBd8() -> Void {
     var halfCarry: UInt8 = 0;
     let subtract = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
     
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -= subtract;
-    
+    CPUStateInstance.registersState.a &-= subtract;
     let value = CPUStateInstance.registersState.a;
     var equalToZero: UInt8 = 0;
     if value == 0 {
@@ -2672,12 +2575,12 @@ func SUBd8() -> Void {
 
 //0xD8
 func RETC() -> Void {
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     if IsCFlagSet() {
         let lowByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         let highByte: UInt16 = UInt16(StackPop());
-        //emu cyc
+        EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc = (highByte << 8) | lowByte;
     }
 }
@@ -2694,7 +2597,7 @@ func JPCa16() -> Void {
         JPa16();
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2705,7 +2608,7 @@ func CALLCa16() -> Void {
         CALLa16();
     }
     else {
-        // emu cyc 2
+        EmulatorCycles(CPUCycles: 2);
         CPUStateInstance.registersState.pc += 2;
     }
 }
@@ -2715,28 +2618,23 @@ func SBCAd8( ) -> Void {
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
     let subtract = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc+=1;
     var carryFlagValue: UInt8 = (1 << 4);
-    
     if  CPUStateInstance.registersState.f & carryFlagValue != carryFlagValue{
         carryFlagValue = 0;
     }
-    
     if (Int(CPUStateInstance.registersState.a & 0xF) - Int(subtract & 0xF) - Int(carryFlagValue)) < 0x0 {
         halfCarry = 1;
     }
-    
     if (Int(CPUStateInstance.registersState.a) - Int(subtract) - Int(carryFlagValue)) < 0x0 {
         carryFlag = 1;
     }
-    
-    CPUStateInstance.registersState.a -=  subtract + carryFlagValue;
+    CPUStateInstance.registersState.a &-=  subtract &+ carryFlagValue;
     var equalToZero: UInt8 = 0;
     if CPUStateInstance.registersState.a == 0 {
         equalToZero = 1;
     }
-    
     /*
      if CPUStateInstance.registersState.a > 0xFF {
      carryFlag = 1;
@@ -2749,17 +2647,16 @@ func SBCAd8( ) -> Void {
 func LDHa8A() -> Void {
     let value: UInt16 = CPUStateInstance.registersState.pc
     var address: UInt16 = UInt16(BusRead(address: value)) | 0xFF00;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     BusWrite(address: address, value: CPUStateInstance.registersState.a);
     CPUStateInstance.registersState.pc += 1;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xE1
 func POPHL() -> Void {
     SetHLRegister(value: StackPop16Bit());
-    //emu cyc
-    //emu cyc
+    EmulatorCycles(CPUCycles: 2);
 }
 
 //0xE2
@@ -2767,19 +2664,19 @@ func LDCAE2() -> Void {
     //can also be addition?
     var address = 0xFF00 | UInt16(CPUStateInstance.registersState.c);
     BusWrite(address: address , value: CPUStateInstance.registersState.a);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xE5
 func PUSHHL() -> Void {
     StackPush16Bit(data: GetHLRegister());
-    //emu cyc 3
+    EmulatorCycles(CPUCycles: 3);
 }
 
 //0xE6
 func ANDd8() -> Void {
     CPUStateInstance.registersState.a &= BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc+=1;
     if CPUStateInstance.registersState.a == 0 {
         CPUStateInstance.registersState.f = 0b10100000;
@@ -2791,22 +2688,18 @@ func ANDd8() -> Void {
 
 //0xE8
 func ADDSPr8() -> Void {
-    
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
-    
     if (CPUStateInstance.registersState.sp & 0xF) + UInt16(BusRead(address:  CPUStateInstance.registersState.sp) & 0xF) >= 0x10 {
         halfCarry = 1;
     }
     if Int(CPUStateInstance.registersState.sp & 0xFF) + Int(BusRead(address:  CPUStateInstance.registersState.sp) & 0xFF) >= 0x100 {
         carryFlag = 1;
     }
-    
     CPUStateInstance.registersState.sp = UInt16(Int(CPUStateInstance.registersState.sp) + Int(Int8(BusRead(address:  CPUStateInstance.registersState.sp))));
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.sp += 1;
-    //emu cyc
-    
+    EmulatorCycles(CPUCycles: 1);
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
 }
 
@@ -2819,13 +2712,13 @@ func JPHL() -> Void {
 //0xEA
 func LDa16A() -> Void {
     BusWrite(address: FetchD16(), value: CPUStateInstance.registersState.a);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xEE
 func XORd8() -> Void {
     let value = BusRead(address: CPUStateInstance.registersState.pc);
-    // emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc+=1;
     if CPUStateInstance.registersState.a == value {
         CPUStateInstance.registersState.a = 0;
@@ -2839,26 +2732,25 @@ func XORd8() -> Void {
 //0xF0
 func LDHAa8() -> Void {
     var fetchedData = UInt16(BusRead(address: CPUStateInstance.registersState.pc));
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.a = BusRead(address: 0xFF00 | fetchedData);
     CPUStateInstance.registersState.pc += 1;
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xF1 lower 4 bits of f reg are not used and w FFF0
 func POPAF() -> Void {
     SetAFRegister(value: StackPop16Bit() & 0xFFF0);
-    //emu cyc
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xF2
 func LDACF2() -> Void {
     //can also be addition?
     var address = 0xFF00 | UInt16(CPUStateInstance.registersState.c);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.a = BusRead(address: address);
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xF3
@@ -2869,14 +2761,14 @@ func DI() -> Void {
 //0xF5
 func PUSHAF() -> Void {
     StackPush16Bit(data: GetAFRegister());
-    //emu cyc 3
+    EmulatorCycles(CPUCycles: 3);
 }
 
 //0xF6
 func ORd8() -> Void {
     CPUStateInstance.registersState.a |= BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cycles
-    CPUStateInstance.registersState.pc+=1;
+    EmulatorCycles(CPUCycles: 1);
+    CPUStateInstance.registersState.pc += 1;
     if CPUStateInstance.registersState.a == 0 {
         CPUStateInstance.registersState.f = 0b10000000;
     }
@@ -2887,19 +2779,17 @@ func ORd8() -> Void {
 
 //0xF8
 func LDHLSPPlusR8() -> Void {
-    //emu cyc
-    //emu cyc maybe
+    EmulatorCycles(CPUCycles: 2);
+    //emu cyc may be 1 cycle instead of 2
     let value = BusRead(address: CPUStateInstance.registersState.pc);
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
     if (CPUStateInstance.registersState.sp & 0xF) + UInt16(value & 0xF) > 0x10 {
         halfCarry = 1;
     }
-    
     if UInt16(CPUStateInstance.registersState.sp & 0xFF) + UInt16(value & 0xFF) >= 0x100 {
         carryFlag = 1;
     }
-   
     CPUStateInstance.registersState.pc += 1;
     SetHLRegister(value: UInt16(Int(Int8(value)) + Int(CPUStateInstance.registersState.sp)));
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
@@ -2908,13 +2798,13 @@ func LDHLSPPlusR8() -> Void {
 //0xF9
 func LDSPHL() -> Void {
     CPUStateInstance.registersState.sp = GetHLRegister();
-    //emu cyc maybe
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0xFA
 func LDAa16() -> Void {
     CPUStateInstance.registersState.a = BusRead(address: FetchD16());
-    //emu cyc
+    EmulatorCycles(CPUCycles: 1);
 }
 //0xFB
 func FI() -> Void {
@@ -2924,23 +2814,20 @@ func FI() -> Void {
 //0xFE
 func CPd8() -> Void {
     var subtract = BusRead(address: CPUStateInstance.registersState.pc);
-    //emulator cyc
+    EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc+=1;
     let value = Int(CPUStateInstance.registersState.a) - Int(subtract);
     var equalToZero: UInt8 = 0;
     if value == 0 {
         equalToZero = 1;
     }
-    
     var halfCarry: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a & 0x0F) - Int(subtract & 0x0F)) < 0x0 {
         halfCarry = 1;
     }
-    
     var carryFlag: UInt8 = 0;
     if (Int(CPUStateInstance.registersState.a) - Int(subtract)) < 0 {
         carryFlag = 1;
     }
-    
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: carryFlag)
 }
