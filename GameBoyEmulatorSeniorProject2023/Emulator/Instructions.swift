@@ -267,18 +267,18 @@ func GenerateOpcodes() -> [Instruction] {
 
 var InstructionsTable = GenerateOpcodes();
 
-//set bits
+//set upper bits of carry flag
 func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
     let flagsArray: [UInt8] = [z, n, h, c];
-    var sum: UInt8 = 7;
+    var index: Int = 7;
     for bit in flagsArray {
         if bit == 1 {
-            CPUStateInstance.registersState.f |= (1 << sum);
+            CPUStateInstance.registersState.f |= (1 << index);
         }
         else if bit == 0 {
-            CPUStateInstance.registersState.f &= ~(1 << sum);
+            CPUStateInstance.registersState.f &= ~(1 << index);
         }
-        sum-=1;
+        index-=1;
     }
 }
 
@@ -292,8 +292,6 @@ func FetchD16() -> UInt16 {
     CPUStateInstance.registersState.pc &+= 2;
     return lowByte | (highByte << 8);
 }
-
-
 
 func IsZFlagSet() -> Bool {
     if CPUStateInstance.registersState.f & (1 << 7) == (1 << 7) {
@@ -411,7 +409,6 @@ func INCB() -> Void {
         equalToZero = 1;
     }
     var halfCarry: UInt8 = 0;
-    
     if CPUStateInstance.registersState.b & 0x0F == 0 {
         halfCarry = 1;
     }
@@ -437,7 +434,7 @@ func DECB() -> Void {
 func LDBd8() -> Void {
     CPUStateInstance.registersState.b = BusRead(address: CPUStateInstance.registersState.pc);
     EmulatorCycles(CPUCycles: 1);
-    CPUStateInstance.registersState.pc &+= 1;
+    CPUStateInstance.registersState.pc += 1;
 }
 
 //0x07 Rotate left. The old 7th bit will be put in teh carry flag
@@ -2767,7 +2764,7 @@ func ORd8() -> Void {
 func LDHLSPPlusR8() -> Void {
     EmulatorCycles(CPUCycles: 2);
     //emu cyc may be 1 cycle instead of 2
-    let value = BusRead(address: CPUStateInstance.registersState.pc);
+    var value = BusRead(address: CPUStateInstance.registersState.pc);
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
     if (CPUStateInstance.registersState.sp & 0xF) + UInt16(value & 0xF) > 0x10 {
@@ -2777,7 +2774,7 @@ func LDHLSPPlusR8() -> Void {
         carryFlag = 1;
     }
     CPUStateInstance.registersState.pc += 1;
-    SetHLRegister(value: UInt16(Int(Int8(value)) + Int(CPUStateInstance.registersState.sp)));
+    SetHLRegister(value: UInt16(truncatingIfNeeded: Int(Int8(bitPattern: value)) + Int(CPUStateInstance.registersState.sp)));
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
 }
 
