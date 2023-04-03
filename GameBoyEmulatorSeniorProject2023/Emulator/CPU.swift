@@ -64,7 +64,7 @@ func CPUStep() -> Bool{
     if !CPUStateInstance.halted {
         CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
         EmulatorCycles(CPUCycles: 1);
-        CPUStateInstance.registersState.pc+=1;
+        CPUStateInstance.registersState.pc += 1;
         InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
     }
     else {
@@ -72,14 +72,14 @@ func CPUStep() -> Bool{
         if CPUStateInstance.interruptFlags != 0 {
             CPUStateInstance.halted = false;
         }
+    }
         if CPUStateInstance.interruptMasterEnable {
-            
+            CPUHandleInterrupts();
             CPUStateInstance.enablingIME = false;
         }
         if CPUStateInstance.enablingIME {
             CPUStateInstance.interruptMasterEnable = true;
         }
-    }
     return true;
 }
 

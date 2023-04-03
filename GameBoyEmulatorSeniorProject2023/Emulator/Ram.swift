@@ -15,7 +15,7 @@ struct RAMState {
 var RAMStateInstance = RAMState();
 
 func WorkingRAMRead(address: UInt16) -> UInt8 {
-    let workingRAMAddress = address - 0xC000;
+    let workingRAMAddress = address &- 0xC000;
     if workingRAMAddress >= 0x2000 {
         print("invalid");
     }
@@ -23,17 +23,17 @@ func WorkingRAMRead(address: UInt16) -> UInt8 {
 }
 
 func WorkingRAMWrite(address: UInt16, value: UInt8) -> Void {
-    let workingRAMAddress = address - 0xC000;
+    let workingRAMAddress = address &- 0xC000;
     RAMStateInstance.workingRAM[Int(workingRAMAddress)] = value;
 }
 
 func HighRAMRead(address: UInt16) -> UInt8 {
-    let highRAMAddress = address - 0xFF80;
+    let highRAMAddress = address &- 0xFF80;
     return RAMStateInstance.highRAM[Int(highRAMAddress)];
 }
 
 func HighRAMWrite(address: UInt16, value: UInt8) -> Void {
-    let highRAMAddress = address - 0xFF80;
+    let highRAMAddress = address &- 0xFF80;
     RAMStateInstance.highRAM[Int(highRAMAddress)] = value;
 }
 

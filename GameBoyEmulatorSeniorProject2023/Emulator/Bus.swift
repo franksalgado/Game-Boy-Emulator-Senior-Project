@@ -88,7 +88,7 @@ func BusWrite(address: UInt16, value: UInt8) {
 
 func BusRead16Bit(address: UInt16) -> UInt16 {
     let lowByte: UInt16 = UInt16(BusRead(address: address));
-    let highByte: UInt16 = UInt16(BusRead(address: address+1));
+    let highByte: UInt16 = UInt16(BusRead(address: address + 1));
     return lowByte | (highByte << 8);
 }
 

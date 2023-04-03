@@ -157,4 +157,38 @@ CPURegisters(a: 0, f: 0, b: 1, c: 16, d: 192, e: 0, h: 116, l: 88, sp: 65534, pc
 \pard\tx642\pardeftab642\pardirnatural\partightenfactor0
 
 \f1\b0 \cf4 \cb3 \CocoaLigature1 \
-}
+\
+\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 i\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 ;\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 \cb3 CPUStep\cf4 \cb3 () -> \cf9 Bool\cf4 \{\
+print(\cf12 \cb3 "Interation: "\cf4 \cb3 , \cf5 i\cf4 , \cf12 \cb3 "\\n"\cf4 \cb3 );\
+    \cf5 i\cf4  += \cf6 \cb3 1\cf4 \cb3 ;\
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  !\cf5 CPUStateInstance\cf4 .halted \{\
+        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "First print\\n"\cf4 \cb3 , \cf12 \cb3 "\\nHL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()), \cf12 \cb3 "\\n"\cf4 \cb3 );\
+        \
+        \
+        \cf5 CPUStateInstance\cf4 .currentOpcode = BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc);\
+        \
+        \
+        print(\cf12 \cb3 "executing "\cf4 \cb3 ,  \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].\cf13 \cb3 name\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , \cf5 CPUStateInstance\cf4 .currentOpcode));\
+        \
+        \
+        EmulatorCycles(CPUCycles: \cf6 \cb3 1\cf4 \cb3 );\
+        \cf5 CPUStateInstance\cf4 .registersState.pc+=\cf6 \cb3 1\cf4 \cb3 ;\
+        \
+        \
+        print(\cf12 \cb3 "Next opcode: "\cf4 \cb3 , BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc));\
+        \cf8 \cb3 //TestRomWrite();\cf4 \cb3 \
+        \cf8 \cb3 //TestRomRead();\cf4 \cb3 \
+        \
+        \
+        \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].instructionFunction();\
+        \
+        \
+        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "second print\\n"\cf4 \cb3 , \cf12 \cb3 "\\nHL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()), \cf12 \cb3 "\\n"\cf4 \cb3 );}

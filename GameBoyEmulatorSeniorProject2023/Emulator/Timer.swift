@@ -26,7 +26,7 @@ var TimerStateInstance = TimerState();
 
 func TimerTick() -> Void {
     var previousDiv = TimerStateInstance.div;
-    TimerStateInstance.div += 1;
+    TimerStateInstance.div &+= 1;
     var timerUpdate: Bool = false;
     switch TimerStateInstance.tac & 0b11 {
     case 0b00:
@@ -42,7 +42,7 @@ func TimerTick() -> Void {
     }
 
     if timerUpdate && (TimerStateInstance.tac & (1 << 2)) != 0 {
-        TimerStateInstance.tima += 1;
+        TimerStateInstance.tima &+= 1;
 
         if TimerStateInstance.tima == 0xFF {
             TimerStateInstance.tima = TimerStateInstance.tma;

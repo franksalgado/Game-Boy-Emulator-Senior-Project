@@ -21,7 +21,8 @@ func StackPush16Bit(data: UInt16) -> Void {
 }
 
 func StackPop() -> UInt8 {
-    return BusRead(address: CPUStateInstance.registersState.sp)
+    CPUStateInstance.registersState.sp += 1;
+    return BusRead(address: (CPUStateInstance.registersState.sp &- 1))
 }
 
 func StackPop16Bit() -> UInt16 {

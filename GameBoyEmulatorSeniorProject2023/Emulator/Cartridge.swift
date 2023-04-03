@@ -37,7 +37,7 @@ func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
     
     var sizeInBytes: UInt32 = 0;
     for _ in romDataInArray {
-        sizeInBytes+=1;
+        sizeInBytes += 1;
     }
     
     let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
