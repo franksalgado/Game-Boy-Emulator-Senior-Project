@@ -241,7 +241,7 @@ func GenerateOpcodes() -> [Instruction] {
     table[0xe1] = Instruction(name: "POPHL", instructionFunction: POPHL);
     table[0xe2] = Instruction(name: "LDCAE2", instructionFunction: LDCAE2);
     table[0xe5] = Instruction(name: "PUSHHL", instructionFunction: PUSHHL);
-    table[0xe6] = Instruction(name: "", instructionFunction: ANDd8);
+    table[0xe6] = Instruction(name: "ANDd8", instructionFunction: ANDd8);
     table[0xe7] = Instruction(name: "RST20H", instructionFunction: {RSTnH(address: 0x20)});
     table[0xe8] = Instruction(name: "ADDSPr8", instructionFunction: ADDSPr8);
     table[0xe9] = Instruction(name: "JPHL", instructionFunction: JPHL);
@@ -258,8 +258,8 @@ func GenerateOpcodes() -> [Instruction] {
     table[0xf8] = Instruction(name: "LDHLSPPlusR8", instructionFunction: LDHLSPPlusR8);
     table[0xf9] = Instruction(name: "LDSPHL", instructionFunction: LDSPHL);
     table[0xfa] = Instruction(name: "LDAa16", instructionFunction: LDAa16);
-    table[0xfb] = Instruction(name: "FI", instructionFunction: FI);
-    table[0xfe] = Instruction(name: "", instructionFunction: CPd8);
+    table[0xfb] = Instruction(name: "EI", instructionFunction: EI);
+    table[0xfe] = Instruction(name: "CPd8", instructionFunction: CPd8);
     table[0xff] = Instruction(name: "RST38H", instructionFunction: {RSTnH(address: 0x38)});
     
     return table;
@@ -278,7 +278,7 @@ func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
         else if bit == 0 {
             CPUStateInstance.registersState.f &= ~(1 << index);
         }
-        index-=1;
+        index -= 1;
     }
 }
 
@@ -286,9 +286,8 @@ func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
 //Fetch 16 bit address to jump to. Since 8 bit value is stored at an address we have to combine the two bytes by
 func FetchD16() -> UInt16 {
     let lowByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc));
-    EmulatorCycles(CPUCycles: 1);
     let highByte: UInt16 = UInt16(BusRead(address: CPUStateInstance.registersState.pc + 1));
-    EmulatorCycles(CPUCycles: 1);
+    EmulatorCycles(CPUCycles: 2);
     CPUStateInstance.registersState.pc += 2;
     return lowByte | (highByte << 8);
 }
@@ -374,7 +373,7 @@ func SetDERegister(value: UInt16) -> Void {
 
 //used to initialize the instruction table and fill in spots that are not used
 func EmptySpot() -> Void {
-    print("😳\n");
+    print("illegal instruc 😳\n");
     exit(-5);
 }
 
@@ -470,7 +469,7 @@ func ADDHLnn(register: UInt16) -> Void {
         carryFlag = 1;
     }
     EmulatorCycles(CPUCycles: 1);
-    SetHLRegister(value: UInt16(value & 0xFFFF));
+    SetHLRegister(value: value & 0xFFFF);
     SetFlagsRegister(z: 2, n: 0, h: halfCarry, c: carryFlag);
 }
 
@@ -621,7 +620,7 @@ func RLA() -> Void {
 
 //0x18 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRr8() -> Void {
-    var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
+    let fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc = UInt16(truncatingIfNeeded: Int(CPUStateInstance.registersState.pc) + Int(fetchedData));
@@ -682,7 +681,7 @@ func RRA() -> Void {
 
 //0x20 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRNZr8() -> Void {
-    var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
+    let fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     EmulatorCycles(CPUCycles: 1);
     if !IsZFlagSet() {
@@ -774,7 +773,7 @@ func DAA() -> Void {
 
 //0x28 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRZr8() -> Void {
-    var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
+    let fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1;
     EmulatorCycles(CPUCycles: 1);
     if IsZFlagSet() {
@@ -845,7 +844,6 @@ func JRNCr8() -> Void {
 //0x31
 func LDSPa16() -> Void {
     CPUStateInstance.registersState.sp = FetchD16();
-    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x32
@@ -908,7 +906,7 @@ func SCF() -> Void {
 
 //0x38 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
 func JRCr8() -> Void {
-    var fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
+    let fetchedData = Int8(bitPattern: BusRead(address: CPUStateInstance.registersState.pc));
     CPUStateInstance.registersState.pc += 1
     EmulatorCycles(CPUCycles: 1);
     if IsCFlagSet() {
@@ -921,16 +919,6 @@ func JRCr8() -> Void {
 func DECSP() -> Void {
     CPUStateInstance.registersState.sp &-= 1;
     EmulatorCycles(CPUCycles: 1);
-    let value = CPUStateInstance.registersState.sp;
-    var equalToZero: UInt8 = 0;
-    if value == 0 {
-        equalToZero = 1;
-    }
-    var halfCarry: UInt8 = 0;
-    if value & 0x0F == 0x0F {
-        halfCarry = 1;
-    }
-    SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
 }
 
 // This function increments A register by 1. 0x3C
@@ -2723,8 +2711,6 @@ func ORd8() -> Void {
 
 //0xF8
 func LDHLSPPlusR8() -> Void {
-    EmulatorCycles(CPUCycles: 2);
-    //emu cyc may be 1 cycle instead of 2
     let value = BusRead(address: CPUStateInstance.registersState.pc);
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
@@ -2737,6 +2723,7 @@ func LDHLSPPlusR8() -> Void {
     CPUStateInstance.registersState.pc += 1;
     SetHLRegister(value: UInt16(truncatingIfNeeded: Int(Int8(bitPattern: value)) + Int(CPUStateInstance.registersState.sp)));
     SetFlagsRegister(z: 0, n: 0, h: halfCarry, c: carryFlag);
+    EmulatorCycles(CPUCycles: 2);
 }
 
 //0xF9
@@ -2751,7 +2738,7 @@ func LDAa16() -> Void {
     EmulatorCycles(CPUCycles: 1);
 }
 //0xFB
-func FI() -> Void {
+func EI() -> Void {
     CPUStateInstance.enablingIME = true;
 }
 

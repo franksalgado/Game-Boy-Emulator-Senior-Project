@@ -26,13 +26,13 @@ struct CPURegisters {
     var pc: UInt16;
     init() {
         a = 0x01;
-        f = 0;
-        b = 0;
-        c = 0;
+        f = 0xB0;
+        b = 0x0;
+        c = 0x13;
         d = 0;
-        e = 0;
-        h = 0;
-        l = 0;
+        e = 0xD8;
+        h = 0x01;
+        l = 0x4d;
         sp = 0xFFFE;
         pc = 0x100;
     }
@@ -65,6 +65,8 @@ func CPUStep() -> Bool{
         CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
         EmulatorCycles(CPUCycles: 1);
         CPUStateInstance.registersState.pc += 1;
+        TestRomWrite();
+        TestRomRead();
         InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
     }
     else {

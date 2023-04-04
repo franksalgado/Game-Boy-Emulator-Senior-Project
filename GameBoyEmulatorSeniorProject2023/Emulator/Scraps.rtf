@@ -44,20 +44,20 @@ for debugging\
 \cf5 CPUStateInstance\cf4 .\cf5 registersState\cf4 .\cf5 pc\cf4  = \cf9 UInt16\cf4 (\cf9 truncatingIfNeeded\cf4 : \cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .\cf5 registersState\cf4 .\cf5 pc\cf4 ) + \cf9 Int\cf4 (fetchedData));\
 
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 \cb3 CPUStep\cf4 \cb3 (\cf8 \cb3 /*CPUStateInstance: CPUState*/\cf4 \cb3 ) -> \cf9 Bool\cf4 \{\
+\f1\b0 \cf4  \cf11 CPUStep\cf4 (\cf8 /*CPUStateInstance: CPUState*/\cf4 ) -> \cf9 Bool\cf4 \{\
     
 \f0\b \cf2 if
 \f1\b0 \cf4  !\cf5 CPUStateInstance\cf4 .halted \{\
-        \cf10 print\cf4 (\cf12 \cb3 "Iteration \cf4 \cb3 \\(\cf5 i\cf4 )\cf12 \cb3 \\n"\cf4 \cb3 )\
-\cf5 i\cf4  += \cf6 \cb3 1\cf4 \cb3 ;\
-            print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "First print\\n"\cf4 \cb3 );\
+        \cf10 print\cf4 (\cf12 "Iteration \cf4 \\(\cf5 i\cf4 )\cf12 \\n"\cf4 )\
+\cf5 i\cf4  += \cf6 1\cf4 ;\
+            print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "First print\\n"\cf4 );\
         \cf5 CPUStateInstance\cf4 .currentOpcode = BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc);\
-        print(\cf12 \cb3 "executing "\cf4 \cb3 ,  \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].\cf13 \cb3 name\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , \cf5 CPUStateInstance\cf4 .currentOpcode));\
-        \cf8 \cb3 //emu cyc\cf4 \cb3 \
-        \cf5 CPUStateInstance\cf4 .registersState.pc+=\cf6 \cb3 1\cf4 \cb3 ;\
+        print(\cf12 "executing "\cf4 ,  \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].\cf13 name\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , \cf5 CPUStateInstance\cf4 .currentOpcode));\
+        \cf8 //emu cyc\cf4 \
+        \cf5 CPUStateInstance\cf4 .registersState.pc+=\cf6 1\cf4 ;\
         \cf10 print\cf4 (BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc));\
         \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].instructionFunction();\
-            print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "second print\\n"\cf4 \cb3 );\
+            print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "second print\\n"\cf4 );\
     \}\
     
 \f0\b \cf2 return
@@ -71,46 +71,41 @@ for debugging\
 \
 \
 \
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
-\cf8 \cb3 //print(UInt16(truncatingIfNeeded: UInt16(Int(537) + Int(Int8(bitPattern: BusRead(address: 537))))))\cf4 \cb3 \
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
-\cf10 print\cf4 (\cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 \cb3 518\cf4 \cb3 )))\
-\cf9 UInt16\cf4 (\cf9 truncatingIfNeeded\cf4 : \cf9 Int\cf4 (\cf6 \cb3 519\cf4 \cb3 ) + \cf9 Int\cf4 ( \cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 \cb3 518\cf4 \cb3 )) ) )\
+\cf8 //print(UInt16(truncatingIfNeeded: UInt16(Int(537) + Int(Int8(bitPattern: BusRead(address: 537))))))\cf4 \
+\cf10 print\cf4 (\cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 518\cf4 )))\
+\cf9 UInt16\cf4 (\cf9 truncatingIfNeeded\cf4 : \cf9 Int\cf4 (\cf6 519\cf4 ) + \cf9 Int\cf4 ( \cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 518\cf4 )) ) )\
 
 \f0\b \cf2 while
 \f1\b0 \cf4  !\cf5 CPUStateInstance\cf4 .halted \{\
-    \cf8 \cb3 // Code to be executed in each iteration\cf4 \cb3 \
+    \cf8 // Code to be executed in each iteration\cf4 \
     \
     CPUStep();\
 \}\
 \
 \
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
-\cf8 \cb3 //InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();\cf4 \cb3 \
+\cf8 //InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();\cf4 \
 \
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
 
 \f0\b \cf2 for
 \f1\b0 \cf4  i 
 \f0\b \cf2 in
-\f1\b0 \cf4  \cf6 \cb3 0x11\cf4 \cb3 ...\cf6 \cb3 0xFF\cf4 \cb3  \{\
-    \cf10 print\cf4 (\cf12 \cb3 "Iteration \cf4 \cb3 \\(\cf5 i\cf4 )\cf12 \cb3 \\n"\cf4 \cb3 )\
-    print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "First print\\n"\cf4 \cb3 , \cf12 \cb3 "HL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()));\
-    \cf8 \cb3 // Code to be executed in each iteration\cf4 \cb3 \
-    print(\cf12 \cb3 "executing "\cf4 \cb3 ,  \cf5 InstructionsTable\cf4 [\cf5 i\cf4 ].\cf13 \cb3 name\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , \cf5 i\cf4 ));\
+\f1\b0 \cf4  \cf6 0x11\cf4 ...\cf6 0xFF\cf4  \{\
+    \cf10 print\cf4 (\cf12 "Iteration \cf4 \\(\cf5 i\cf4 )\cf12 \\n"\cf4 )\
+    print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "First print\\n"\cf4 , \cf12 "HL: "\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , GetHLRegister()));\
+    \cf8 // Code to be executed in each iteration\cf4 \
+    print(\cf12 "executing "\cf4 ,  \cf5 InstructionsTable\cf4 [\cf5 i\cf4 ].\cf13 name\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , \cf5 i\cf4 ));\
     \cf5 InstructionsTable\cf4 [\cf5 i\cf4 ].instructionFunction();\
     \
-    print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "second print\\n"\cf4 \cb3 , \cf12 \cb3 "HL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()));\
+    print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "second print\\n"\cf4 , \cf12 "HL: "\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , GetHLRegister()));\
 \}\
 \
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
-\cf8 \cb3 /*\cf4 \cb3 \
-\cf8 \cb3 SetHLRegister(value: 0x9F0F)\cf4 \cb3 \
-\cf8 \cb3 print(CPUStateInstance.registersState, "First print\\n", "HL: ", String(format: "0x%X", GetHLRegister()));\cf4 \cb3 \
-\cf8 \cb3 print("executing ",  InstructionsTable[0x29].name);\cf4 \cb3 \
-\cf8 \cb3 InstructionsTable[0x29].instructionFunction();\cf4 \cb3 \
-\cf8 \cb3 print(CPUStateInstance.registersState, "second print\\n", "HL: ", String(format: "0x%X", GetHLRegister()));\cf4 \cb3 \
-\cf8 \cb3 */\
+\cf8 /*\cf4 \
+\cf8 SetHLRegister(value: 0x9F0F)\cf4 \
+\cf8 print(CPUStateInstance.registersState, "First print\\n", "HL: ", String(format: "0x%X", GetHLRegister()));\cf4 \
+\cf8 print("executing ",  InstructionsTable[0x29].name);\cf4 \
+\cf8 InstructionsTable[0x29].instructionFunction();\cf4 \
+\cf8 print(CPUStateInstance.registersState, "second print\\n", "HL: ", String(format: "0x%X", GetHLRegister()));\cf4 \
+\cf8 */\
 \
 \
 \
@@ -119,10 +114,9 @@ getcartridgestate\
 then generate instruction table\
 start emulator\
 cpu step\
-\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
 
-\f0\b \cf2 \cb3 var
-\f1\b0 \cf4  \cf11 \cb3 fileURL\cf4 \cb3 : \cf9 URL\cf4  = \cf9 URL\cf4 (\cf10 string\cf4 : \cf12 \cb3 "file:///Users/franksalgado/Documents/roms/01-special.gb"\cf4 \cb3 )!;\
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 fileURL\cf4 : \cf9 URL\cf4  = \cf9 URL\cf4 (\cf10 string\cf4 : \cf12 "file:///Users/franksalgado/Documents/roms/01-special.gb"\cf4 )!;\
 \
 \
 \
@@ -161,34 +155,44 @@ CPURegisters(a: 0, f: 0, b: 1, c: 16, d: 192, e: 0, h: 116, l: 88, sp: 65534, pc
 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 i\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 ;\
+\f1\b0 \cf4  \cf11 i\cf4  = \cf6 0\cf4 ;\
 
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 \cb3 CPUStep\cf4 \cb3 () -> \cf9 Bool\cf4 \{\
-print(\cf12 \cb3 "Interation: "\cf4 \cb3 , \cf5 i\cf4 , \cf12 \cb3 "\\n"\cf4 \cb3 );\
-    \cf5 i\cf4  += \cf6 \cb3 1\cf4 \cb3 ;\
+\f1\b0 \cf4  \cf11 CPUStep\cf4 () -> \cf9 Bool\cf4 \{\
+print(\cf12 "Interation: "\cf4 , \cf5 i\cf4 , \cf12 "\\n"\cf4 );\
+    \cf5 i\cf4  += \cf6 1\cf4 ;\
     
 \f0\b \cf2 if
 \f1\b0 \cf4  !\cf5 CPUStateInstance\cf4 .halted \{\
-        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "First print\\n"\cf4 \cb3 , \cf12 \cb3 "\\nHL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()), \cf12 \cb3 "\\n"\cf4 \cb3 );\
+        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "First print\\n"\cf4 , \cf12 "\\nHL: "\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , GetHLRegister()), \cf12 "\\n"\cf4 );\
         \
         \
         \cf5 CPUStateInstance\cf4 .currentOpcode = BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc);\
         \
         \
-        print(\cf12 \cb3 "executing "\cf4 \cb3 ,  \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].\cf13 \cb3 name\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , \cf5 CPUStateInstance\cf4 .currentOpcode));\
+        print(\cf12 "executing "\cf4 ,  \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].\cf13 name\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , \cf5 CPUStateInstance\cf4 .currentOpcode));\
         \
         \
-        EmulatorCycles(CPUCycles: \cf6 \cb3 1\cf4 \cb3 );\
-        \cf5 CPUStateInstance\cf4 .registersState.pc+=\cf6 \cb3 1\cf4 \cb3 ;\
+        EmulatorCycles(CPUCycles: \cf6 1\cf4 );\
+        \cf5 CPUStateInstance\cf4 .registersState.pc+=\cf6 1\cf4 ;\
         \
         \
-        print(\cf12 \cb3 "Next opcode: "\cf4 \cb3 , BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc));\
-        \cf8 \cb3 //TestRomWrite();\cf4 \cb3 \
-        \cf8 \cb3 //TestRomRead();\cf4 \cb3 \
+        print(\cf12 "Next opcode: "\cf4 , BusRead(address: \cf5 CPUStateInstance\cf4 .registersState.pc));\
+        \cf8 //TestRomWrite();\cf4 \
+        \cf8 //TestRomRead();\cf4 \
         \
         \
         \cf5 InstructionsTable\cf4 [\cf9 Int\cf4 (\cf5 CPUStateInstance\cf4 .currentOpcode)].instructionFunction();\
         \
         \
-        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 \cb3 "second print\\n"\cf4 \cb3 , \cf12 \cb3 "\\nHL: "\cf4 \cb3 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 \cb3 "0x%X"\cf4 \cb3 , GetHLRegister()), \cf12 \cb3 "\\n"\cf4 \cb3 );}
+        print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "second print\\n"\cf4 , \cf12 "\\nHL: "\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , GetHLRegister()), \cf12 "\\n"\cf4 );\
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+
+\fs28 \cf4 \cb3   
+\f0\b \cf2 let
+\f1\b0 \cf4  messageString = \cf9 String\cf4 (\cf5 TestRomMessage\cf4 .\cf10 map\cf4  \{ \cf9 Character\cf4 (\cf9 UnicodeScalar\cf4 ($0)) \})\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  messageString.\cf10 contains\cf4 (\cf12 "Passed"\cf4 ) \{\
+            \cf10 print\cf4 (messageString)\
+        \}}

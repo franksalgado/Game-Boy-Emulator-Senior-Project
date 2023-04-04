@@ -21,7 +21,7 @@ func InterruptHandle(address: UInt16) -> Void {
 }
 
 func InterruptCheck(address: UInt16, InterruptTypes: InterruptTypes) -> Bool {
-    if (CPUStateInstance.interruptFlags & InterruptTypes.rawValue != 0) && (CPUStateInstance.interruptEnableRegister & InterruptTypes.rawValue != 0) {
+    if ((CPUStateInstance.interruptFlags & InterruptTypes.rawValue) != 0) && ((CPUStateInstance.interruptEnableRegister & InterruptTypes.rawValue) != 0) {
         InterruptHandle(address: address);
         CPUStateInstance.interruptFlags &= ~InterruptTypes.rawValue;
         CPUStateInstance.halted = false;

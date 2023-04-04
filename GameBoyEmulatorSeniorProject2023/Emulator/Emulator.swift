@@ -22,11 +22,15 @@ var EmulatorStateInstance = EmulatorState();
 
 
 func EmulatorCycles(CPUCycles: Int) -> Void {
-    var i: Int = 0
-    while i < CPUCycles * 4 {
-        EmulatorStateInstance.ticks += 1;
+    var i: Int = 0;
+    var n: Int = 0;
+    while i < CPUCycles {
+        while n < 4 {
+            EmulatorStateInstance.ticks += 1;
+            TimerTick();
+            n += 1;
+        }
         i += 1;
-        TimerTick();
     }
 }
 func StartEmulator() -> Void {
