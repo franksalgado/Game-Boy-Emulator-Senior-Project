@@ -27,7 +27,7 @@ struct CPURegisters {
     init() {
         a = 0x01;
         f = 0xB0;
-        b = 0x0;
+        b = 0b10110000;
         c = 0x13;
         d = 0;
         e = 0xD8;

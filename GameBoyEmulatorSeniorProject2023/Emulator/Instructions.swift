@@ -184,14 +184,14 @@ func GenerateOpcodes() -> [Instruction] {
     table[0xa5] = Instruction(name: "ANDL", instructionFunction: ANDL);
     table[0xa6] = Instruction(name: "ANDHL", instructionFunction: ANDHL);
     table[0xa7] = Instruction(name: "ANDA", instructionFunction: ANDA);
-    table[0xa8] = Instruction(name: "XORB", instructionFunction: XORB);
-    table[0xa9] = Instruction(name: "XORC", instructionFunction: XORC);
-    table[0xaa] = Instruction(name: "XORD", instructionFunction: XORD);
-    table[0xab] = Instruction(name: "XORE", instructionFunction: XORE);
-    table[0xac] = Instruction(name: "XORH", instructionFunction: XORH);
-    table[0xad] = Instruction(name: "XORL", instructionFunction: XORL);
-    table[0xae] = Instruction(name: "XORHL", instructionFunction: XORHL);
-    table[0xaf] = Instruction(name: "XORA", instructionFunction: XORA);
+    table[0xa8] = Instruction(name: "XORB", instructionFunction: {XORn(register: CPUStateInstance.registersState.b)});
+    table[0xa9] = Instruction(name: "XORC", instructionFunction: {XORn(register: CPUStateInstance.registersState.c)});
+    table[0xaa] = Instruction(name: "XORD", instructionFunction: {XORn(register: CPUStateInstance.registersState.d)});
+    table[0xab] = Instruction(name: "XORE", instructionFunction: {XORn(register: CPUStateInstance.registersState.e)});
+    table[0xac] = Instruction(name: "XORH", instructionFunction: {XORn(register: CPUStateInstance.registersState.h)});
+    table[0xad] = Instruction(name: "XORL", instructionFunction: {XORn(register: CPUStateInstance.registersState.l)});
+    table[0xae] = Instruction(name: "XORHL", instructionFunction: {XORn(register: BusRead(address: GetHLRegister()))});
+    table[0xaf] = Instruction(name: "XORA", instructionFunction: {XORn(register: CPUStateInstance.registersState.a)});
     table[0xb0] = Instruction(name: "ORB", instructionFunction: ORB);
     table[0xb1] = Instruction(name: "ORC", instructionFunction: ORC);
     table[0xb2] = Instruction(name: "ORD", instructionFunction: ORD);
@@ -442,13 +442,9 @@ func RLCA() -> Void {
     if CPUStateInstance.registersState.a & (1 << 7) == (1 << 7) {
         carryFlag = 1;
     }
-    CPUStateInstance.registersState.a = (CPUStateInstance.registersState.a << 1);
+    CPUStateInstance.registersState.a <<= 1;
     CPUStateInstance.registersState.a |= carryFlag;
-    var equalToZero: UInt8 = 0;
-    if CPUStateInstance.registersState.a == 0 {
-        equalToZero = 1;
-    }
-    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: carryFlag);
+    SetFlagsRegister(z: 0, n: 0, h: 0, c: carryFlag);
 }
 
 //0x08 Write sp value to address (a16)
@@ -469,7 +465,7 @@ func ADDHLnn(register: UInt16) -> Void {
         carryFlag = 1;
     }
     EmulatorCycles(CPUCycles: 1);
-    SetHLRegister(value: value & 0xFFFF);
+    SetHLRegister(value: value);
     SetFlagsRegister(z: 2, n: 0, h: halfCarry, c: carryFlag);
 }
 
@@ -608,7 +604,10 @@ func LDDd8() -> Void {
 
 //0x17
 func RLA() -> Void {
-    let carryFlag: UInt8 = CPUStateInstance.registersState.a & (1 << 7);
+    var carryFlag: UInt8 = 0;
+    if CPUStateInstance.registersState.a & (1 << 7) == (1 << 7) {
+        carryFlag = 1;
+    }
     CPUStateInstance.registersState.a <<= 1;
     if IsCFlagSet() {
         //carryFlag = 1;
@@ -829,6 +828,7 @@ func LDLd8() -> Void {
 //0x2F. This is the complement of A register
 func CPL() -> Void {
     CPUStateInstance.registersState.a = ~CPUStateInstance.registersState.a;
+    SetFlagsRegister(z: 2, n: 1, h: 1, c: 2);
 }
 
 //0x30 Add BusRead(address: CPUStateInstance.registersState.pc) to pc address and jump to it. convert to signed 8 bit immediate value
@@ -857,11 +857,12 @@ func LDHLDecA() -> Void {
 //0x33
 func INCSP() -> Void {
     CPUStateInstance.registersState.sp &+= 1;
+    EmulatorCycles(CPUCycles: 1);
 }
 
 //0x34
 func INCHL0x34() -> Void {
-    let value = BusRead(address: GetHLRegister()) &+ 1;
+    let value: UInt8 = BusRead(address: GetHLRegister()) &+ 1;
     EmulatorCycles(CPUCycles: 2);
     BusWrite(address: GetHLRegister(), value: value);
     var equalToZero: UInt8 = 0;
@@ -876,7 +877,7 @@ func INCHL0x34() -> Void {
 }
 //0x35
 func DECHL0x35() -> Void {
-    let value = BusRead(address: GetHLRegister()) &- 1;
+    let value: UInt8 = BusRead(address: GetHLRegister()) &- 1;
     EmulatorCycles(CPUCycles: 2);
     BusWrite(address: GetHLRegister(), value: value & 0xFF);
     var equalToZero: UInt8 = 0;
@@ -944,7 +945,7 @@ func DECA() -> Void {
         equalToZero = 1;
     }
     var halfCarry: UInt8 = 0;
-    if value & 0x0F == 0 {
+    if value & 0x0F == 0x0F {
         halfCarry = 1;
     }
     SetFlagsRegister(z: equalToZero , n: 1, h: halfCarry, c: 2);
@@ -1717,84 +1718,17 @@ func ANDA() -> Void {
 }
 
 // 0xA8 - 0xAD
-func XORB() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.b {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.b;
-        CPUStateInstance.registersState.f = 0;
+func XORn(register: UInt8) -> Void {
+    let value = register;
+    CPUStateInstance.registersState.a ^= value;
+    var equalToZero: UInt8 = 0;
+    if CPUStateInstance.registersState.a == 0 {
+        equalToZero = 1;
     }
-}
-
-func XORC() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.c {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.c;
-        CPUStateInstance.registersState.f = 0;
+    if CPUStateInstance.currentOpcode == 0xAE {
+        EmulatorCycles(CPUCycles: 1);
     }
-}
-
-func XORD() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.d {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.d;
-        CPUStateInstance.registersState.f = 0;
-    }
-}
-
-func XORE() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.e {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.e;
-        CPUStateInstance.registersState.f = 0;
-    }
-}
-
-func XORH() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.h {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.h;
-        CPUStateInstance.registersState.f = 0;
-    }
-}
-
-func XORL() -> Void {
-    if CPUStateInstance.registersState.a == CPUStateInstance.registersState.l {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.l;
-        CPUStateInstance.registersState.f = 0;
-    }
-}
-
-
-func XORHL() -> Void {
-    let value = BusRead(address: GetHLRegister());
-    EmulatorCycles(CPUCycles: 1);
-    if CPUStateInstance.registersState.a == value {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= value;
-        CPUStateInstance.registersState.f = 0;
-    }
-}
-
-// XOR the value at register A by itself. This always results in 0 so I just hard coded it to always be 0. It also resets the flags register. 0xAF
-func XORA() -> Void {
-    CPUStateInstance.registersState.a = 0;
-    //CPUStateInstance.registersState.a ^= CPUStateInstance.registersState.a & 0xFF;
-    CPUStateInstance.registersState.f = 0b1000000;
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: 0);
 }
 
 
@@ -2272,7 +2206,7 @@ func SRACB(register: String) -> Void {
     if value & 1 == 1 {
         carryFlag = 1;
     }
-    value >>= 1;
+    value = (value >> 1) + (value & (1 << 7));
     if value == 0 {
         equalToZero = 1;
     }
@@ -2364,11 +2298,10 @@ func GetRegisterCB(opcode: UInt8) -> String {
 //0xCB
 func PREFIXCB() -> Void {
     let opcode = BusRead(address: CPUStateInstance.registersState.pc);
-    //emu cyc maybe
     CPUStateInstance.registersState.pc += 1;
     var register: String = GetRegisterCB(opcode: opcode);
     var bit: UInt8 = (opcode >> 3) & 0b111;
-    //EmulatorCycles(CPUCycles: 1);
+    EmulatorCycles(CPUCycles: 1);
     if opcode <= 0x07 {
         RLCCB(register: register);
     }
@@ -2657,13 +2590,12 @@ func XORd8() -> Void {
     let value = BusRead(address: CPUStateInstance.registersState.pc);
     EmulatorCycles(CPUCycles: 1);
     CPUStateInstance.registersState.pc += 1;
-    if CPUStateInstance.registersState.a == value {
-        CPUStateInstance.registersState.a = 0;
-        CPUStateInstance.registersState.f = 0b1000000;
-    } else {
-        CPUStateInstance.registersState.a ^= value;
-        CPUStateInstance.registersState.f = 0;
+    CPUStateInstance.registersState.a ^= value;
+    var equalToZero: UInt8 = 0;
+    if CPUStateInstance.registersState.a == 0 {
+        equalToZero = 1;
     }
+    SetFlagsRegister(z: equalToZero, n: 0, h: 0, c: 0);
 }
 
 //0xF0
@@ -2716,10 +2648,10 @@ func ORd8() -> Void {
 
 //0xF8
 func LDHLSPPlusR8() -> Void {
-    let value = BusRead(address: CPUStateInstance.registersState.pc);
+    let value: UInt8 = BusRead(address: CPUStateInstance.registersState.pc);
     var halfCarry: UInt8 = 0;
     var carryFlag: UInt8 = 0;
-    if (CPUStateInstance.registersState.sp & 0xF) + UInt16(value & 0xF) > 0x10 {
+    if (CPUStateInstance.registersState.sp & 0xF) + UInt16(value & 0xF) >= 0x10 {
         halfCarry = 1;
     }
     if UInt16(CPUStateInstance.registersState.sp & 0xFF) + UInt16(value & 0xFF) >= 0x100 {
