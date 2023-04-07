@@ -188,11 +188,67 @@ print(\cf12 "Interation: "\cf4 , \cf5 i\cf4 , \cf12 "\\n"\cf4 );\
         print(\cf5 CPUStateInstance\cf4 .registersState, \cf12 "second print\\n"\cf4 , \cf12 "\\nHL: "\cf4 , \cf9 String\cf4 (\cf9 format\cf4 : \cf12 "0x%X"\cf4 , GetHLRegister()), \cf12 "\\n"\cf4 );\
 \pard\tx692\pardeftab692\pardirnatural\partightenfactor0
 
-\fs28 \cf4 \cb3   
+\fs28 \cf4   
 \f0\b \cf2 let
 \f1\b0 \cf4  messageString = \cf9 String\cf4 (\cf5 TestRomMessage\cf4 .\cf10 map\cf4  \{ \cf9 Character\cf4 (\cf9 UnicodeScalar\cf4 ($0)) \})\
         
 \f0\b \cf2 if
 \f1\b0 \cf4  messageString.\cf10 contains\cf4 (\cf12 "Passed"\cf4 ) \{\
             \cf10 print\cf4 (messageString)\
-        \}}
+        \}\
+\
+\
+\
+\
+\
+ppu scraps\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 num1\cf4 \cb3 : \cf9 UInt8\cf4  = \cf6 \cb3 0b11111111\cf4 \cb3 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 num2\cf4 \cb3 : \cf9 UInt8\cf4  = \cf6 \cb3 0b00000000\cf4 \cb3 \
+\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 columnIndex\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 rowIndex\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 arrayInd\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 \cb3 line\cf4 \cb3 : \cf9 UInt16\cf4  = \cf6 \cb3 0\cf4 \cb3 \
+
+\f0\b \cf2 while
+\f1\b0 \cf4  \cf5 arrayInd\cf4  < \cf6 \cb3 64\cf4 \cb3  \{\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  byteVal1 = \cf6 \cb3 0\cf4 \cb3 \
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  byteVal2 = \cf6 \cb3 0\cf4 \cb3 \
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf5 num1\cf4  & (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) == (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) \{\
+        byteVal1 = \cf6 \cb3 1\cf4 \cb3 \
+    \}\
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf5 num2\cf4  & (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) == (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) \{\
+        byteVal1 = \cf6 \cb3 1\cf4 \cb3 \
+    \}\
+    \cf5 line\cf4  |= (byteVal1 << (\cf6 \cb3 2\cf4 \cb3  * \cf5 columnIndex\cf4 ) )\
+    \
+    \cf5 line\cf4  |= (byteVal2 << (\cf6 \cb3 2\cf4 \cb3  * (\cf5 columnIndex\cf4  - \cf6 \cb3 1\cf4 \cb3 ) )\
+    \cf5 columnIndex\cf4  -= \cf6 \cb3 1\cf4 \cb3 \
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf5 rowIndex\cf4  == \cf6 \cb3 0\cf4 \cb3  \{\
+        \cf5 rowIndex\cf4  = \cf6 \cb3 7\cf4 \cb3 \
+        \cf5 rowIndex\cf4  += \cf6 \cb3 1\cf4 \cb3 \
+    \}\
+    \cf5 arrayInd\cf4  += \cf6 \cb3 1\cf4 \cb3 ;\
+\}}

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		701A276129DE4DDC00842E99 /* PictureProcessingUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */; };
 		7020846129B81B7900D13C4D /* Scraps.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7020846029B81B7900D13C4D /* Scraps.rtf */; };
 		70B256C129D93F4D00DF5324 /* Interrupts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C029D93F4D00DF5324 /* Interrupts.swift */; };
 		70B256C529D9554200DF5324 /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C429D9554200DF5324 /* IO.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureProcessingUnit.swift; sourceTree = "<group>"; };
 		7020846029B81B7900D13C4D /* Scraps.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Scraps.rtf; sourceTree = "<group>"; };
 		70B256C029D93F4D00DF5324 /* Interrupts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interrupts.swift; sourceTree = "<group>"; };
 		70B256C429D9554200DF5324 /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				70B256C429D9554200DF5324 /* IO.swift */,
 				70B256C629D963A900DF5324 /* TestRoms.swift */,
 				70B256C829D968C400DF5324 /* Timer.swift */,
+				701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				70D639B829A5A08200D0855D /* GameScene.swift in Sources */,
 				70D639E629A5A10E00D0855D /* CPU.swift in Sources */,
 				70D639B229A5A08200D0855D /* AppDelegate.swift in Sources */,
+				701A276129DE4DDC00842E99 /* PictureProcessingUnit.swift in Sources */,
 				70B256C129D93F4D00DF5324 /* Interrupts.swift in Sources */,
 				70E247DD29CD280300BC828C /* Stack.swift in Sources */,
 				70B256C729D963A900DF5324 /* TestRoms.swift in Sources */,

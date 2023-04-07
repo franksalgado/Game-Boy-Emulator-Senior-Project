@@ -38,7 +38,7 @@ struct CPURegisters {
     }
     
 }
-//class to be mutable and contain same values inside and outide of classes;)
+//class to be mutable and contain same values inside and outide of classes
 class CPUState {
     var registersState = CPURegisters();
     var currentOpcode: UInt8;
