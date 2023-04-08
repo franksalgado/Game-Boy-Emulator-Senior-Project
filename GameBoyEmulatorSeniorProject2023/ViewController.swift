@@ -6,7 +6,7 @@
 //
 
 import Cocoa
-import SpriteKit
+import MetalKit
 import GameplayKit
 
 class ViewController: NSViewController {
