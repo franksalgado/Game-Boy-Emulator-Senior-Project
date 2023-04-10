@@ -25,7 +25,7 @@ struct TimerState {
 var TimerStateInstance = TimerState();
 
 func TimerTick() -> Void {
-    var previousDiv = TimerStateInstance.div;
+    let previousDiv = TimerStateInstance.div;
     TimerStateInstance.div &+= 1;
     var timerUpdate: Bool = false;
     switch TimerStateInstance.tac & 0b11 {
@@ -43,7 +43,6 @@ func TimerTick() -> Void {
 
     if timerUpdate && (TimerStateInstance.tac & (1 << 2)) != 0 {
         TimerStateInstance.tima &+= 1;
-
         if TimerStateInstance.tima == 0xFF {
             TimerStateInstance.tima = TimerStateInstance.tma;
             RequestInterrupt(InterruptTypes: .TIMER);
@@ -63,21 +62,20 @@ func TimerRead(address: UInt16) -> UInt8 {
     case 0xFF07:
         return TimerStateInstance.tac;
     default:
-        return 0; 
+        print("Failed Timer Read");
+        exit(-5);
     }
 }
 
 func TimerWrite(address: UInt16, value: UInt8) -> Void {
     switch(address) {
     case 0xFF04:
-
         TimerStateInstance.div = 0;
     case 0xFF05:
         TimerStateInstance.tima = value;
     case 0xFF06:
         TimerStateInstance.tma = value;
     case 0xFF07:
-
         TimerStateInstance.tac = value;
     default:
         break;

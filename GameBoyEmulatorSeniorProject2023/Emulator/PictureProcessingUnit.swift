@@ -23,6 +23,7 @@ func generateTileLine(firstByte: UInt8, secondByte: UInt8) -> UInt16 {
         if secondByte & binaryNumbers[i] != 0 {
             second |= (1 << (i * 2) );
         }
+        i += 1;
         return first | second;
     }
 }
