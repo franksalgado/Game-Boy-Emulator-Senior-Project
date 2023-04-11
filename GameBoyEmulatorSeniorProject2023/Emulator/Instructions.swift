@@ -263,8 +263,6 @@ func GenerateOpcodes() -> [Instruction] {
     return table;
 }
 
-var InstructionsTable = GenerateOpcodes();
-
 func IsValueEqualToZero(value: UInt8) -> UInt8 {
     if value == 0 {
         return 1;

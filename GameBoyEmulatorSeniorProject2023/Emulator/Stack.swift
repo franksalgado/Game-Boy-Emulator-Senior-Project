@@ -8,7 +8,7 @@
 import Foundation
 
 func StackPush(data: UInt8) -> Void {
-    CPUStateInstance.registersState.sp -= 1;
+    CPUStateInstance.registersState.sp &-= 1;
     BusWrite(address: CPUStateInstance.registersState.sp, value: data);
 }
 //First we push the high byte to the stack so we just shift right 8 bits and convert to UInt8.

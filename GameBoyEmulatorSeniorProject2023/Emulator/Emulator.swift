@@ -35,7 +35,7 @@ func EmulatorCycles(CPUCycles: Int) -> Void {
 }
 func StartEmulator() -> Void {
     while EmulatorStateInstance.running {
-        if !CPUStep() {
+        if !CPUStateInstance.CPUStep() {
             exit(-5);
         }
     }

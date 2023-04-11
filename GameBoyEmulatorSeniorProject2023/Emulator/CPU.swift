@@ -48,6 +48,7 @@ class CPUState {
     var enablingIME: Bool;
     var interruptEnableRegister: UInt8;
     var interruptFlags: UInt8;
+    let InstructionsTable = GenerateOpcodes();
      init(){
          currentOpcode = 0;
          halted = false;
@@ -59,31 +60,33 @@ class CPUState {
     }
 }
 var CPUStateInstance = CPUState();
-
-func CPUStep() -> Bool{
-    if !CPUStateInstance.halted {
-        CPUStateInstance.currentOpcode = BusRead(address: CPUStateInstance.registersState.pc);
-        EmulatorCycles(CPUCycles: 1);
-        CPUStateInstance.registersState.pc += 1;
-        TestRomWrite();
-        TestRomRead();
-        InstructionsTable[Int(CPUStateInstance.currentOpcode)].instructionFunction();
-    }
-    else {
-        EmulatorCycles(CPUCycles: 1);
-        if CPUStateInstance.interruptFlags != 0 {
-            CPUStateInstance.halted = false;
+extension CPUState {
+    func CPUStep() -> Bool{
+        if !self.halted {
+            self.currentOpcode = BusRead(address: self.registersState.pc);
+            EmulatorCycles(CPUCycles: 1);
+            self.registersState.pc += 1;
+            TestRomWrite();
+            TestRomRead();
+            self.InstructionsTable[Int(self.currentOpcode)].instructionFunction();
         }
-    }
-        if CPUStateInstance.interruptMasterEnable {
+        else {
+            EmulatorCycles(CPUCycles: 1);
+            if self.interruptFlags != 0 {
+                self.halted = false;
+            }
+        }
+        if self.interruptMasterEnable {
             CPUHandleInterrupts();
-            CPUStateInstance.enablingIME = false;
+            self.enablingIME = false;
         }
-        if CPUStateInstance.enablingIME {
-            CPUStateInstance.interruptMasterEnable = true;
+        if self.enablingIME {
+            self.interruptMasterEnable = true;
         }
-    return true;
+        return true;
+    }
 }
+
 
 func GetInterruptEnableRegister() -> UInt8 {
     return CPUStateInstance.interruptEnableRegister;

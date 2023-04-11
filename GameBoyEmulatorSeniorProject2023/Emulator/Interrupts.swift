@@ -8,7 +8,7 @@
 import Foundation
 
 enum InterruptTypes: UInt8 {
-case VBLANK = 1,
+case VBLANK = 1,//bit 1
      LCDSTAT = 2,
      TIMER = 4,
      SERIAL = 8,

@@ -33,7 +33,12 @@ func BusRead(address: UInt16) -> UInt8 {
         return CartridgeRead(address: address);
     }
     else if address < 0xE000 {
-        return WorkingRAMRead(address: address)
+        let workingRAMAddress = address &- 0xC000;
+        if workingRAMAddress >= 0x2000 {
+            print("invalid");
+            exit(-5)
+        }
+        return RAMStateInstance.workingRAM[Int(workingRAMAddress)];
     }
     else if address < 0xFE00 {
         //implement
@@ -50,7 +55,7 @@ func BusRead(address: UInt16) -> UInt8 {
     else if address == 0xFFFF {
         return GetInterruptEnableRegister();
     }
-    return HighRAMRead(address: address);
+    return RAMStateInstance.highRAM[Int(address &- 0xFF80)];
 }
 
 func BusWrite(address: UInt16, value: UInt8) {
@@ -64,7 +69,7 @@ func BusWrite(address: UInt16, value: UInt8) {
         CartridgeWrite(address: address, value: value);
     }
     else if address < 0xE000 {
-        WorkingRAMWrite(address: address, value: value);
+        RAMStateInstance.workingRAM[Int(address &- 0xC000)] = value;
     }
     else if address < 0xFE00 {
         //implement
@@ -82,9 +87,11 @@ func BusWrite(address: UInt16, value: UInt8) {
         SetInterruptEnableRegister(value: value);
     }
     else{
-        return HighRAMWrite(address: address, value: value);
+        RAMStateInstance.highRAM[Int(address &- 0xFF80)] = value;
     }
 }
+
+var SerialData: [UInt8] = [UInt8](repeating: 0, count: 2);
 
 func BusRead16Bit(address: UInt16) -> UInt16 {
     let lowByte: UInt16 = UInt16(BusRead(address: address));
@@ -96,3 +103,10 @@ func BusWrite16Bit(address: UInt16, value: UInt16) {
     BusWrite(address: address + 1, value: UInt8(value >> 8));
     BusWrite(address: address, value: UInt8(value & 0xFF));
 }
+
+struct RAMState {
+    var workingRAM: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x2000);
+    var highRAM: [UInt8] = Array<UInt8>(repeating: 0 , count: 0x80);
+}
+
+var RAMStateInstance = RAMState();

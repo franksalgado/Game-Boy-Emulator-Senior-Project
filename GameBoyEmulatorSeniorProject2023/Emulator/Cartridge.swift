@@ -7,7 +7,7 @@
 
 import Foundation
 //Use later implement functions to get this shit. 
-struct RomHeaderData {
+struct RomHeaderAndCartDataData {
     var fileURL: URL;
     var entry: [UInt8] = Array<UInt8>(repeating: 0 , count: 4);
     //logo has size 0x30
@@ -52,7 +52,6 @@ var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL);
 
 
 func CartridgeRead(address: UInt16) -> UInt8 {
-    //for now only rom tyoe supported
     return CartridgeStateInstance.romDataInMemory[Int(address)];
 }
 
