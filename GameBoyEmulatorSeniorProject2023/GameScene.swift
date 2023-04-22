@@ -20,27 +20,77 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
         
         self.lastUpdateTime = 0
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
+        renderTilemap();
+        /*
+        let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
+        pixelNode.position = CGPoint(x: 0, y: 0);
+        pixelNode.zPosition = 1;
+        self.addChild(pixelNode);
+         
+        let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
+        pixelNode.position = CGPoint(x: -80, y: 72);
+        pixelNode.zPosition = 5;
+        self.addChild(pixelNode);
+        let pixelNodea = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
+        pixelNodea.position = CGPoint(x: 48, y: -120);
+        pixelNodea.zPosition = 5;
+        self.addChild(pixelNodea);
+         */
+    }
+    
+    func getPixelColor(value: UInt8) -> SKColor {
+        switch value {
+        case 0:
+            return SKColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0);  // White
+            case 1:
+            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0);  // Light blue
+            case 2:
+            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0);   // Dark blue
+            case 3:
+            return SKColor(red: 0.0, green: 0.1, blue: 0.3, alpha: 1.0);    // Navy blue
+        default:
+            print("Invalid color index");
+            exit(-5);
+            }
         }
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
+    
+    
+    func renderTile(atPoint pos : CGPoint, tileIndex: UInt16, colorValue: UInt8) {
+       // let tileSize = CGSize(width: 8, height: 8);
+        // Loop through each pixel in the tile and set its color based on the UInt8 value
+        for y in (0..<8) {
+            var tileOffset:UInt16 = tileIndex * 16;
+            let rowOffset:UInt16  = UInt16(y * 2);
+            let address:UInt16 = 0x8000 + tileOffset + rowOffset;
+            var firstByte: UInt8 = BusRead(address: address);
+            var secondByte: UInt8 = BusRead(address: 0x8000 + (tileIndex * 16) + (y * 2) + 1);
+            let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
+            for x in 0..<8 {
+                let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
+                let pixelNode = SKSpriteNode(color: pixelColor, size: CGSize(width: 1, height: 1));
+                pixelNode.position = CGPoint(x: x + Int(pos.x), y:  Int(pos.y) - y);
+                pixelNode.zPosition = -1;
+                self.addChild(pixelNode);
+            }
         }
     }
+    
+    func renderTilemap() {
+        var x = -80;
+        var y = 72;
+        var tileIndex:UInt16 = 0;
+        while y != -120 {
+            x = -80;
+            while x != 48 {
+                renderTile(atPoint: CGPoint(x: x, y: y), tileIndex: tileIndex);
+                tileIndex += 1;
+                x += 8;
+            }
+            y -= 8;
+        }
+    }
+    
+    
     
     
     func touchDown(atPoint pos : CGPoint) {

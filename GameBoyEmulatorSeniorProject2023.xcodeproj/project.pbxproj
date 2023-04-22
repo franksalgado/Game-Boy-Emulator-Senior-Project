@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		701A276129DE4DDC00842E99 /* PictureProcessingUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */; };
 		7020846129B81B7900D13C4D /* Scraps.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7020846029B81B7900D13C4D /* Scraps.rtf */; };
-		708C44C129E1342A007ACC25 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708C44C029E1342A007ACC25 /* Renderer.swift */; };
-		708C44C329E13638007ACC25 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 708C44C229E13638007ACC25 /* Shaders.metal */; };
 		70B256C129D93F4D00DF5324 /* Interrupts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C029D93F4D00DF5324 /* Interrupts.swift */; };
 		70B256C529D9554200DF5324 /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C429D9554200DF5324 /* IO.swift */; };
 		70B256C729D963A900DF5324 /* TestRoms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C629D963A900DF5324 /* TestRoms.swift */; };
@@ -54,9 +52,6 @@
 /* Begin PBXFileReference section */
 		701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureProcessingUnit.swift; sourceTree = "<group>"; };
 		7020846029B81B7900D13C4D /* Scraps.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Scraps.rtf; sourceTree = "<group>"; };
-		708C44C029E1342A007ACC25 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		708C44C229E13638007ACC25 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
-		708C44C529E136A8007ACC25 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
 		70B256C029D93F4D00DF5324 /* Interrupts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interrupts.swift; sourceTree = "<group>"; };
 		70B256C429D9554200DF5324 /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
 		70B256C629D963A900DF5324 /* TestRoms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRoms.swift; sourceTree = "<group>"; };
@@ -138,9 +133,6 @@
 				70D639B529A5A08200D0855D /* Actions.sks */,
 				70D639B729A5A08200D0855D /* GameScene.swift */,
 				70D639B929A5A08200D0855D /* GameViewController.swift */,
-				708C44C029E1342A007ACC25 /* Renderer.swift */,
-				708C44C229E13638007ACC25 /* Shaders.metal */,
-				708C44C529E136A8007ACC25 /* ShaderTypes.h */,
 				70D639BB29A5A08300D0855D /* Assets.xcassets */,
 				70D639BD29A5A08300D0855D /* Main.storyboard */,
 				70D639C029A5A08300D0855D /* GameBoyEmulatorSeniorProject2023.entitlements */,
@@ -318,11 +310,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				708C44C129E1342A007ACC25 /* Renderer.swift in Sources */,
 				70D639EA29A5A18300D0855D /* Bus.swift in Sources */,
 				70D639BA29A5A08200D0855D /* GameViewController.swift in Sources */,
 				70D639EC29A5A1AA00D0855D /* Emulator.swift in Sources */,
-				708C44C329E13638007ACC25 /* Shaders.metal in Sources */,
 				70D639B829A5A08200D0855D /* GameScene.swift in Sources */,
 				70D639E629A5A10E00D0855D /* CPU.swift in Sources */,
 				70D639B229A5A08200D0855D /* AppDelegate.swift in Sources */,
@@ -518,7 +508,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = frank.GameBoyEmulatorSeniorProject2023;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = GameBoyEmulatorSeniorProject2023/ShaderTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -546,7 +536,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = frank.GameBoyEmulatorSeniorProject2023;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = GameBoyEmulatorSeniorProject2023/ShaderTypes.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

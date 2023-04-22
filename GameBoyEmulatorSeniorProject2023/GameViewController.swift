@@ -6,39 +6,30 @@
 //
 
 import Cocoa
-import MetalKit
+import SpriteKit
+import GameplayKit
 
-// Our macOS specific view controller
-class GameViewController: NSViewController {
+class ViewController: NSViewController {
 
-    var renderer: Renderer!
-    var mtkView: MTKView!
-
+    @IBOutlet var skView: SKView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        guard let mtkView = self.view as? MTKView else {
-            print("View attached to GameViewController is not an MTKView")
-            return
+
+        if let view = self.skView {
+            // Load the SKScene from 'GameScene.sks'
+            if let scene = SKScene(fileNamed: "GameScene") {
+                // Set the scale mode to scale to fit the window
+                scene.scaleMode = .aspectFill;
+                scene.size = CGSize(width: 160, height: 144);
+                // Present the scene
+                view.presentScene(scene);
+            }
+            
+            view.ignoresSiblingOrder = true;
+            
+            view.showsFPS = true;
+            view.showsNodeCount = true;
         }
-
-        // Select the device to render with.  We choose the default device
-        guard let defaultDevice = MTLCreateSystemDefaultDevice() else {
-            print("Metal is not supported on this device")
-            return
-        }
-
-        mtkView.device = defaultDevice
-
-        guard let newRenderer = Renderer(metalKitView: mtkView) else {
-            print("Renderer cannot be initialized")
-            return
-        }
-
-        renderer = newRenderer
-
-        renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
-
-        mtkView.delegate = renderer
     }
 }

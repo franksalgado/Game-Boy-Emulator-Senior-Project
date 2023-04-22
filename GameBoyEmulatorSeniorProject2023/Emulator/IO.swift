@@ -6,7 +6,7 @@
 //
 
 import Foundation
-var SerialData: [UInt8] = [UInt8](repeating: 0, count: 2);
+//var SerialData: [UInt8] = [UInt8](repeating: 0, count: 2);
 func IORead(address: UInt16) -> UInt8 {
     if address == 0xFF01 {
         return SerialData[0];

@@ -5,8 +5,22 @@
 //  Created by Frank Salgado on 4/5/23.
 //
 //PPU has 3 layers. Objects, Window, and Bakcground.
+/*red
+ #8BAC0F (dark green)
+ #9BBC0F (medium green)
+ #306230 (light green)
+ #0F380F (very light green)
+ */
 import Foundation
+var darkest: UInt32 = 0x8BAC0F;
+var darker: UInt32 = 0x9BBC0F;
+var dark: UInt32 = 0x306230;
+var light: UInt32 = 0x0F380F;
 
+enum PixelColors {
+    case blackAndWhite
+    case shadesOfGreen(darkest: UInt32, darker: UInt32, dark: UInt32, light: UInt32)
+}
 struct BitField {
     var bit0: Bool = false
     var bit1: Bool = false
@@ -37,20 +51,21 @@ struct OAMSpriteAttribute {
     var tileIndex: UInt8;
     var AttributesAndFlags: UInt8
 }
-
-func generateTileLine(firstByte: UInt8, secondByte: UInt8) -> UInt16 {
-    let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
+let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
+func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
     var i = 0;
-    var first: UInt16 = 0;
-    var second: UInt16 = 0;
+    var number: UInt8 = 0;
+    var array: [UInt8]
     while i < 8 {
+        number = 0;
         if firstByte & binaryNumbers[i] != 0 {
-            first |= (1 <<  (i * 2) + 1 );
+            number |= (1 <<  1);
         }
         if secondByte & binaryNumbers[i] != 0 {
-            second |= (1 << (i * 2) );
+            number |= 1;
         }
+        array[i] = number
         i += 1;
-        return first | second;
     }
+    return array;
 }

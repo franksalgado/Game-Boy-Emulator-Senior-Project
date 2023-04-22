@@ -28,13 +28,30 @@ struct CartridgeState {
     var romDataInArray: [UInt8];
     var romDataInMemory: UnsafeMutablePointer<UInt8>;
 }
+var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/roms/tetris.gb")!;
 
 func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
+    /*
+    let fileManager = FileManager.default
+    if fileManager.fileExists(atPath: "file:///Users/franksalgado/Documents/roms/tetris.gb" ) {
+        print("File Exists")
+    } else {
+        print(" not File Exists")
+    }
+
+    */
     //Get the data from the rom file
-    let data = try! Data(contentsOf: fileURL);
+
+    guard let data = try? Data(contentsOf: fileURL)
+    else {
+        print("forbidden cartridge read\n");
+        exit(-5);
+    }
+
     //Store data in 8 bit array form
     let romDataInArray = [UInt8](data);
     
+
     var sizeInBytes: UInt32 = 0;
     for _ in romDataInArray {
         sizeInBytes += 1;
@@ -47,7 +64,7 @@ func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
     return CartridgeState;
 }
 
-var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/roms/mem_timing.gb")!;
+
 var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL);
 
 
