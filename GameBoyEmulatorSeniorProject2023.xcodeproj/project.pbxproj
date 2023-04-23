@@ -28,7 +28,6 @@
 		70D639E829A5A13D00D0855D /* Instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639E729A5A13D00D0855D /* Instructions.swift */; };
 		70D639EA29A5A18300D0855D /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639E929A5A18300D0855D /* Bus.swift */; };
 		70D639EC29A5A1AA00D0855D /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639EB29A5A1AA00D0855D /* Emulator.swift */; };
-		70E247DB29CD19DA00BC828C /* Ram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E247DA29CD19DA00BC828C /* Ram.swift */; };
 		70E247DD29CD280300BC828C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E247DC29CD280300BC828C /* Stack.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,7 +74,6 @@
 		70D639E729A5A13D00D0855D /* Instructions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instructions.swift; sourceTree = "<group>"; };
 		70D639E929A5A18300D0855D /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		70D639EB29A5A1AA00D0855D /* Emulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
-		70E247DA29CD19DA00BC828C /* Ram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ram.swift; sourceTree = "<group>"; };
 		70E247DC29CD280300BC828C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,7 +164,6 @@
 				70D639E929A5A18300D0855D /* Bus.swift */,
 				70D639EB29A5A1AA00D0855D /* Emulator.swift */,
 				7020846029B81B7900D13C4D /* Scraps.rtf */,
-				70E247DA29CD19DA00BC828C /* Ram.swift */,
 				70E247DC29CD280300BC828C /* Stack.swift */,
 				70B256C029D93F4D00DF5324 /* Interrupts.swift */,
 				70B256C429D9554200DF5324 /* IO.swift */,
@@ -323,7 +320,6 @@
 				70B256C929D968C400DF5324 /* Timer.swift in Sources */,
 				70D639E829A5A13D00D0855D /* Instructions.swift in Sources */,
 				70D639E429A5A0AE00D0855D /* Cartridge.swift in Sources */,
-				70E247DB29CD19DA00BC828C /* Ram.swift in Sources */,
 				70B256C529D9554200DF5324 /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

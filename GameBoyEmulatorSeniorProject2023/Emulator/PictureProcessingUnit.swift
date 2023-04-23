@@ -55,7 +55,7 @@ let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b
 func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
     var i = 0;
     var number: UInt8 = 0;
-    var array: [UInt8]
+    var array: [UInt8] = Array<UInt8>(repeating: 0 , count: 8);
     while i < 8 {
         number = 0;
         if firstByte & binaryNumbers[i] != 0 {

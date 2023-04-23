@@ -2,10 +2,12 @@
 \cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Bold;\f1\fnil\fcharset0 Menlo-Regular;}
 {\colortbl;\red255\green255\blue255;\red252\green95\blue163;\red31\green31\blue36;\red255\green255\blue255;
 \red103\green183\blue164;\red208\green191\blue105;\red103\green183\blue164;\red108\green121\blue134;\red208\green168\blue255;
-\red161\green103\blue230;\red65\green161\blue192;\red252\green106\blue93;\red161\green103\blue230;}
+\red161\green103\blue230;\red65\green161\blue192;\red252\green106\blue93;\red161\green103\blue230;\red158\green241\blue221;
+\red84\green130\blue255;\red208\green168\blue255;}
 {\*\expandedcolortbl;;\csgenericrgb\c98839\c37355\c63833;\csgenericrgb\c12054\c12284\c14131;\csgenericrgb\c100000\c100000\c100000\c85000;
 \csgenericrgb\c40538\c71705\c64209;\csgenericrgb\c81498\c74939\c41233;\csgenericrgb\c40392\c71765\c64314;\csgenericrgb\c42394\c47462\c52518;\csgenericrgb\c81681\c65692\c99927;
-\csgenericrgb\c63137\c40392\c90196;\csgenericrgb\c25490\c63137\c75294;\csgenericrgb\c98912\c41558\c36568;\csgenericrgb\c63232\c40219\c90115;}
+\csgenericrgb\c63137\c40392\c90196;\csgenericrgb\c25490\c63137\c75294;\csgenericrgb\c98912\c41558\c36568;\csgenericrgb\c63232\c40219\c90115;\csgenericrgb\c62145\c94386\c86819;
+\csgenericrgb\c33019\c51127\c99859;\csgenericrgb\c81569\c65882\c100000;}
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \deftab593
 \pard\tx593\pardeftab593\pardirnatural\partightenfactor0
@@ -204,51 +206,218 @@ print(\cf12 "Interation: "\cf4 , \cf5 i\cf4 , \cf12 "\\n"\cf4 );\
 ppu scraps\
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 num1\cf4 \cb3 : \cf9 UInt8\cf4  = \cf6 \cb3 0b11111111\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 num1\cf4 : \cf9 UInt8\cf4  = \cf6 0b11111111\cf4 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 num2\cf4 \cb3 : \cf9 UInt8\cf4  = \cf6 \cb3 0b00000000\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 num2\cf4 : \cf9 UInt8\cf4  = \cf6 0b00000000\cf4 \
 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 columnIndex\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 columnIndex\cf4  = \cf6 0\cf4 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 rowIndex\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 rowIndex\cf4  = \cf6 0\cf4 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 arrayInd\cf4 \cb3  = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 arrayInd\cf4  = \cf6 0\cf4 \
 
 \f0\b \cf2 var
-\f1\b0 \cf4  \cf11 \cb3 line\cf4 \cb3 : \cf9 UInt16\cf4  = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  \cf11 line\cf4 : \cf9 UInt16\cf4  = \cf6 0\cf4 \
 
 \f0\b \cf2 while
-\f1\b0 \cf4  \cf5 arrayInd\cf4  < \cf6 \cb3 64\cf4 \cb3  \{\
+\f1\b0 \cf4  \cf5 arrayInd\cf4  < \cf6 64\cf4  \{\
     
 \f0\b \cf2 var
-\f1\b0 \cf4  byteVal1 = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  byteVal1 = \cf6 0\cf4 \
     
 \f0\b \cf2 var
-\f1\b0 \cf4  byteVal2 = \cf6 \cb3 0\cf4 \cb3 \
+\f1\b0 \cf4  byteVal2 = \cf6 0\cf4 \
     
 \f0\b \cf2 if
-\f1\b0 \cf4  \cf5 num1\cf4  & (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) == (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) \{\
-        byteVal1 = \cf6 \cb3 1\cf4 \cb3 \
+\f1\b0 \cf4  \cf5 num1\cf4  & (\cf6 1\cf4  << \cf5 columnIndex\cf4 ) == (\cf6 1\cf4  << \cf5 columnIndex\cf4 ) \{\
+        byteVal1 = \cf6 1\cf4 \
     \}\
     
 \f0\b \cf2 if
-\f1\b0 \cf4  \cf5 num2\cf4  & (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) == (\cf6 \cb3 1\cf4 \cb3  << \cf5 columnIndex\cf4 ) \{\
-        byteVal1 = \cf6 \cb3 1\cf4 \cb3 \
+\f1\b0 \cf4  \cf5 num2\cf4  & (\cf6 1\cf4  << \cf5 columnIndex\cf4 ) == (\cf6 1\cf4  << \cf5 columnIndex\cf4 ) \{\
+        byteVal1 = \cf6 1\cf4 \
     \}\
-    \cf5 line\cf4  |= (byteVal1 << (\cf6 \cb3 2\cf4 \cb3  * \cf5 columnIndex\cf4 ) )\
+    \cf5 line\cf4  |= (byteVal1 << (\cf6 2\cf4  * \cf5 columnIndex\cf4 ) )\
     \
-    \cf5 line\cf4  |= (byteVal2 << (\cf6 \cb3 2\cf4 \cb3  * (\cf5 columnIndex\cf4  - \cf6 \cb3 1\cf4 \cb3 ) )\
-    \cf5 columnIndex\cf4  -= \cf6 \cb3 1\cf4 \cb3 \
+    \cf5 line\cf4  |= (byteVal2 << (\cf6 2\cf4  * (\cf5 columnIndex\cf4  - \cf6 1\cf4 ) )\
+    \cf5 columnIndex\cf4  -= \cf6 1\cf4 \
     
 \f0\b \cf2 if
-\f1\b0 \cf4  \cf5 rowIndex\cf4  == \cf6 \cb3 0\cf4 \cb3  \{\
-        \cf5 rowIndex\cf4  = \cf6 \cb3 7\cf4 \cb3 \
-        \cf5 rowIndex\cf4  += \cf6 \cb3 1\cf4 \cb3 \
+\f1\b0 \cf4  \cf5 rowIndex\cf4  == \cf6 0\cf4  \{\
+        \cf5 rowIndex\cf4  = \cf6 7\cf4 \
+        \cf5 rowIndex\cf4  += \cf6 1\cf4 \
     \}\
-    \cf5 arrayInd\cf4  += \cf6 \cb3 1\cf4 \cb3 ;\
-\}}
+    \cf5 arrayInd\cf4  += \cf6 1\cf4 ;\
+\}\
+\
+\
+\
+\
+\
+\pard\tx791\pardeftab791\pardirnatural\partightenfactor0
+
+\f0\b\fs32 \cf2 \cb3 func
+\f1\b0 \cf4  \cf11 InitializeCartridgeState\cf4 () -> \cf14 CartridgeState\cf4  \{\
+    \cf8 /*\cf4 \
+\cf8     let fileManager = FileManager.default\cf4 \
+\cf8     if fileManager.fileExists(atPath: "\cf15 file:///Users/franksalgado/Documents/roms/tetris.gb\cf8 " ) \{\cf4 \
+\cf8         print("File Exists")\cf4 \
+\cf8     \} else \{\cf4 \
+\cf8         print(" not File Exists")\cf4 \
+\cf8     \}\cf4 \
+\
+\cf8     */\cf4 \
+    \cf8 //Get the data from the rom file\cf4 \
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  fileURL: \cf9 URL\cf4  = \cf9 URL\cf4 (\cf10 string\cf4 : \cf12 "file:///Users/franksalgado/Documents/roms/1.gb"\cf4 )!;\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  data = 
+\f0\b \cf2 try
+\f1\b0 \cf4 ! \cf9 Data\cf4 (\cf10 contentsOf\cf4 : fileURL)\
+\
+    \cf8 //Store data in 8 bit array form\cf4 \
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  romDataInArray = [\cf9 UInt8\cf4 ](data);\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  sizeInBytes: \cf9 UInt32\cf4  = \cf6 0\cf4 ;\
+    
+\f0\b \cf2 for
+\f1\b0 \cf4  _ 
+\f0\b \cf2 in
+\f1\b0 \cf4  romDataInArray \{\
+        sizeInBytes += \cf6 1\cf4 ;\
+    \}\
+    \
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  romDataInMemory = \cf9 UnsafeMutablePointer\cf4 <\cf9 UInt8\cf4 >.\cf10 allocate\cf4 (\cf10 capacity\cf4 : \cf9 Int\cf4 (sizeInBytes));\
+    romDataInMemory.\cf10 initialize\cf4 (\cf10 from\cf4 : romDataInArray, \cf10 count\cf4 : \cf9 Int\cf4 (sizeInBytes));\
+    \cf8 //memcpy(romDataInMemory, romDataInArray, Int(sizeInBytes));\cf4 \
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  CartridgeState = \cf14 CartridgeState\cf4 (\cf7 romSize\cf4 : sizeInBytes, \cf7 romDataInArray\cf4 : romDataInArray, \cf7 romDataInMemory\cf4 : romDataInMemory);\
+    print(\cf12 "Hi"\cf4 , \cf5 CartridgeStateInstance\cf4 .\cf5 romSize\cf4 );\
+    
+\f0\b \cf2 return
+\f1\b0 \cf4  CartridgeState;\
+\}\
+\
+\
+\
+\
+ 
+\f0\b \cf2 override
+\f1\b0 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 sceneDidLoad\cf4 () \{\
+        \
+        
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf5 lastUpdateTime\cf4  = \cf6 0\cf4 \
+        \cf7 renderTilemap\cf4 ();\
+        \cf8 /*\cf4 \
+\cf8         let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));\cf4 \
+\cf8         pixelNode.position = CGPoint(x: 0, y: 0);\cf4 \
+\cf8         pixelNode.zPosition = 1;\cf4 \
+\cf8         self.addChild(pixelNode);\cf4 \
+\cf8          \cf4 \
+\cf8         let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));\cf4 \
+\cf8         pixelNode.position = CGPoint(x: -80, y: 72);\cf4 \
+\cf8         pixelNode.zPosition = 5;\cf4 \
+\cf8         self.addChild(pixelNode);\cf4 \
+\cf8         let pixelNodea = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));\cf4 \
+\cf8         pixelNodea.position = CGPoint(x: 48, y: -120);\cf4 \
+\cf8         pixelNodea.zPosition = 5;\cf4 \
+\cf8         self.addChild(pixelNodea);\cf4 \
+\cf8          */\cf4 \
+    \}\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 InitializeCartridgeState\cf4 () -> \cf14 CartridgeState\cf4  \{\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  fileManager = \cf16 \cb3 FileManager\cf4 \cb3 ()\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  openPanel = \cf16 \cb3 NSOpenPanel\cf4 \cb3 ()\
+    openPanel.\cf13 \cb3 allowedFileTypes\cf4 \cb3  = [\cf12 "gb"\cf4 ]\
+    openPanel.\cf13 \cb3 canChooseFiles\cf4 \cb3  = 
+\f0\b \cf2 true
+\f1\b0 \cf4 \
+    openPanel.\cf13 \cb3 canChooseDirectories\cf4 \cb3  = 
+\f0\b \cf2 false
+\f1\b0 \cf4 \
+    \
+    
+\f0\b \cf2 guard
+\f1\b0 \cf4  openPanel.\cf10 runModal\cf4 () == .\cf13 \cb3 OK\cf4 \cb3  
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+        \cf10 exit\cf4 (-\cf6 5\cf4 )\
+    \}\
+    \
+    
+\f0\b \cf2 guard
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  url = openPanel.\cf13 \cb3 urls\cf4 \cb3 .\cf10 first\cf4  
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+        \cf10 exit\cf4 (-\cf6 5\cf4 )\
+    \}\
+    \
+    
+\f0\b \cf2 do
+\f1\b0 \cf4  \{\
+        \cf10 print\cf4 (\cf12 "Initcartexecuted"\cf4 )\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  data = 
+\f0\b \cf2 try
+\f1\b0 \cf4  \cf9 Data\cf4 (\cf10 contentsOf\cf4 : url);\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  romDataInArray = [\cf9 UInt8\cf4 ](data);\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  sizeInBytes = \cf9 UInt32\cf4 (romDataInArray.\cf13 \cb3 count\cf4 \cb3 );\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  romDataInMemory = \cf9 UnsafeMutablePointer\cf4 <\cf9 UInt8\cf4 >.\cf10 allocate\cf4 (\cf10 capacity\cf4 : \cf9 Int\cf4 (sizeInBytes))\
+        romDataInMemory.\cf10 initialize\cf4 (\cf10 from\cf4 : romDataInArray, \cf10 count\cf4 : \cf9 Int\cf4 (sizeInBytes))\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  cartridgeState = \cf14 CartridgeState\cf4 (\cf7 romSize\cf4 : sizeInBytes, \cf7 romDataInArray\cf4 : romDataInArray, \cf7 romDataInMemory\cf4 : romDataInMemory)\
+        \cf10 print\cf4 (cartridgeState.\cf5 romSize\cf4 )\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  cartridgeState\
+    \} 
+\f0\b \cf2 catch
+\f1\b0 \cf4  \{\
+        \cf10 print\cf4 (\cf12 "Error reading file: \cf4 \\(error.\cf13 \cb3 localizedDescription\cf4 \cb3 )\cf12 "\cf4 )\
+        \cf10 exit\cf4 (-\cf6 5\cf4 )\
+    \}\
+\}\
+\
+\
+}

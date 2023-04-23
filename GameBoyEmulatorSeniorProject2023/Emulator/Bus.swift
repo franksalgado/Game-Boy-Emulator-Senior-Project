@@ -27,7 +27,7 @@ func BusRead(address: UInt16) -> UInt8 {
         return CartridgeRead(address: address);
     }
     else if address < 0xA000 {
-       // implement
+        return PPUStateInstance.vram[Int(address) - 0x8000];
     }
     else if address < 0xC000 {
         return CartridgeRead(address: address);
@@ -63,7 +63,7 @@ func BusWrite(address: UInt16, value: UInt8) {
         CartridgeWrite(address: address, value: value);
     }
     else if address < 0xA000 {
-        //implement
+        PPUStateInstance.vram[Int(address) - 0x8000] = value;
     }
     else if address < 0xC000 {
         CartridgeWrite(address: address, value: value);
@@ -110,3 +110,8 @@ struct RAMState {
 }
 
 var RAMStateInstance = RAMState();
+
+struct PPUState {
+    var vram: [UInt8] = Array<UInt8>(repeating: 0, count: 0x2000);
+}
+var PPUStateInstance = PPUState();

@@ -66,8 +66,8 @@ extension CPUState {
             self.currentOpcode = BusRead(address: self.registersState.pc);
             EmulatorCycles(CPUCycles: 1);
             self.registersState.pc += 1;
-            TestRomWrite();
-            TestRomRead();
+            //TestRomWrite();
+            //TestRomRead();
             self.InstructionsTable[Int(self.currentOpcode)].instructionFunction();
         }
         else {

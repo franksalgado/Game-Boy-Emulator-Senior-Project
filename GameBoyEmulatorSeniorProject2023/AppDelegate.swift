@@ -11,9 +11,13 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    
+    var test = CartridgeStateInstance
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        //StartEmulator()
+
+        DispatchQueue.global().async {
+            // Call the StartEmulator function with the necessary arguments
+            StartEmulator(CartridgeStateInstance: CartridgeStateInstance, CPUStateInstance: CPUStateInstance, SerialData: SerialData, RAMStateInstance: RAMStateInstance, TestRomMessage: TestRomMessage, MessageSize: MessageSize, TimerStateInstance: TimerStateInstance, PPUStateInstance:  PPUStateInstance)
+        }
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {

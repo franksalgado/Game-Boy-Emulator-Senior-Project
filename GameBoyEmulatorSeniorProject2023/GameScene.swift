@@ -18,25 +18,10 @@ class GameScene: SKScene {
     private var spinnyNode : SKShapeNode?
     
     override func sceneDidLoad() {
-        
-        self.lastUpdateTime = 0
+           self.lastUpdateTime = 0
         renderTilemap();
-        /*
-        let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
-        pixelNode.position = CGPoint(x: 0, y: 0);
-        pixelNode.zPosition = 1;
-        self.addChild(pixelNode);
-         
-        let pixelNode = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
-        pixelNode.position = CGPoint(x: -80, y: 72);
-        pixelNode.zPosition = 5;
-        self.addChild(pixelNode);
-        let pixelNodea = SKSpriteNode(color: .red, size: CGSize(width: 1, height: 1));
-        pixelNodea.position = CGPoint(x: 48, y: -120);
-        pixelNodea.zPosition = 5;
-        self.addChild(pixelNodea);
-         */
-    }
+       }
+
     
     func getPixelColor(value: UInt8) -> SKColor {
         switch value {
@@ -54,16 +39,19 @@ class GameScene: SKScene {
             }
         }
     
+    func tileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 {
+        let tileOffset:UInt16 = tileIndex * 16;
+        let rowOffset:UInt16  = UInt16(y * 2);
+        let address:UInt16 = 0x8000 + tileOffset + rowOffset;
+        return BusRead(address: address);
+    }
     
-    func renderTile(atPoint pos : CGPoint, tileIndex: UInt16, colorValue: UInt8) {
+    func renderTile(atPoint pos : CGPoint, tileIndex: UInt16) {
        // let tileSize = CGSize(width: 8, height: 8);
         // Loop through each pixel in the tile and set its color based on the UInt8 value
         for y in (0..<8) {
-            var tileOffset:UInt16 = tileIndex * 16;
-            let rowOffset:UInt16  = UInt16(y * 2);
-            let address:UInt16 = 0x8000 + tileOffset + rowOffset;
-            var firstByte: UInt8 = BusRead(address: address);
-            var secondByte: UInt8 = BusRead(address: 0x8000 + (tileIndex * 16) + (y * 2) + 1);
+            let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);
+            let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);
             let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
             for x in 0..<8 {
                 let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
@@ -158,5 +146,11 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
+        for child in self.children {
+            // Remove the node from the parent
+            child.removeFromParent()
+        }
+        print("displayrun")
+        renderTilemap();
     }
 }

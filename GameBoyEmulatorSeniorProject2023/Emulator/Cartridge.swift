@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Cocoa
 //Use later implement functions to get this shit. 
 struct RomHeaderAndCartDataData {
     var fileURL: URL;
@@ -28,45 +29,41 @@ struct CartridgeState {
     var romDataInArray: [UInt8];
     var romDataInMemory: UnsafeMutablePointer<UInt8>;
 }
-var fileURL: URL = URL(string: "file:///Users/franksalgado/Documents/roms/tetris.gb")!;
 
-func InitializeCartridgeState(fileURL: URL ) -> CartridgeState {
-    /*
-    let fileManager = FileManager.default
-    if fileManager.fileExists(atPath: "file:///Users/franksalgado/Documents/roms/tetris.gb" ) {
-        print("File Exists")
-    } else {
-        print(" not File Exists")
-    }
 
-    */
-    //Get the data from the rom file
-
-    guard let data = try? Data(contentsOf: fileURL)
-    else {
-        print("forbidden cartridge read\n");
-        exit(-5);
-    }
-
-    //Store data in 8 bit array form
-    let romDataInArray = [UInt8](data);
+func InitializeCartridgeState() -> CartridgeState {
+    let fileManager = FileManager()
+    let openPanel = NSOpenPanel()
+    openPanel.allowedFileTypes = ["gb"]
+    openPanel.canChooseFiles = true
+    openPanel.canChooseDirectories = false
     
-
-    var sizeInBytes: UInt32 = 0;
-    for _ in romDataInArray {
-        sizeInBytes += 1;
+    guard openPanel.runModal() == .OK else {
+        exit(-5)
     }
     
-    let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
-    romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
-    //memcpy(romDataInMemory, romDataInArray, Int(sizeInBytes));
-    let CartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
-    return CartridgeState;
+    guard let url = openPanel.urls.first else {
+        exit(-5)
+    }
+    
+    do {
+        print("Initcartexecuted")
+        let data = try Data(contentsOf: url);
+        let romDataInArray = [UInt8](data);
+        let sizeInBytes = UInt32(romDataInArray.count);
+        let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes))
+        romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes))
+        let cartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory)
+        print(cartridgeState.romSize)
+        return cartridgeState
+    } catch {
+        print("Error reading file: \(error.localizedDescription)")
+        exit(-5)
+    }
 }
 
 
-var CartridgeStateInstance = InitializeCartridgeState(fileURL: fileURL);
-
+var CartridgeStateInstance = InitializeCartridgeState();
 
 func CartridgeRead(address: UInt16) -> UInt8 {
     return CartridgeStateInstance.romDataInMemory[Int(address)];
