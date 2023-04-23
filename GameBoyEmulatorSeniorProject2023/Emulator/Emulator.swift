@@ -30,6 +30,7 @@ func EmulatorCycles(CPUCycles: Int) -> Void {
             TimerTick();
             n += 1;
         }
+        DMATick();
         i += 1;
     }
 }

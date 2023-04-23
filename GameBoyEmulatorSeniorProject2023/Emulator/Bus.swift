@@ -45,6 +45,9 @@ func BusRead(address: UInt16) -> UInt8 {
     }
     else if address < 0xFEA0 {
        // ppu
+        if DMATransferring() {
+            return 0xFF;
+        }
     }
     else if address < 0xFF00 {
         //unusable
@@ -75,7 +78,10 @@ func BusWrite(address: UInt16, value: UInt8) {
         //implement
     }
     else if address < 0xFEA0 {
-        ////ppu
+        //ppu
+            if DMATransferring() {
+        return;
+        }
     }
     else if address < 0xFF00 {
         //unusable
@@ -111,7 +117,4 @@ struct RAMState {
 
 var RAMStateInstance = RAMState();
 
-struct PPUState {
-    var vram: [UInt8] = Array<UInt8>(repeating: 0, count: 0x2000);
-}
-var PPUStateInstance = PPUState();
+

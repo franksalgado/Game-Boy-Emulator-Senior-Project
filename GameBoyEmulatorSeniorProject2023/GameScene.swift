@@ -47,7 +47,7 @@ class GameScene: SKScene {
                 let pixelColor: SKColor = getPixelColor(value: colorValue);
                 let pixelNode = SKSpriteNode(color: pixelColor, size: CGSize(width: 1, height: 1));
                 pixelNode.position = CGPoint(x: x + Int(pos.x), y:  Int(pos.y) - y);
-                pixelNode.zPosition = -1;
+                pixelNode.zPosition = -0.1;
                 pixelNodes.append(pixelNode);
                 self.addChild(pixelNode);
             }

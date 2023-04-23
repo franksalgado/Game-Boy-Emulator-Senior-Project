@@ -28,6 +28,7 @@
 		70D639E829A5A13D00D0855D /* Instructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639E729A5A13D00D0855D /* Instructions.swift */; };
 		70D639EA29A5A18300D0855D /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639E929A5A18300D0855D /* Bus.swift */; };
 		70D639EC29A5A1AA00D0855D /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639EB29A5A1AA00D0855D /* Emulator.swift */; };
+		70DBF75E29F52753004091FB /* DirectMemoryAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */; };
 		70E247DD29CD280300BC828C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E247DC29CD280300BC828C /* Stack.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,7 @@
 		70D639E729A5A13D00D0855D /* Instructions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instructions.swift; sourceTree = "<group>"; };
 		70D639E929A5A18300D0855D /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		70D639EB29A5A1AA00D0855D /* Emulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
+		70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectMemoryAccess.swift; sourceTree = "<group>"; };
 		70E247DC29CD280300BC828C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +172,7 @@
 				70B256C629D963A900DF5324 /* TestRoms.swift */,
 				70B256C829D968C400DF5324 /* Timer.swift */,
 				701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */,
+				70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70D639EA29A5A18300D0855D /* Bus.swift in Sources */,
+				70DBF75E29F52753004091FB /* DirectMemoryAccess.swift in Sources */,
 				70D639BA29A5A08200D0855D /* GameViewController.swift in Sources */,
 				70D639EC29A5A1AA00D0855D /* Emulator.swift in Sources */,
 				70D639B829A5A08200D0855D /* GameScene.swift in Sources */,

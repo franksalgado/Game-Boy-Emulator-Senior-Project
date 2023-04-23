@@ -27,14 +27,17 @@ func IOWrite(address: UInt16, value: UInt8) {
     if address == 0xFF01 {
         SerialData[0] = value;
     }
-    else if address == 0xFF02 {
+     if address == 0xFF02 {
         SerialData[1] = value;
     }
-    else if address >= 0xFF04 && address <= 0xFF07 {
+     if address >= 0xFF04 && address <= 0xFF07 {
         TimerWrite(address: address, value: value);
     }
-    else if address == 0xFF0F {
+    if address == 0xFF0F {
         SetInterruptFlags(value: value);
+    }
+    if address == 0xFF46 {
+        InitializeDMAState(start: value);
     }
 }
 
