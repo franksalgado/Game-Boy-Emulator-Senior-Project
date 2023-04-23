@@ -261,7 +261,7 @@ ppu scraps\
 \
 \pard\tx791\pardeftab791\pardirnatural\partightenfactor0
 
-\f0\b\fs32 \cf2 \cb3 func
+\f0\b\fs32 \cf2 func
 \f1\b0 \cf4  \cf11 InitializeCartridgeState\cf4 () -> \cf14 CartridgeState\cf4  \{\
     \cf8 /*\cf4 \
 \cf8     let fileManager = FileManager.default\cf4 \
@@ -355,21 +355,21 @@ ppu scraps\
 \f1\b0 \cf4  \cf11 InitializeCartridgeState\cf4 () -> \cf14 CartridgeState\cf4  \{\
     
 \f0\b \cf2 let
-\f1\b0 \cf4  fileManager = \cf16 \cb3 FileManager\cf4 \cb3 ()\
+\f1\b0 \cf4  fileManager = \cf16 FileManager\cf4 ()\
     
 \f0\b \cf2 let
-\f1\b0 \cf4  openPanel = \cf16 \cb3 NSOpenPanel\cf4 \cb3 ()\
-    openPanel.\cf13 \cb3 allowedFileTypes\cf4 \cb3  = [\cf12 "gb"\cf4 ]\
-    openPanel.\cf13 \cb3 canChooseFiles\cf4 \cb3  = 
+\f1\b0 \cf4  openPanel = \cf16 NSOpenPanel\cf4 ()\
+    openPanel.\cf13 allowedFileTypes\cf4  = [\cf12 "gb"\cf4 ]\
+    openPanel.\cf13 canChooseFiles\cf4  = 
 \f0\b \cf2 true
 \f1\b0 \cf4 \
-    openPanel.\cf13 \cb3 canChooseDirectories\cf4 \cb3  = 
+    openPanel.\cf13 canChooseDirectories\cf4  = 
 \f0\b \cf2 false
 \f1\b0 \cf4 \
     \
     
 \f0\b \cf2 guard
-\f1\b0 \cf4  openPanel.\cf10 runModal\cf4 () == .\cf13 \cb3 OK\cf4 \cb3  
+\f1\b0 \cf4  openPanel.\cf10 runModal\cf4 () == .\cf13 OK\cf4  
 \f0\b \cf2 else
 \f1\b0 \cf4  \{\
         \cf10 exit\cf4 (-\cf6 5\cf4 )\
@@ -379,7 +379,7 @@ ppu scraps\
 \f0\b \cf2 guard
 \f1\b0 \cf4  
 \f0\b \cf2 let
-\f1\b0 \cf4  url = openPanel.\cf13 \cb3 urls\cf4 \cb3 .\cf10 first\cf4  
+\f1\b0 \cf4  url = openPanel.\cf13 urls\cf4 .\cf10 first\cf4  
 \f0\b \cf2 else
 \f1\b0 \cf4  \{\
         \cf10 exit\cf4 (-\cf6 5\cf4 )\
@@ -399,7 +399,7 @@ ppu scraps\
 \f1\b0 \cf4  romDataInArray = [\cf9 UInt8\cf4 ](data);\
         
 \f0\b \cf2 let
-\f1\b0 \cf4  sizeInBytes = \cf9 UInt32\cf4 (romDataInArray.\cf13 \cb3 count\cf4 \cb3 );\
+\f1\b0 \cf4  sizeInBytes = \cf9 UInt32\cf4 (romDataInArray.\cf13 count\cf4 );\
         
 \f0\b \cf2 let
 \f1\b0 \cf4  romDataInMemory = \cf9 UnsafeMutablePointer\cf4 <\cf9 UInt8\cf4 >.\cf10 allocate\cf4 (\cf10 capacity\cf4 : \cf9 Int\cf4 (sizeInBytes))\
@@ -414,10 +414,127 @@ ppu scraps\
     \} 
 \f0\b \cf2 catch
 \f1\b0 \cf4  \{\
-        \cf10 print\cf4 (\cf12 "Error reading file: \cf4 \\(error.\cf13 \cb3 localizedDescription\cf4 \cb3 )\cf12 "\cf4 )\
+        \cf10 print\cf4 (\cf12 "Error reading file: \cf4 \\(error.\cf13 localizedDescription\cf4 )\cf12 "\cf4 )\
         \cf10 exit\cf4 (-\cf6 5\cf4 )\
     \}\
 \}\
 \
 \
+\
+class GameScene: SKScene \{\
+    \
+    var entities = [GKEntity]()\
+    var graphs = [String : GKGraph]()\
+    \
+    private var lastUpdateTime : TimeInterval = 0\
+    private var label : SKLabelNode?\
+    private var spinnyNode : SKShapeNode?\
+    private var pixelNodes = [SKSpriteNode]()\
+    \
+    override func sceneDidLoad() \{\
+        self.lastUpdateTime = 0\
+        createPixelNodes()\
+        renderTilemap()\
+    \}\
+    \
+    func createPixelNodes() \{\
+        // Create 64x64 pixel nodes and add them as children of the scene\
+        for y in 0..<64 \{\
+            for x in 0..<64 \{\
+                let pixelNode = SKSpriteNode(color: SKColor.white, size: CGSize(width: 1, height: 1))\
+                pixelNode.position = CGPoint(x: x - 32, y: -y + 32)\
+                pixelNode.zPosition = -1\
+                self.addChild(pixelNode)\
+                pixelNodes.append(pixelNode)\
+            \}\
+        \}\
+    \}\
+    \
+    func getPixelIndex(x: Int, y: Int) -> Int \{\
+        // Convert x, y coordinates to pixel index\
+        return (y * 64) + x\
+    \}\
+    \
+    func setPixelColor(x: Int, y: Int, color: SKColor) \{\
+        // Set the color of the pixel at the given x, y coordinates\
+        let index = getPixelIndex(x: x, y: y)\
+        pixelNodes[index].color = color\
+    \}\
+    \
+    func getPixelColor(value: UInt8) -> SKColor \{\
+        // Return the color for the given value\
+        switch value \{\
+        case 0:\
+            return SKColor.white\
+        case 1:\
+            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0)\
+        case 2:\
+            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0)\
+        case 3:\
+            return SKColor(red: 0.0, green: 0.1, blue: 0.3, alpha: 1.0)\
+        default:\
+            return SKColor.clear\
+        \}\
+    \}\
+    \
+    func tileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 \{\
+        let tileOffset:UInt16 = tileIndex * 16;\
+        let rowOffset:UInt16  = UInt16(y * 2);\
+        let address:UInt16 = 0x8000 + tileOffset + rowOffset;\
+        return BusRead(address: address);\
+    \}\
+    \
+    func renderTile(atPoint pos : CGPoint, tileIndex: UInt16) \{\
+        // Loop through each pixel in the tile and set its color based on the UInt8 value\
+        for y in (0..<8) \{\
+            let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);\
+            let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);\
+            let colorValue: [UInt8] = GetTileLineBytes(first\
+\
+\
+\
+\
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\fs24 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 \cb3 getPixelColor\cf4 \cb3 (\cf11 \cb3 value\cf4 \cb3 : \cf9 \cb3 UInt8\cf4 \cb3 ) -> \cf9 \cb3 SKColor\cf4 \cb3  \{\
+        
+\f0\b \cf2 switch
+\f1\b0 \cf4  value \{\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 0\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );  \cf8 // White\cf4 \
+            
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 1\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.4\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.8\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );  \cf8 // Light blue\cf4 \
+            
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 2\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.4\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.8\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );   \cf8 // Dark blue\cf4 \
+            
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 3\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.1\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.3\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );    \cf8 // Navy blue\cf4 \
+        
+\f0\b \cf2 default
+\f1\b0 \cf4 :\
+            \cf10 \cb3 print\cf4 \cb3 (\cf12 \cb3 "Invalid color index"\cf4 \cb3 );\
+            \cf10 \cb3 exit\cf4 \cb3 (-\cf6 5\cf4 );\
+            \}\
+        \}
+\fs32 \
+\pard\tx791\pardeftab791\pardirnatural\partightenfactor0
+\cf4 \
 }

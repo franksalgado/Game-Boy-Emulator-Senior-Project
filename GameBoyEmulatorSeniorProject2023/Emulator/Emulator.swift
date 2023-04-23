@@ -35,7 +35,6 @@ func EmulatorCycles(CPUCycles: Int) -> Void {
 }
 func StartEmulator( CartridgeStateInstance: CartridgeState, CPUStateInstance: CPUState, SerialData: [UInt8], RAMStateInstance: RAMState, TestRomMessage: [UInt8], MessageSize: Int, TimerStateInstance: TimerState, PPUStateInstance: PPUState) -> Void {
     while EmulatorStateInstance.running {
-        print("emurun")
         if !CPUStateInstance.CPUStep() {
             exit(-5);
         }

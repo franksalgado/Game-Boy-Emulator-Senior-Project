@@ -32,9 +32,8 @@ struct CartridgeState {
 
 
 func InitializeCartridgeState() -> CartridgeState {
-    let fileManager = FileManager()
+    _ = FileManager()
     let openPanel = NSOpenPanel()
-    openPanel.allowedFileTypes = ["gb"]
     openPanel.canChooseFiles = true
     openPanel.canChooseDirectories = false
     
@@ -47,15 +46,14 @@ func InitializeCartridgeState() -> CartridgeState {
     }
     
     do {
-        print("Initcartexecuted")
         let data = try Data(contentsOf: url);
         let romDataInArray = [UInt8](data);
         let sizeInBytes = UInt32(romDataInArray.count);
-        let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes))
-        romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes))
-        let cartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory)
-        print(cartridgeState.romSize)
-        return cartridgeState
+        let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
+        romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
+        let cartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
+        print(cartridgeState.romSize);
+        return cartridgeState;
     } catch {
         print("Error reading file: \(error.localizedDescription)")
         exit(-5)

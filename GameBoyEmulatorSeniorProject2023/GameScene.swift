@@ -16,28 +16,60 @@ class GameScene: SKScene {
     private var lastUpdateTime : TimeInterval = 0
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private var pixelNodes = [SKSpriteNode]();
     
     override func sceneDidLoad() {
            self.lastUpdateTime = 0
-        renderTilemap();
+        createTileMap();
+        //renderTilemap();
        }
 
+    func createTileMap() {
+        var x = -80;
+        var y = 72;
+        var tileIndex:UInt16 = 0;
+        while y != -120 {
+            x = -80;
+            while x != 48 {
+                createTile(atPoint: CGPoint(x: x, y: y), tileIndex: tileIndex);
+                tileIndex += 1;
+                x += 8;
+            }
+            y -= 8;
+        }
+    }
+    func createTile(atPoint pos : CGPoint, tileIndex: UInt16) {
+       // let tileSize = CGSize(width: 8, height: 8);
+        // Loop through each pixel in the tile and set its color based on the UInt8 value
+        for y in (0..<8) {
+            let colorValue: UInt8 = 0;
+            for x in 0..<8 {
+                let pixelColor: SKColor = getPixelColor(value: colorValue);
+                let pixelNode = SKSpriteNode(color: pixelColor, size: CGSize(width: 1, height: 1));
+                pixelNode.position = CGPoint(x: x + Int(pos.x), y:  Int(pos.y) - y);
+                pixelNode.zPosition = -1;
+                pixelNodes.append(pixelNode);
+                self.addChild(pixelNode);
+            }
+        }
+    }
     
     func getPixelColor(value: UInt8) -> SKColor {
         switch value {
         case 0:
-            return SKColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0);  // White
-            case 1:
-            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0);  // Light blue
-            case 2:
-            return SKColor(red: 0.0, green: 0.4, blue: 0.8, alpha: 1.0);   // Dark blue
-            case 3:
-            return SKColor(red: 0.0, green: 0.1, blue: 0.3, alpha: 1.0);    // Navy blue
+            return SKColor(red: 0.757, green: 0.875, blue: 0.757, alpha: 1.0);  // Lightest Green
+        case 1:
+            return SKColor(red: 0.561, green: 0.765, blue: 0.561, alpha: 1.0);  // Light Green
+        case 2:
+            return SKColor(red: 0.278, green: 0.659, blue: 0.278, alpha: 1.0);  // Dark Green
+        case 3:
+            return SKColor(red: 0.149, green: 0.357, blue: 0.149, alpha: 1.0);  // Darkest Green
         default:
             print("Invalid color index");
             exit(-5);
-            }
         }
+    }
+
     
     func tileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 {
         let tileOffset:UInt16 = tileIndex * 16;
@@ -46,19 +78,17 @@ class GameScene: SKScene {
         return BusRead(address: address);
     }
     
-    func renderTile(atPoint pos : CGPoint, tileIndex: UInt16) {
+    func renderTile( tileIndex: UInt16) {
        // let tileSize = CGSize(width: 8, height: 8);
         // Loop through each pixel in the tile and set its color based on the UInt8 value
-        for y in (0..<8) {
+        for y in 0..<8 {
             let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);
             let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);
             let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
             for x in 0..<8 {
                 let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
-                let pixelNode = SKSpriteNode(color: pixelColor, size: CGSize(width: 1, height: 1));
-                pixelNode.position = CGPoint(x: x + Int(pos.x), y:  Int(pos.y) - y);
-                pixelNode.zPosition = -1;
-                self.addChild(pixelNode);
+                let index = (y * 8) + x + (Int(tileIndex) * 64);
+                pixelNodes[index].color = pixelColor;
             }
         }
     }
@@ -70,7 +100,7 @@ class GameScene: SKScene {
         while y != -120 {
             x = -80;
             while x != 48 {
-                renderTile(atPoint: CGPoint(x: x, y: y), tileIndex: tileIndex);
+                renderTile(tileIndex: tileIndex);
                 tileIndex += 1;
                 x += 8;
             }
@@ -146,11 +176,6 @@ class GameScene: SKScene {
         }
         
         self.lastUpdateTime = currentTime
-        for child in self.children {
-            // Remove the node from the parent
-            child.removeFromParent()
-        }
-        print("displayrun")
         renderTilemap();
     }
 }
