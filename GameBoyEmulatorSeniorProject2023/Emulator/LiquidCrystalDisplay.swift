@@ -47,8 +47,8 @@ struct LCDState {
      */
     var backGroundPaletteData: UInt8;
     var objectPalette: [UInt8];
-    var windowX: UInt8;
     var windowY: UInt8;
+    var windowX: UInt8;
     
     var backGroundColors: [SKColor];
     var Sprite1Colors: [SKColor];
@@ -79,7 +79,7 @@ var LCDStateInstance = LCDState();
 //todo BG Palette data update func
 
 func LCDRead(address: UInt16) -> UInt8{
-    switch ((address - 0xFF40) / 8)    {
+    switch address - 0xFF40 {
     case 0:
         return LCDStateInstance.lcdc;
     case 1:
@@ -101,9 +101,9 @@ func LCDRead(address: UInt16) -> UInt8{
     case 9:
         return LCDStateInstance.objectPalette[1];
     case 10:
-        return LCDStateInstance.windowX;
-    case 11:
         return LCDStateInstance.windowY;
+    case 11:
+        return LCDStateInstance.windowX;
     default:
         print("invalid lcd reead");
         exit(-5);
@@ -111,7 +111,7 @@ func LCDRead(address: UInt16) -> UInt8{
 }
 
 func LCDWrite(address: UInt16, value: UInt8) -> Void{
-    switch ( (address - 0xFF40) / 8)   {
+    switch address - 0xFF40   {
     case 0:
         LCDStateInstance.lcdc = value;
     case 1:
@@ -151,15 +151,13 @@ func LCDWrite(address: UInt16, value: UInt8) -> Void{
             i += 1;
         }
     case 10:
-        LCDStateInstance.windowX = value;
-    case 11:
         LCDStateInstance.windowY = value;
+    case 11:
+        LCDStateInstance.windowX = value;
     //update pallete value
     default:
         print("invalid lcd write");
         exit(-5);
     }
 }
-
-
 

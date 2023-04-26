@@ -28,6 +28,7 @@ func EmulatorCycles(CPUCycles: Int) -> Void {
         while n < 4 {
             EmulatorStateInstance.ticks += 1;
             TimerTick();
+            PPUTick();
             n += 1;
         }
         DMATick();

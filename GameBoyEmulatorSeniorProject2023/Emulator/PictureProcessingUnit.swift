@@ -49,7 +49,7 @@ enum SelectPixelColors {
 let GreenColors = SelectPixelColors.shadesOfGreen.colors;
 let BlueColors = SelectPixelColors.shadesOfBlue.colors;
 let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
-func isBitSet(_ bitPosition: UInt8, in value: UInt8) -> Bool {
+func isBitSet(bitPosition: UInt8, in value: UInt8) -> Bool {
     let mask: UInt8 = 1 << bitPosition
     return (value & mask) != 0
 }
@@ -156,7 +156,53 @@ func PPUOAMread(address: UInt16) -> UInt8 {
     }
 }
 func PPUTick() -> Void {
-    //
+    PPUStateInstance.lineTicks += 1;
+    switch LCDStateInstance.LCDStatus & 0b11 {
+    case 0:
+        if PPUStateInstance.lineTicks >= 80 {
+            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .XFER, LCDStatus: LCDStateInstance.LCDStatus);
+        }
+    case 1:
+        if PPUStateInstance.lineTicks >= 80 + 172{
+            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .HBLANK, LCDStatus: LCDStateInstance.LCDStatus);
+        }
+    case 2:
+        if PPUStateInstance.lineTicks >= 456{
+            LCDStateInstance.LY += 1;
+            if LCDStateInstance.LY == LCDStateInstance.LYCompare {
+                LCDStateInstance.LCDStatus |= (1 << 2);
+            } else {
+                LCDStateInstance.LCDStatus &= ~(1 << 2);
+            }
+            if LCDStateInstance.LY >= 154 {
+                LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .OAM, LCDStatus: LCDStateInstance.LCDStatus);
+                LCDStateInstance.LY = 0;
+            }
+            PPUStateInstance.lineTicks = 0;
+        }
+    case 3:
+        if PPUStateInstance.lineTicks >= 456 {
+            LCDStateInstance.LY += 1;
+            if LCDStateInstance.LY == LCDStateInstance.LYCompare {
+                LCDStateInstance.LCDStatus |= (1 << 2);
+            } else {
+                LCDStateInstance.LCDStatus &= ~(1 << 2);
+            }
+            if LCDStateInstance.LY >= 144 {
+                LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .VBLANK, LCDStatus: LCDStateInstance.LCDStatus);
+                RequestInterrupt(InterruptTypes: .VBLANK);
+                if (LCDStateInstance.LCDStatus & StatSRC.VBLANK.rawValue) != 0 {
+                    RequestInterrupt(InterruptTypes: .LCDSTAT)
+                }
+                PPUStateInstance.currentFrame += 1;
+            }
+        } else {
+            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .OAM, LCDStatus: LCDStateInstance.LCDStatus);
+        }
+        PPUStateInstance.lineTicks = 0;
+    default:
+        print("Inval pputick")
+    }
 }
 
 //PPU states func
