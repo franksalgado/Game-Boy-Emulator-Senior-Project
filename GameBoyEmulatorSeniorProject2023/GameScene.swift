@@ -57,13 +57,13 @@ class GameScene: SKScene {
     func getPixelColor(value: UInt8) -> SKColor {
         switch value {
         case 0:
-            return SKColor(red: 0.757, green: 0.875, blue: 0.757, alpha: 1.0);  // Lightest Green
+            return GreenColors[0];  // Lightest Green
         case 1:
-            return SKColor(red: 0.561, green: 0.765, blue: 0.561, alpha: 1.0);  // Light Green
+            return  GreenColors[1];  // Light Green
         case 2:
-            return SKColor(red: 0.278, green: 0.659, blue: 0.278, alpha: 1.0);  // Dark Green
+            return  GreenColors[2];  // Dark Green
         case 3:
-            return SKColor(red: 0.149, green: 0.357, blue: 0.149, alpha: 1.0);  // Darkest Green
+            return  GreenColors[3];  // Darkest Green
         default:
             print("Invalid color index");
             exit(-5);

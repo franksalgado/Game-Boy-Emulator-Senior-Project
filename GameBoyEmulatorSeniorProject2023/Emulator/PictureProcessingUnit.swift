@@ -12,15 +12,48 @@
  #0F380F (very light green)
  */
 import Foundation
-var darkest: UInt32 = 0x8BAC0F;
-var darker: UInt32 = 0x9BBC0F;
-var dark: UInt32 = 0x306230;
-var light: UInt32 = 0x0F380F;
-
-enum PixelColors {
-    case blackAndWhite
-    case shadesOfGreen(darkest: UInt32, darker: UInt32, dark: UInt32, light: UInt32)
+import SpriteKit
+enum SelectPixelColors {
+    case shadesOfGreen
+    case shadesOfBlue
+    case shadesOfBlackAndWhite
+    
+    var colors: [SKColor] {
+        switch self {
+        case .shadesOfGreen:
+            return [
+                SKColor(red: 0.757, green: 0.875, blue: 0.757, alpha: 1.0),
+                SKColor(red: 0.561, green: 0.765, blue: 0.561, alpha: 1.0),
+                SKColor(red: 0.278, green: 0.659, blue: 0.278, alpha: 1.0),
+                SKColor(red: 0.149, green: 0.357, blue: 0.149, alpha: 1.0)
+            ]
+            
+        case .shadesOfBlue:
+            return [
+                SKColor(red: 0.749, green: 0.839, blue: 0.914, alpha: 1.0),
+                SKColor(red: 0.525, green: 0.631, blue: 0.718, alpha: 1.0),
+                SKColor(red: 0.349, green: 0.439, blue: 0.533, alpha: 1.0),
+                SKColor(red: 0.196, green: 0.267, blue: 0.353, alpha: 1.0)
+            ]
+            
+        case .shadesOfBlackAndWhite:
+            return [
+                SKColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0),
+                SKColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1.0),
+                SKColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0),
+                SKColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            ]
+        }
+    }
 }
+let GreenColors = SelectPixelColors.shadesOfGreen.colors;
+let BlueColors = SelectPixelColors.shadesOfBlue.colors;
+let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
+func isBitSet(_ bitPosition: UInt8, in value: UInt8) -> Bool {
+    let mask: UInt8 = 1 << bitPosition
+    return (value & mask) != 0
+}
+
 struct BitField {
     var bit0: Bool = false
     var bit1: Bool = false
@@ -44,14 +77,15 @@ struct BitField {
     }
 }
 
-
 struct OAMSpriteAttributes {
     var y: UInt8;
     var x: UInt8;
     var tileIndex: UInt8;
     var attributesAndFlags: UInt8
 }
+
 let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
+
 func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
     var i = 0;
     var number: UInt8 = 0;
@@ -75,7 +109,6 @@ struct PPUState {
     var vram: [UInt8] = Array<UInt8>(repeating: 0, count: 0x2000);
 }
 var PPUStateInstance = PPUState();
-//todo oam stuff
 
 func PPUOAMWrite(address: UInt16, value: UInt8) -> Void {
     var sprite = address;
@@ -98,7 +131,7 @@ func PPUOAMWrite(address: UInt16, value: UInt8) -> Void {
     }
 }
 
-func PPUOAMWrite(address: UInt16, value: UInt8) -> UInt8 {
+func PPUOAMread(address: UInt16) -> UInt8 {
     var sprite = address;
     if address >= 0xFE00 {
         sprite -= 0xFE00;

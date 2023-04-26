@@ -48,6 +48,7 @@ func BusRead(address: UInt16) -> UInt8 {
         if DMATransferring() {
             return 0xFF;
         }
+        return PPUOAMread(address: address);
     }
     else if address < 0xFF00 {
         //unusable
@@ -79,9 +80,10 @@ func BusWrite(address: UInt16, value: UInt8) {
     }
     else if address < 0xFEA0 {
         //ppu
-            if DMATransferring() {
-        return;
+        if DMATransferring() {
+            return;
         }
+        PPUOAMWrite(address: address, value: value);
     }
     else if address < 0xFF00 {
         //unusable

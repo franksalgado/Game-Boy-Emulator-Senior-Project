@@ -48,14 +48,17 @@ func InitializeCartridgeState() -> CartridgeState {
     do {
         let data = try Data(contentsOf: url);
         let romDataInArray = [UInt8](data);
-        let sizeInBytes = UInt32(romDataInArray.count);
+        var sizeInBytes: UInt32 = 0;
+            for _ in romDataInArray {
+                sizeInBytes += 1;
+            }
         let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
         romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
         let cartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
         print(cartridgeState.romSize);
         return cartridgeState;
     } catch {
-        print("Error reading file: \(error.localizedDescription)")
+        print("Error reading file: \(error.localizedDescription)");
         exit(-5)
     }
 }
@@ -68,6 +71,6 @@ func CartridgeRead(address: UInt16) -> UInt8 {
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {
-    print("NOT YET IMPLEMENTED");
+    print("NOT YET IMPLEMENTED cart write");
     
 }

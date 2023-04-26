@@ -16,12 +16,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         DispatchQueue.global().async {
             // Call the StartEmulator function with the necessary arguments
-            StartEmulator(CartridgeStateInstance: CartridgeStateInstance, CPUStateInstance: CPUStateInstance, SerialData: SerialData, RAMStateInstance: RAMStateInstance, TestRomMessage: TestRomMessage, MessageSize: MessageSize, TimerStateInstance: TimerStateInstance, PPUStateInstance:  PPUStateInstance)
+            StartEmulator(CartridgeStateInstance: CartridgeStateInstance, CPUStateInstance: CPUStateInstance, SerialData: SerialData, RAMStateInstance: RAMStateInstance, TestRomMessage: TestRomMessage, MessageSize: MessageSize, TimerStateInstance: TimerStateInstance, PPUStateInstance:  PPUStateInstance, DMAStateInstance: DMAStateInstance);
         }
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
     
     
