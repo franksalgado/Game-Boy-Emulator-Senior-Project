@@ -55,7 +55,6 @@ func InitializeCartridgeState() -> CartridgeState {
         let romDataInMemory = UnsafeMutablePointer<UInt8>.allocate(capacity: Int(sizeInBytes));
         romDataInMemory.initialize(from: romDataInArray, count: Int(sizeInBytes));
         let cartridgeState = CartridgeState(romSize: sizeInBytes, romDataInArray: romDataInArray, romDataInMemory: romDataInMemory);
-        print(cartridgeState.romSize);
         return cartridgeState;
     } catch {
         print("Error reading file: \(error.localizedDescription)");

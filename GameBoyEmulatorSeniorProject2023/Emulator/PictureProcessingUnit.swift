@@ -77,15 +77,9 @@ struct BitField {
     }
 }
 
-struct OAMSpriteAttributes {
-    var y: UInt8;
-    var x: UInt8;
-    var tileIndex: UInt8;
-    var attributesAndFlags: UInt8
-}
 
+//Used in GameScene class to get the bytes to render all 8 pixels for a tile.
 let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
-
 func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
     var i = 0;
     var number: UInt8 = 0;
@@ -104,9 +98,19 @@ func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
     return array;
 }
 
+
+struct OAMSpriteAttributes {
+    var y: UInt8;
+    var x: UInt8;
+    var tileIndex: UInt8;
+    var attributesAndFlags: UInt8;
+}
+
 struct PPUState {
     var OAMSprite: [OAMSpriteAttributes] = Array<OAMSpriteAttributes>(repeating: OAMSpriteAttributes(y: 0, x: 0, tileIndex: 0, attributesAndFlags: 0), count: 40);
     var vram: [UInt8] = Array<UInt8>(repeating: 0, count: 0x2000);
+    var currentFrame: UInt32 = 0;
+    var lineTicks: UInt32 = 0;
 }
 var PPUStateInstance = PPUState();
 
@@ -151,3 +155,8 @@ func PPUOAMread(address: UInt16) -> UInt8 {
         exit(-5);
     }
 }
+func PPUTick() -> Void {
+    //
+}
+
+//PPU states func

@@ -35,10 +35,6 @@ func DMATick() -> Void {
     PPUOAMWrite(address: UInt16(DMAStateInstance.byte), value: BusRead(address: UInt16( ( UInt16(DMAStateInstance.value) * 0x100) + UInt16(DMAStateInstance.byte))) );
     DMAStateInstance.byte += 1;
     DMAStateInstance.active = DMAStateInstance.byte < 0xA0;
-    if !DMAStateInstance.active {
-        print("DMA done");
-        Thread.sleep(forTimeInterval: 2.0);
-    }
 }
 
 func DMATransferring() -> Bool {

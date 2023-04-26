@@ -34,11 +34,10 @@ func EmulatorCycles(CPUCycles: Int) -> Void {
         i += 1;
     }
 }
-func StartEmulator( CartridgeStateInstance: CartridgeState, CPUStateInstance: CPUState, SerialData: [UInt8], RAMStateInstance: RAMState, TestRomMessage: [UInt8], MessageSize: Int, TimerStateInstance: TimerState, PPUStateInstance: PPUState, DMAStateInstance: DMAState) -> Void {
+func StartEmulator( CartridgeStateInstance: CartridgeState, CPUStateInstance: CPUState, SerialData: [UInt8], RAMStateInstance: RAMState, TestRomMessage: [UInt8], MessageSize: Int, TimerStateInstance: TimerState, PPUStateInstance: PPUState, DMAStateInstance: DMAState, LCDStateInstance: LCDState) -> Void {
     while EmulatorStateInstance.running {
         if !CPUStateInstance.CPUStep() {
             exit(-5);
         }
     }
 }
-

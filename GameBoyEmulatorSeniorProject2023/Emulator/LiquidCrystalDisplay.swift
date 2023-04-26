@@ -7,6 +7,25 @@
 
 import Foundation
 import SpriteKit
+
+enum LCDMode: UInt8 {
+    case HBLANK,
+    VBLANK,
+    OAM,
+    XFER
+}
+
+enum StatSRC: UInt8 {
+    case HBlANK = 0b00001000,
+    VBLANK = 0b00010000,
+    OAM = 0b00100000,
+    LYC = 0b01000000
+}
+
+func SetLCDStatusMode(LCDMode: LCDMode, LCDStatus: UInt8) -> UInt8{
+    return (LCDStatus & ~0b11) | LCDMode.rawValue;
+}
+
 struct LCDState {
     var lcdc: UInt8;
     //0xFF41
@@ -36,7 +55,8 @@ struct LCDState {
     var Sprite2Colors: [SKColor];
     init() {
         lcdc = 0x91;
-        LCDStatus = 0;
+        //LCD Status starts out with every bit set except the first
+        LCDStatus = ~1;
         yScroll = 0;
         xScroll = 0;
         LY = 0;
@@ -48,7 +68,9 @@ struct LCDState {
         windowY = 0;
         backGroundColors = GreenColors;
         Sprite1Colors = GreenColors;
+        Sprite1Colors[0] = Sprite1Colors[0].withAlphaComponent(0);
         Sprite2Colors = GreenColors;
+        Sprite2Colors[0] = Sprite1Colors[0].withAlphaComponent(0);
     }
 }
 var LCDStateInstance = LCDState();
@@ -57,7 +79,7 @@ var LCDStateInstance = LCDState();
 //todo BG Palette data update func
 
 func LCDRead(address: UInt16) -> UInt8{
-    switch (address - 0xFF40) / 8   {
+    switch ((address - 0xFF40) / 8)    {
     case 0:
         return LCDStateInstance.lcdc;
     case 1:
@@ -89,7 +111,7 @@ func LCDRead(address: UInt16) -> UInt8{
 }
 
 func LCDWrite(address: UInt16, value: UInt8) -> Void{
-    switch (address - 0xFF40) / 8   {
+    switch ( (address - 0xFF40) / 8)   {
     case 0:
         LCDStateInstance.lcdc = value;
     case 1:
@@ -107,10 +129,27 @@ func LCDWrite(address: UInt16, value: UInt8) -> Void{
         InitializeDMAState(start: value);
     case 7:
         LCDStateInstance.backGroundPaletteData = value;
+        var i: UInt8 = 0
+        while i < 4 {
+            LCDStateInstance.backGroundColors[Int(i)] = GreenColors[Int( (value >> (i * 2) ) & 0b11) ];
+            i += 1;
+        }
     case 8:
         LCDStateInstance.objectPalette[0] = value;
+        let temp = LCDStateInstance.Sprite1Colors;
+        var i: UInt8 = 0
+        while i < 4 {
+            LCDStateInstance.Sprite1Colors[Int(i)] = temp[Int( (value >> (i * 2) ) & 0b11) ];
+            i += 1;
+        }
     case 9:
         LCDStateInstance.objectPalette[1] = value;
+        let temp = LCDStateInstance.Sprite2Colors;
+        var i: UInt8 = 0
+        while i < 4 {
+            LCDStateInstance.Sprite2Colors[Int(i)] = temp[Int( (value >> (i * 2) ) & 0b11) ];
+            i += 1;
+        }
     case 10:
         LCDStateInstance.windowX = value;
     case 11:
@@ -122,17 +161,5 @@ func LCDWrite(address: UInt16, value: UInt8) -> Void{
     }
 }
 
-enum LCDMode: UInt8 {
-    case HBLANK,
-    VBLANK,
-    OAM,
-    XFER
-}
 
-enum StatSRC: UInt8 {
-    case HBlANK = 0b00001000,
-    VBLANK = 0b00010000,
-    OAM = 0b00100000,
-    LYC = 0b01000000
-}
 

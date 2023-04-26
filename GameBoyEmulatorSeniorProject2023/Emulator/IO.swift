@@ -20,7 +20,7 @@ func IORead(address: UInt16) -> UInt8 {
     if address == 0xFF0F {
         return GetInterruptFlags();
     }
-    if address >= 0xFF04 && address <= 0xFF07 {
+    if address >= 0xFF40 && address <= 0xFF4B {
         return LCDRead(address: address);
     }
     print("Invalid IO Read")
@@ -40,10 +40,7 @@ func IOWrite(address: UInt16, value: UInt8) {
     if address == 0xFF0F {
         SetInterruptFlags(value: value);
     }
-    if address == 0xFF46 {
-        InitializeDMAState(start: value);
-    }
-    if address >= 0xFF04 && address <= 0xFF07 {
+    if address >= 0xFF40 && address <= 0xFF4B {
         LCDWrite(address: address, value: value);
     }
 }
