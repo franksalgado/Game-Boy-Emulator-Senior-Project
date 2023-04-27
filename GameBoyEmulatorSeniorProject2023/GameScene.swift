@@ -175,7 +175,7 @@ class GameScene: SKScene {
             entity.update(deltaTime: dt)
         }
         
-        self.lastUpdateTime = currentTime
+        self.lastUpdateTime = currentTime;
         renderTilemap();
     }
 }

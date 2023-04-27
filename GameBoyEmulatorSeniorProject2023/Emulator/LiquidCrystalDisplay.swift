@@ -22,12 +22,19 @@ enum StatSRC: UInt8 {
     LYC = 0b01000000
 }
 
-func SetLCDStatusMode(LCDMode: LCDMode, LCDStatus: UInt8) -> UInt8{
-    return (LCDStatus & ~0b11) | LCDMode.rawValue;
-}
-
 struct LCDState {
-    var lcdc: UInt8;
+    //0xFF40
+    /*
+     7    LCD and PPU enable    0=Off, 1=On
+     6    Window tile map area    0=9800-9BFF, 1=9C00-9FFF
+     5    Window enable    0=Off, 1=On
+     4    BG and Window tile data area    0=8800-97FF, 1=8000-8FFF
+     3    BG tile map area    0=9800-9BFF, 1=9C00-9FFF
+     2    OBJ size    0=8x8, 1=8x16
+     1    OBJ enable    0=Off, 1=On
+     0    BG and Window enable/priority    0=Off, 1=On
+     */
+    var LCDControl: UInt8;
     //0xFF41
     var LCDStatus: UInt8;
     var yScroll: UInt8;
@@ -53,13 +60,17 @@ struct LCDState {
     var backGroundColors: [SKColor];
     var Sprite1Colors: [SKColor];
     var Sprite2Colors: [SKColor];
+    func SetLCDStatusMode(LCDMode: LCDMode) -> Void{
+        LCDStateInstance.LCDStatus = ( LCDStateInstance.LCDStatus & ~0b11) | LCDMode.rawValue;
+    }
     init() {
-        lcdc = 0x91;
+        LCDControl = 0x91;
         //LCD Status starts out with every bit set except the first
         LCDStatus = ~1;
         yScroll = 0;
         xScroll = 0;
         LY = 0;
+        //0xFF45
         LYCompare = 0;
         DMA = 0;
         backGroundPaletteData = 0xFC;
@@ -81,7 +92,7 @@ var LCDStateInstance = LCDState();
 func LCDRead(address: UInt16) -> UInt8{
     switch address - 0xFF40 {
     case 0:
-        return LCDStateInstance.lcdc;
+        return LCDStateInstance.LCDControl;
     case 1:
         return LCDStateInstance.LCDStatus;
     case 2:
@@ -113,7 +124,7 @@ func LCDRead(address: UInt16) -> UInt8{
 func LCDWrite(address: UInt16, value: UInt8) -> Void{
     switch address - 0xFF40   {
     case 0:
-        LCDStateInstance.lcdc = value;
+        LCDStateInstance.LCDControl = value;
     case 1:
         LCDStateInstance.LCDStatus = value;
     case 2:

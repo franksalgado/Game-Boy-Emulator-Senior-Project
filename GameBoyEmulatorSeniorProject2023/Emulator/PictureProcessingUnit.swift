@@ -46,7 +46,7 @@ enum SelectPixelColors {
         }
     }
 }
-let GreenColors = SelectPixelColors.shadesOfGreen.colors;
+let GreenColors = SelectPixelColors.shadesOfBlue.colors;
 let BlueColors = SelectPixelColors.shadesOfBlue.colors;
 let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
 func isBitSet(bitPosition: UInt8, in value: UInt8) -> Bool {
@@ -160,12 +160,14 @@ func PPUTick() -> Void {
     switch LCDStateInstance.LCDStatus & 0b11 {
     case 0:
         if PPUStateInstance.lineTicks >= 80 {
-            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .XFER, LCDStatus: LCDStateInstance.LCDStatus);
+            LCDStateInstance.SetLCDStatusMode(LCDMode: .XFER);
         }
+        break;
     case 1:
         if PPUStateInstance.lineTicks >= 80 + 172{
-            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .HBLANK, LCDStatus: LCDStateInstance.LCDStatus);
+            LCDStateInstance.SetLCDStatusMode(LCDMode: .HBLANK);
         }
+        break;
     case 2:
         if PPUStateInstance.lineTicks >= 456{
             LCDStateInstance.LY += 1;
@@ -175,11 +177,12 @@ func PPUTick() -> Void {
                 LCDStateInstance.LCDStatus &= ~(1 << 2);
             }
             if LCDStateInstance.LY >= 154 {
-                LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .OAM, LCDStatus: LCDStateInstance.LCDStatus);
+                LCDStateInstance.SetLCDStatusMode(LCDMode: .OAM);
                 LCDStateInstance.LY = 0;
             }
             PPUStateInstance.lineTicks = 0;
         }
+        break;
     case 3:
         if PPUStateInstance.lineTicks >= 456 {
             LCDStateInstance.LY += 1;
@@ -189,7 +192,7 @@ func PPUTick() -> Void {
                 LCDStateInstance.LCDStatus &= ~(1 << 2);
             }
             if LCDStateInstance.LY >= 144 {
-                LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .VBLANK, LCDStatus: LCDStateInstance.LCDStatus);
+                LCDStateInstance.SetLCDStatusMode(LCDMode: .VBLANK);
                 RequestInterrupt(InterruptTypes: .VBLANK);
                 if (LCDStateInstance.LCDStatus & StatSRC.VBLANK.rawValue) != 0 {
                     RequestInterrupt(InterruptTypes: .LCDSTAT)
@@ -197,9 +200,10 @@ func PPUTick() -> Void {
                 PPUStateInstance.currentFrame += 1;
             }
         } else {
-            LCDStateInstance.LCDStatus = SetLCDStatusMode(LCDMode: .OAM, LCDStatus: LCDStateInstance.LCDStatus);
+            LCDStateInstance.SetLCDStatusMode(LCDMode: .OAM);
         }
         PPUStateInstance.lineTicks = 0;
+        break;
     default:
         print("Inval pputick")
     }

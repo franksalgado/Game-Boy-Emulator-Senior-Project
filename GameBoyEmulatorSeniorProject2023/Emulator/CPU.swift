@@ -9,6 +9,7 @@ import Foundation
 
 struct CPURegisters {
     //a is accumulator register, f is flag register
+    //register pairs can be combined to be one 16 bit register
     var a: UInt8;
     var f: UInt8;
     

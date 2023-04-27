@@ -499,7 +499,7 @@ class GameScene: SKScene \{\
 
 \fs24 \cf4  
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 \cb3 getPixelColor\cf4 \cb3 (\cf11 \cb3 value\cf4 \cb3 : \cf9 \cb3 UInt8\cf4 \cb3 ) -> \cf9 \cb3 SKColor\cf4 \cb3  \{\
+\f1\b0 \cf4  \cf11 getPixelColor\cf4 (\cf11 value\cf4 : \cf9 UInt8\cf4 ) -> \cf9 SKColor\cf4  \{\
         
 \f0\b \cf2 switch
 \f1\b0 \cf4  value \{\
@@ -508,32 +508,221 @@ class GameScene: SKScene \{\
 \f1\b0 \cf4  \cf6 0\cf4 :\
             
 \f0\b \cf2 return
-\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 1.0\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );  \cf8 // White\cf4 \
+\f1\b0 \cf4  \cf9 SKColor\cf4 (\cf9 red\cf4 : \cf6 1.0\cf4 , \cf9 green\cf4 : \cf6 1.0\cf4 , \cf9 blue\cf4 : \cf6 1.0\cf4 , \cf9 alpha\cf4 : \cf6 1.0\cf4 );  \cf8 // White\cf4 \
             
 \f0\b \cf2 case
 \f1\b0 \cf4  \cf6 1\cf4 :\
             
 \f0\b \cf2 return
-\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.4\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.8\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );  \cf8 // Light blue\cf4 \
+\f1\b0 \cf4  \cf9 SKColor\cf4 (\cf9 red\cf4 : \cf6 0.0\cf4 , \cf9 green\cf4 : \cf6 0.4\cf4 , \cf9 blue\cf4 : \cf6 0.8\cf4 , \cf9 alpha\cf4 : \cf6 1.0\cf4 );  \cf8 // Light blue\cf4 \
             
 \f0\b \cf2 case
 \f1\b0 \cf4  \cf6 2\cf4 :\
             
 \f0\b \cf2 return
-\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.4\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.8\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );   \cf8 // Dark blue\cf4 \
+\f1\b0 \cf4  \cf9 SKColor\cf4 (\cf9 red\cf4 : \cf6 0.0\cf4 , \cf9 green\cf4 : \cf6 0.4\cf4 , \cf9 blue\cf4 : \cf6 0.8\cf4 , \cf9 alpha\cf4 : \cf6 1.0\cf4 );   \cf8 // Dark blue\cf4 \
             
 \f0\b \cf2 case
 \f1\b0 \cf4  \cf6 3\cf4 :\
             
 \f0\b \cf2 return
-\f1\b0 \cf4  \cf9 \cb3 SKColor\cf4 \cb3 (\cf9 \cb3 red\cf4 \cb3 : \cf6 0.0\cf4 , \cf9 \cb3 green\cf4 \cb3 : \cf6 0.1\cf4 , \cf9 \cb3 blue\cf4 \cb3 : \cf6 0.3\cf4 , \cf9 \cb3 alpha\cf4 \cb3 : \cf6 1.0\cf4 );    \cf8 // Navy blue\cf4 \
+\f1\b0 \cf4  \cf9 SKColor\cf4 (\cf9 red\cf4 : \cf6 0.0\cf4 , \cf9 green\cf4 : \cf6 0.1\cf4 , \cf9 blue\cf4 : \cf6 0.3\cf4 , \cf9 alpha\cf4 : \cf6 1.0\cf4 );    \cf8 // Navy blue\cf4 \
         
 \f0\b \cf2 default
 \f1\b0 \cf4 :\
-            \cf10 \cb3 print\cf4 \cb3 (\cf12 \cb3 "Invalid color index"\cf4 \cb3 );\
-            \cf10 \cb3 exit\cf4 \cb3 (-\cf6 5\cf4 );\
+            \cf10 print\cf4 (\cf12 "Invalid color index"\cf4 );\
+            \cf10 exit\cf4 (-\cf6 5\cf4 );\
             \}\
-        \}
+        \}\
+\
+\
+\
+\
+\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 BusRead\cf4 (\cf11 address\cf4 : \cf9 UInt16\cf4 ) -> \cf9 UInt8\cf4  \{\
+    
+\f0\b \cf2 switch
+\f1\b0 \cf4  address\{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0x8000\cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 CartridgeRead\cf4 (\cf7 address\cf4 : address);\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xA000\cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 PPUStateInstance\cf4 .\cf5 vram\cf4 [\cf9 Int\cf4 (address) - \cf6 0x8000\cf4 ];\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xC000\cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 CartridgeRead\cf4 (\cf7 address\cf4 : address);\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xE000\cf4  \{\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  workingRAMAddress = address &- \cf6 0xC000\cf4 ;\
+            
+\f0\b \cf2 if
+\f1\b0 \cf4  workingRAMAddress >= \cf6 0x2000\cf4  \{\
+                \cf10 print\cf4 (\cf12 "invalid wram read"\cf4 );\
+                \cf10 exit\cf4 (-\cf6 5\cf4 )\
+            \}\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 RAMStateInstance\cf4 .\cf5 workingRAM\cf4 [\cf9 Int\cf4 (workingRAMAddress)];\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFE00\cf4  \{\
+            \cf8 //implement\cf4 \
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFEA0\cf4  \{\
+            \cf8 // ppu\cf4 \
+            
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf7 DMATransferring\cf4 () \{\
+                
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf6 0xFF\cf4 ;\
+            \}\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 PPUOAMread\cf4 (\cf7 address\cf4 : address);\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFF00\cf4  \{\
+            \cf8 //unusable\cf4 \
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFF80\cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 IORead\cf4 (\cf7 address\cf4 : address);\
+        \}\
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address == \cf6 0xFFFF\cf4  \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 GetInterruptEnableRegister\cf4 ();\
+        \}\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 RAMStateInstance\cf4 .\cf5 highRAM\cf4 [\cf9 Int\cf4 (address &- \cf6 0xFF80\cf4 )];\
+    \}\
+\}\
+\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 BusWrite\cf4 (\cf11 address\cf4 : \cf9 UInt16\cf4 , \cf11 value\cf4 : \cf9 UInt8\cf4 ) \{\
+    
+\f0\b \cf2 if
+\f1\b0 \cf4  (address < \cf6 0x8000\cf4 ) \{\
+        \cf7 CartridgeWrite\cf4 (\cf7 address\cf4 : address, \cf7 value\cf4 : value);\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xA000\cf4  \{\
+        \cf5 PPUStateInstance\cf4 .\cf5 vram\cf4 [\cf9 Int\cf4 (address) - \cf6 0x8000\cf4 ] = value;\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xC000\cf4  \{\
+        \cf7 CartridgeWrite\cf4 (\cf7 address\cf4 : address, \cf7 value\cf4 : value);\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xE000\cf4  \{\
+        \cf5 RAMStateInstance\cf4 .\cf5 workingRAM\cf4 [\cf9 Int\cf4 (address &- \cf6 0xC000\cf4 )] = value;\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFE00\cf4  \{\
+        \cf8 //implement\cf4 \
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFEA0\cf4  \{\
+        \cf8 //ppu\cf4 \
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  \cf7 DMATransferring\cf4 () \{\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4 ;\
+        \}\
+        \cf7 PPUOAMWrite\cf4 (\cf7 address\cf4 : address, \cf7 value\cf4 : value);\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFF00\cf4  \{\
+        \cf8 //unusable\cf4 \
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address < \cf6 0xFF80\cf4  \{\
+        \cf7 IOWrite\cf4 (\cf7 address\cf4 : address, \cf7 value\cf4 : value);\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4  
+\f0\b \cf2 if
+\f1\b0 \cf4  address == \cf6 0xFFFF\cf4  \{\
+        \cf7 SetInterruptEnableRegister\cf4 (\cf7 value\cf4 : value);\
+    \}\
+    
+\f0\b \cf2 else
+\f1\b0 \cf4 \{\
+        \cf5 RAMStateInstance\cf4 .\cf5 highRAM\cf4 [\cf9 Int\cf4 (address &- \cf6 0xFF80\cf4 )] = value;\
+    \}\
+\}
 \fs32 \
 \pard\tx791\pardeftab791\pardirnatural\partightenfactor0
 \cf4 \
