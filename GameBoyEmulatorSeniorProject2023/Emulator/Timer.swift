@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct TimerState {
     var div: UInt16;
     var tima: UInt8;

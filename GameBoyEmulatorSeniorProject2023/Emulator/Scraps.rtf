@@ -726,4 +726,315 @@ class GameScene: SKScene \{\
 \fs32 \
 \pard\tx791\pardeftab791\pardirnatural\partightenfactor0
 \cf4 \
+\
+\
+\
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\fs24 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 getPixelColor\cf4 (\cf11 value\cf4 : \cf9 UInt8\cf4 ) -> \cf9 SKColor\cf4  \{\
+        
+\f0\b \cf2 switch
+\f1\b0 \cf4  value \{\
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 0\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 0\cf4 ];  \cf8 // Lightest Green\cf4 \
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 1\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 1\cf4 ];  \cf8 // Light Green\cf4 \
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 2\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 2\cf4 ];  \cf8 // Dark Green\cf4 \
+        
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 3\cf4 :\
+            
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 3\cf4 ];  \cf8 // Darkest Green\cf4 \
+        
+\f0\b \cf2 default
+\f1\b0 \cf4 :\
+            \cf10 print\cf4 (\cf12 "Invalid color index"\cf4 );\
+            \cf10 exit\cf4 (-\cf6 5\cf4 );\
+        \}\
+    \}\
+\
+    \cf8 //Used in GameScene class to get the bytes to render all 8 pixels for a tile.\cf4 \
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf11 binaryNumbers\cf4 : [\cf9 UInt8\cf4 ] = [\cf6 0b10000000\cf4 , \cf6 0b01000000\cf4 , \cf6 0b00100000\cf4 , \cf6 0b00010000\cf4 , \cf6 0b00001000\cf4 , \cf6 0b00000100\cf4 , \cf6 0b00000010\cf4 , \cf6 0b00000001\cf4 ];\
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 GetTileLineBytes\cf4 (\cf11 firstByte\cf4 : \cf9 UInt8\cf4 , \cf11 secondByte\cf4 : \cf9 UInt8\cf4 ) -> [\cf9 UInt8\cf4 ] \{\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  i = \cf6 0\cf4 ;\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  number: \cf9 UInt8\cf4  = \cf6 0\cf4 ;\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  array: [\cf9 UInt8\cf4 ] = \cf9 Array\cf4 <\cf9 UInt8\cf4 >(repeating: \cf6 0\cf4  , count: \cf6 8\cf4 );\
+        
+\f0\b \cf2 while
+\f1\b0 \cf4  i < \cf6 8\cf4  \{\
+            number = \cf6 0\cf4 ;\
+            
+\f0\b \cf2 if
+\f1\b0 \cf4  firstByte & \cf5 binaryNumbers\cf4 [i] != \cf6 0\cf4  \{\
+                number |= (\cf6 1\cf4  <<  \cf6 1\cf4 );\
+            \}\
+            
+\f0\b \cf2 if
+\f1\b0 \cf4  secondByte & \cf5 binaryNumbers\cf4 [i] != \cf6 0\cf4  \{\
+                number |= \cf6 1\cf4 ;\
+            \}\
+            array[i] = number\
+            i += \cf6 1\cf4 ;\
+        \}\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  array;\
+    \}\
+    \
+    \cf8 //Each tile is composed of 16 bytes. Each line is 2 bytes vram starts at address 0x8000\cf4 \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 tileByteCalculaion\cf4 (\cf11 tileIndex\cf4 : \cf9 UInt16\cf4 , \cf11 y\cf4 : \cf9 Int\cf4 ) -> \cf9 UInt8\cf4  \{\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  tileOffset:\cf9 UInt16\cf4  = tileIndex * \cf6 16\cf4 ;\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  rowOffset:\cf9 UInt16\cf4   = \cf9 UInt16\cf4 (y * \cf6 2\cf4 );\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  address:\cf9 UInt16\cf4  = \cf6 0x8000\cf4  + tileOffset + rowOffset;\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf7 BusRead\cf4 (\cf7 address\cf4 : address);\
+    \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 renderTile\cf4 ( \cf11 tileIndex\cf4 : \cf9 UInt16\cf4 ) \{\
+       \cf8 // let tileSize = CGSize(width: 8, height: 8);\cf4 \
+        \cf8 // Loop through each pixel in the tile and set its color based on the UInt8 value\cf4 \
+        
+\f0\b \cf2 for
+\f1\b0 \cf4  y 
+\f0\b \cf2 in
+\f1\b0 \cf4  \cf6 0\cf4 ..<\cf6 8\cf4  \{\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  firstByte: \cf9 UInt8\cf4  = \cf7 tileByteCalculaion\cf4 (\cf7 tileIndex\cf4 : tileIndex, \cf7 y\cf4 : y);\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  secondByte: \cf9 UInt8\cf4  = \cf7 tileByteCalculaion\cf4 (\cf7 tileIndex\cf4 : tileIndex, \cf7 y\cf4 : y + \cf6 1\cf4 );\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  colorValue: [\cf9 UInt8\cf4 ] = \cf7 GetTileLineBytes\cf4 (\cf7 firstByte\cf4 : firstByte, \cf7 secondByte\cf4 : secondByte);\
+            
+\f0\b \cf2 for
+\f1\b0 \cf4  x 
+\f0\b \cf2 in
+\f1\b0 \cf4  \cf6 0\cf4 ..<\cf6 8\cf4  \{\
+                
+\f0\b \cf2 let
+\f1\b0 \cf4  pixelColor: \cf9 SKColor\cf4  = \cf7 getPixelColor\cf4 (\cf7 value\cf4 : colorValue[x]);\
+                
+\f0\b \cf2 let
+\f1\b0 \cf4  index = (y * \cf6 8\cf4 ) + x + (\cf9 Int\cf4 (tileIndex) * \cf6 64\cf4 );\
+                \cf5 pixelNodes\cf4 [index].color = pixelColor;\
+            \}\
+        \}\
+    \}\
+    \
+    \
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 renderTilemap\cf4 () \{\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  x = -\cf6 80\cf4 ;\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  y = \cf6 72\cf4 ;\
+        
+\f0\b \cf2 var
+\f1\b0 \cf4  tileIndex:\cf9 UInt16\cf4  = \cf6 0\cf4 ;\
+        
+\f0\b \cf2 while
+\f1\b0 \cf4  y != -\cf6 120\cf4  \{\
+            x = -\cf6 80\cf4 ;\
+            
+\f0\b \cf2 while
+\f1\b0 \cf4  x != \cf6 48\cf4  \{\
+                \cf7 renderTile\cf4 (\cf7 tileIndex\cf4 : tileIndex);\
+                tileIndex += \cf6 1\cf4 ;\
+                x += \cf6 8\cf4 ;\
+            \}\
+            y -= \cf6 8\cf4 ;\
+        \}\
+    \}\
+\
+\cf7 EmuRenderTilemap\cf4 (\cf7 PixelArrayInMemory\cf4 : \cf5 PixelColorsArrayInMemory\cf4 );\
+\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 PixelColorsArrayInMemory\cf4  = \cf9 UnsafeMutablePointer\cf4 <\cf9 SKColor\cf4 >.\cf10 allocate\cf4 (\cf10 capacity\cf4 : \cf6 24576\cf4 );\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 EmuGetPixelColor\cf4 (\cf11 value\cf4 : \cf9 UInt8\cf4 ) -> \cf9 SKColor\cf4  \{\
+    
+\f0\b \cf2 switch
+\f1\b0 \cf4  value \{\
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 0\cf4 :\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 0\cf4 ];  \cf8 // Lightest Green\cf4 \
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 1\cf4 :\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 1\cf4 ];  \cf8 // Light Green\cf4 \
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 2\cf4 :\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 2\cf4 ];  \cf8 // Dark Green\cf4 \
+    
+\f0\b \cf2 case
+\f1\b0 \cf4  \cf6 3\cf4 :\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4   \cf5 LCDStateInstance\cf4 .\cf5 backGroundColors\cf4 [\cf6 3\cf4 ];  \cf8 // Darkest Green\cf4 \
+    
+\f0\b \cf2 default
+\f1\b0 \cf4 :\
+        \cf10 print\cf4 (\cf12 "Invalid color index"\cf4 );\
+        \cf10 exit\cf4 (-\cf6 5\cf4 );\
+    \}\
+\}\
+\
+\cf8 //Used in GameScene class to get the bytes to render all 8 pixels for a tile.\cf4 \
+
+\f0\b \cf2 let
+\f1\b0 \cf4  \cf11 binaryNumbers\cf4 : [\cf9 UInt8\cf4 ] = [\cf6 0b10000000\cf4 , \cf6 0b01000000\cf4 , \cf6 0b00100000\cf4 , \cf6 0b00010000\cf4 , \cf6 0b00001000\cf4 , \cf6 0b00000100\cf4 , \cf6 0b00000010\cf4 , \cf6 0b00000001\cf4 ];\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 EmuGetTileLineBytes\cf4 (\cf11 firstByte\cf4 : \cf9 UInt8\cf4 , \cf11 secondByte\cf4 : \cf9 UInt8\cf4 ) -> [\cf9 UInt8\cf4 ] \{\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  i = \cf6 0\cf4 ;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  number: \cf9 UInt8\cf4  = \cf6 0\cf4 ;\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  array: [\cf9 UInt8\cf4 ] = \cf9 Array\cf4 <\cf9 UInt8\cf4 >(repeating: \cf6 0\cf4  , count: \cf6 8\cf4 );\
+    
+\f0\b \cf2 while
+\f1\b0 \cf4  i < \cf6 8\cf4  \{\
+        number = \cf6 0\cf4 ;\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  firstByte & \cf5 binaryNumbers\cf4 [i] != \cf6 0\cf4  \{\
+            number |= (\cf6 1\cf4  <<  \cf6 1\cf4 );\
+        \}\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  secondByte & \cf5 binaryNumbers\cf4 [i] != \cf6 0\cf4  \{\
+            number |= \cf6 1\cf4 ;\
+        \}\
+        array[i] = number\
+        i += \cf6 1\cf4 ;\
+    \}\
+    
+\f0\b \cf2 return
+\f1\b0 \cf4  array;\
+\}\
+\
+\cf8 //Each tile is composed of 16 bytes. Each line is 2 bytes vram starts at address 0x8000\cf4 \
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 EmuTileByteCalculaion\cf4 (\cf11 tileIndex\cf4 : \cf9 UInt16\cf4 , \cf11 y\cf4 : \cf9 Int\cf4 ) -> \cf9 UInt8\cf4  \{\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  tileOffset:\cf9 UInt16\cf4  = tileIndex * \cf6 16\cf4 ;\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  rowOffset:\cf9 UInt16\cf4   = \cf9 UInt16\cf4 (y * \cf6 2\cf4 );\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  address:\cf9 UInt16\cf4  = tileOffset + rowOffset;\
+    
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 PPUStateInstance\cf4 .\cf5 vram\cf4 [\cf9 Int\cf4 (address)];\
+\}\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 EmuRenderTile\cf4 ( \cf11 tileIndex\cf4 : \cf9 UInt16\cf4 ) \{\
+   \cf8 // let tileSize = CGSize(width: 8, height: 8);\cf4 \
+    \cf8 // Loop through each pixel in the tile and set its color based on the UInt8 value\cf4 \
+    
+\f0\b \cf2 for
+\f1\b0 \cf4  y 
+\f0\b \cf2 in
+\f1\b0 \cf4  \cf6 0\cf4 ..<\cf6 8\cf4  \{\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  firstByte: \cf9 UInt8\cf4  = \cf7 EmuTileByteCalculaion\cf4 (\cf7 tileIndex\cf4 : tileIndex, \cf7 y\cf4 : y);\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  secondByte: \cf9 UInt8\cf4  = \cf7 EmuTileByteCalculaion\cf4 (\cf7 tileIndex\cf4 : tileIndex, \cf7 y\cf4 : y + \cf6 1\cf4 );\
+        
+\f0\b \cf2 let
+\f1\b0 \cf4  colorValue: [\cf9 UInt8\cf4 ] = \cf7 EmuGetTileLineBytes\cf4 (\cf7 firstByte\cf4 : firstByte, \cf7 secondByte\cf4 : secondByte);\
+        
+\f0\b \cf2 for
+\f1\b0 \cf4  x 
+\f0\b \cf2 in
+\f1\b0 \cf4  \cf6 0\cf4 ..<\cf6 8\cf4  \{\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  pixelColor: \cf9 SKColor\cf4  = \cf7 EmuGetPixelColor\cf4 (\cf7 value\cf4 : colorValue[x]);\
+            
+\f0\b \cf2 let
+\f1\b0 \cf4  index = (y * \cf6 8\cf4 ) + x + (\cf9 Int\cf4 (tileIndex) * \cf6 64\cf4 );\
+            \cf5 PixelColorsArrayInMemory\cf4 [index] = pixelColor;\
+        \}\
+    \}\
+\}\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 EmuRenderTilemap\cf4 (\cf11 PixelArrayInMemory\cf4 : \cf9 UnsafeMutablePointer\cf4 <\cf9 SKColor\cf4 >) \{\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  tileIndex:\cf9 UInt16\cf4  = \cf6 0\cf4 ;\
+    
+\f0\b \cf2 while
+\f1\b0 \cf4  tileIndex * \cf6 64\cf4  < \cf6 24576\cf4  \{\
+        \cf7 EmuRenderTile\cf4 (\cf7 tileIndex\cf4 : tileIndex);\
+        tileIndex += \cf6 1\cf4 ;\
+    \}\
+\}
+\fs32 \
 }

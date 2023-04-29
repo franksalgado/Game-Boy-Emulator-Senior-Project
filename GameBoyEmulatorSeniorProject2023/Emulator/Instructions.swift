@@ -404,6 +404,8 @@ func INCBC() -> Void {
 }
 
 // This function increments B register by 1. 0x04
+//In an increment operation, the half-carry flag is set
+//if the least significant nibble (4 bits) of the register being incremented goes from 0x0F to 0x00
 func INCB() -> Void {
     CPUStateInstance.registersState.b &+= 1;
     var halfCarry: UInt8 = 0;

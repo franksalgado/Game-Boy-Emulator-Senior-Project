@@ -46,9 +46,83 @@ enum SelectPixelColors {
         }
     }
 }
-let GreenColors = SelectPixelColors.shadesOfBlue.colors;
+
+let GreenColors = SelectPixelColors.shadesOfGreen.colors;
 let BlueColors = SelectPixelColors.shadesOfBlue.colors;
 let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
+
+//EmuRenderTilemap(PixelArrayInMemory: PixelColorsArrayInMemory);
+
+var PixelColorsArrayInMemory = UnsafeMutablePointer<SKColor>.allocate(capacity: 24576);
+func EmuGetPixelColor(value: UInt8) -> SKColor {
+    switch value {
+    case 0:
+        return LCDStateInstance.backGroundColors[0];  // Lightest Green
+    case 1:
+        return  LCDStateInstance.backGroundColors[1];  // Light Green
+    case 2:
+        return  LCDStateInstance.backGroundColors[2];  // Dark Green
+    case 3:
+        return  LCDStateInstance.backGroundColors[3];  // Darkest Green
+    default:
+        print("Invalid color index");
+        exit(-5);
+    }
+}
+
+
+let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
+func EmuGetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
+    var i = 0;
+    var number: UInt8 = 0;
+    var array: [UInt8] = Array<UInt8>(repeating: 0 , count: 8);
+    while i < 8 {
+        number = 0;
+        if firstByte & binaryNumbers[i] != 0 {
+            number |= (1 <<  1);
+        }
+        if secondByte & binaryNumbers[i] != 0 {
+            number |= 1;
+        }
+        array[i] = number
+        i += 1;
+    }
+    return array;
+}
+
+//Each tile is composed of 16 bytes. Each line is 2 bytes vram starts at address 0x8000
+func EmuTileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 {
+    let tileOffset:UInt16 = tileIndex * 16;
+    let rowOffset:UInt16  = UInt16(y * 2);
+    let address:UInt16 = tileOffset + rowOffset;
+    return PPUStateInstance.vram[Int(address)];
+}
+
+func EmuRenderTile( tileIndex: UInt16) {
+   // let tileSize = CGSize(width: 8, height: 8);
+    // Loop through each pixel in the tile and set its color based on the UInt8 value
+    for y in 0..<8 {
+        let firstByte: UInt8 = EmuTileByteCalculaion(tileIndex: tileIndex, y: y);
+        let secondByte: UInt8 = EmuTileByteCalculaion(tileIndex: tileIndex, y: y + 1);
+        let colorValue: [UInt8] = EmuGetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
+        for x in 0..<8 {
+            let pixelColor: SKColor = EmuGetPixelColor(value: colorValue[x]);
+            let index = (y * 8) + x + (Int(tileIndex) * 64);
+            PixelColorsArrayInMemory[index] = pixelColor;
+        }
+    }
+}
+
+func EmuRenderTilemap(PixelArrayInMemory: UnsafeMutablePointer<SKColor>) {
+    var tileIndex:UInt16 = 0;
+    while tileIndex * 64 < 24576 {
+        EmuRenderTile(tileIndex: tileIndex);
+        tileIndex += 1;
+    }
+}
+
+
+
 func isBitSet(bitPosition: UInt8, in value: UInt8) -> Bool {
     let mask: UInt8 = 1 << bitPosition
     return (value & mask) != 0
@@ -76,28 +150,6 @@ struct BitField {
         self.bit3 = (rawValue & 0b0000_1000) != 0
     }
 }
-
-
-//Used in GameScene class to get the bytes to render all 8 pixels for a tile.
-let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
-func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
-    var i = 0;
-    var number: UInt8 = 0;
-    var array: [UInt8] = Array<UInt8>(repeating: 0 , count: 8);
-    while i < 8 {
-        number = 0;
-        if firstByte & binaryNumbers[i] != 0 {
-            number |= (1 <<  1);
-        }
-        if secondByte & binaryNumbers[i] != 0 {
-            number |= 1;
-        }
-        array[i] = number
-        i += 1;
-    }
-    return array;
-}
-
 
 struct OAMSpriteAttributes {
     var y: UInt8;

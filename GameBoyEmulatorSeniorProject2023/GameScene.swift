@@ -70,12 +70,32 @@ class GameScene: SKScene {
         }
     }
 
+    //Used in GameScene class to get the bytes to render all 8 pixels for a tile.
+    let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
+    func GetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
+        var i = 0;
+        var number: UInt8 = 0;
+        var array: [UInt8] = Array<UInt8>(repeating: 0 , count: 8);
+        while i < 8 {
+            number = 0;
+            if firstByte & binaryNumbers[i] != 0 {
+                number |= (1 <<  1);
+            }
+            if secondByte & binaryNumbers[i] != 0 {
+                number |= 1;
+            }
+            array[i] = number
+            i += 1;
+        }
+        return array;
+    }
     
+    //Each tile is composed of 16 bytes. Each line is 2 bytes vram starts at address 0x8000
     func tileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 {
         let tileOffset:UInt16 = tileIndex * 16;
         let rowOffset:UInt16  = UInt16(y * 2);
-        let address:UInt16 = 0x8000 + tileOffset + rowOffset;
-        return BusRead(address: address);
+        let address:UInt16 = tileOffset + rowOffset;
+        return PPUStateInstance.vram[Int(address)];
     }
     
     func renderTile( tileIndex: UInt16) {
@@ -94,17 +114,10 @@ class GameScene: SKScene {
     }
     
     func renderTilemap() {
-        var x = -80;
-        var y = 72;
         var tileIndex:UInt16 = 0;
-        while y != -120 {
-            x = -80;
-            while x != 48 {
-                renderTile(tileIndex: tileIndex);
-                tileIndex += 1;
-                x += 8;
-            }
-            y -= 8;
+        while tileIndex * 64 < pixelNodes.count {
+            renderTile(tileIndex: tileIndex);
+            tileIndex += 1;
         }
     }
     
@@ -177,5 +190,6 @@ class GameScene: SKScene {
         
         self.lastUpdateTime = currentTime;
         renderTilemap();
+        //print(pixelNodes.count)
     }
 }
