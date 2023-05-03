@@ -142,9 +142,13 @@ func LCDWrite(address: UInt16, value: UInt8) -> Void{
         LCDStateInstance.backGroundPaletteData = value;
         var i: UInt8 = 0
         while i < 4 {
+            //print("za")
+            //print(GreenColors[Int( (value >> (i * 2) ) & 0b11) ])
             LCDStateInstance.backGroundColors[Int(i)] = GreenColors[Int( (value >> (i * 2) ) & 0b11) ];
             i += 1;
         }
+        //print("😹")
+        //exit(-5)
     case 8:
         LCDStateInstance.objectPalette[0] = value;
         let temp = LCDStateInstance.Sprite1Colors;

@@ -21,7 +21,8 @@ class ViewController: NSViewController {
             if let scene = SKScene(fileNamed: "GameScene") {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .aspectFill;
-                scene.size = CGSize(width: 500, height: 500);
+                scene.size = CGSize(width: 160, height: 144);
+                scene.anchorPoint = CGPoint(x: 0, y: 1);
                 // Present the scene
                 view.presentScene(scene);
             }

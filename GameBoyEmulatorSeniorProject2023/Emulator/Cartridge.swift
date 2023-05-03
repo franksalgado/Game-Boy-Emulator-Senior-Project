@@ -62,11 +62,10 @@ func InitializeCartridgeState() -> CartridgeState {
     }
 }
 
-
 var CartridgeStateInstance = InitializeCartridgeState();
 
 func CartridgeRead(address: UInt16) -> UInt8 {
-    return CartridgeStateInstance.romDataInMemory[Int(address)];
+    return CartridgeStateInstance.romDataInArray[Int(address)];
 }
 
 func CartridgeWrite(address: UInt16, value: UInt8) {

@@ -51,77 +51,6 @@ let GreenColors = SelectPixelColors.shadesOfGreen.colors;
 let BlueColors = SelectPixelColors.shadesOfBlue.colors;
 let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
 
-//EmuRenderTilemap(PixelArrayInMemory: PixelColorsArrayInMemory);
-
-var PixelColorsArrayInMemory = UnsafeMutablePointer<SKColor>.allocate(capacity: 24576);
-func EmuGetPixelColor(value: UInt8) -> SKColor {
-    switch value {
-    case 0:
-        return LCDStateInstance.backGroundColors[0];  // Lightest Green
-    case 1:
-        return  LCDStateInstance.backGroundColors[1];  // Light Green
-    case 2:
-        return  LCDStateInstance.backGroundColors[2];  // Dark Green
-    case 3:
-        return  LCDStateInstance.backGroundColors[3];  // Darkest Green
-    default:
-        print("Invalid color index");
-        exit(-5);
-    }
-}
-
-
-let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
-func EmuGetTileLineBytes(firstByte: UInt8, secondByte: UInt8) -> [UInt8] {
-    var i = 0;
-    var number: UInt8 = 0;
-    var array: [UInt8] = Array<UInt8>(repeating: 0 , count: 8);
-    while i < 8 {
-        number = 0;
-        if firstByte & binaryNumbers[i] != 0 {
-            number |= (1 <<  1);
-        }
-        if secondByte & binaryNumbers[i] != 0 {
-            number |= 1;
-        }
-        array[i] = number
-        i += 1;
-    }
-    return array;
-}
-
-//Each tile is composed of 16 bytes. Each line is 2 bytes vram starts at address 0x8000
-func EmuTileByteCalculaion(tileIndex: UInt16, y: Int) -> UInt8 {
-    let tileOffset:UInt16 = tileIndex * 16;
-    let rowOffset:UInt16  = UInt16(y * 2);
-    let address:UInt16 = tileOffset + rowOffset;
-    return PPUStateInstance.vram[Int(address)];
-}
-
-func EmuRenderTile( tileIndex: UInt16) {
-   // let tileSize = CGSize(width: 8, height: 8);
-    // Loop through each pixel in the tile and set its color based on the UInt8 value
-    for y in 0..<8 {
-        let firstByte: UInt8 = EmuTileByteCalculaion(tileIndex: tileIndex, y: y);
-        let secondByte: UInt8 = EmuTileByteCalculaion(tileIndex: tileIndex, y: y + 1);
-        let colorValue: [UInt8] = EmuGetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
-        for x in 0..<8 {
-            let pixelColor: SKColor = EmuGetPixelColor(value: colorValue[x]);
-            let index = (y * 8) + x + (Int(tileIndex) * 64);
-            PixelColorsArrayInMemory[index] = pixelColor;
-        }
-    }
-}
-
-func EmuRenderTilemap(PixelArrayInMemory: UnsafeMutablePointer<SKColor>) {
-    var tileIndex:UInt16 = 0;
-    while tileIndex * 64 < 24576 {
-        EmuRenderTile(tileIndex: tileIndex);
-        tileIndex += 1;
-    }
-}
-
-
 
 func isBitSet(bitPosition: UInt8, in value: UInt8) -> Bool {
     let mask: UInt8 = 1 << bitPosition
@@ -163,7 +92,10 @@ struct PPUState {
     var vram: [UInt8] = Array<UInt8>(repeating: 0, count: 0x2000);
     var currentFrame: UInt32 = 0;
     var lineTicks: UInt32 = 0;
+    var FIFOInstance: FIFO = FIFO();
+    var videoBuffer: [SKColor] = Array(repeating: GreenColors[0], count: 168 * 144);
 }
+
 var PPUStateInstance = PPUState();
 
 func PPUOAMWrite(address: UInt16, value: UInt8) -> Void {
@@ -210,17 +142,27 @@ func PPUOAMread(address: UInt16) -> UInt8 {
 func PPUTick() -> Void {
     PPUStateInstance.lineTicks += 1;
     switch LCDStateInstance.LCDStatus & 0b11 {
-    case 0:
+    case LCDMode.OAM.rawValue:
         if PPUStateInstance.lineTicks >= 80 {
             LCDStateInstance.SetLCDStatusMode(LCDMode: .XFER);
+            PPUStateInstance.FIFOInstance.currentFIFOStep = .GetTile;
+            PPUStateInstance.FIFOInstance.lineX = 0;
+            PPUStateInstance.FIFOInstance.fetchX = 0;
+            PPUStateInstance.FIFOInstance.pushedX = 0;
+            PPUStateInstance.FIFOInstance.FIFOX = 0;
         }
         break;
-    case 1:
-        if PPUStateInstance.lineTicks >= 80 + 172{
+    case LCDMode.XFER.rawValue:
+        PipelinePrcess()
+        if PPUStateInstance.FIFOInstance.pushedX >= 160 {
+            PipelineFIFOReset();
             LCDStateInstance.SetLCDStatusMode(LCDMode: .HBLANK);
+            if LCDStateInstance.LCDStatus & StatSRC.HBlANK.rawValue != 0 {
+                RequestInterrupt(InterruptTypes: .LCDSTAT);
+            }
         }
         break;
-    case 2:
+    case LCDMode.VBLANK.rawValue:
         if PPUStateInstance.lineTicks >= 456{
             LCDStateInstance.LY += 1;
             if LCDStateInstance.LY == LCDStateInstance.LYCompare {
@@ -235,7 +177,7 @@ func PPUTick() -> Void {
             PPUStateInstance.lineTicks = 0;
         }
         break;
-    case 3:
+    case LCDMode.HBLANK.rawValue:
         if PPUStateInstance.lineTicks >= 456 {
             LCDStateInstance.LY += 1;
             if LCDStateInstance.LY == LCDStateInstance.LYCompare {
@@ -258,6 +200,7 @@ func PPUTick() -> Void {
         break;
     default:
         print("Inval pputick")
+        exit(-5);
     }
 }
 
