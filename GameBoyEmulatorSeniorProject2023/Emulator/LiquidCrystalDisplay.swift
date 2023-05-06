@@ -60,19 +60,19 @@ struct LCDState {
     var backGroundColors: [SKColor];
     var Sprite1Colors: [SKColor];
     var Sprite2Colors: [SKColor];
-    func SetLCDStatusMode(LCDMode: LCDMode) -> Void{
-        LCDStateInstance.LCDStatus = ( LCDStateInstance.LCDStatus & ~0b11) | LCDMode.rawValue;
+    func SetLCDStatusMode(LCDmode: UInt8) -> Void{
+        LCDStateInstance.LCDStatus = ( LCDStateInstance.LCDStatus & ~0b11) | LCDmode;
     }
     init() {
         LCDControl = 0x91;
         //LCD Status starts out with every bit set except the first
-        LCDStatus = ~1;
+        LCDStatus = ~0b1;
         yScroll = 0;
         xScroll = 0;
         LY = 0;
         //0xFF45
         LYCompare = 0;
-        DMA = 0;
+        DMA = 0xFF;
         backGroundPaletteData = 0xFC;
         objectPalette = Array<UInt8>(repeating: 0xFF, count: 2);
         windowX = 0;
@@ -147,8 +147,7 @@ func LCDWrite(address: UInt16, value: UInt8) -> Void{
             LCDStateInstance.backGroundColors[Int(i)] = GreenColors[Int( (value >> (i * 2) ) & 0b11) ];
             i += 1;
         }
-        //print("😹")
-        //exit(-5)
+       // print("😹")
     case 8:
         LCDStateInstance.objectPalette[0] = value;
         let temp = LCDStateInstance.Sprite1Colors;

@@ -85,7 +85,7 @@ func BusWrite(address: UInt16, value: UInt8) {
     case 0x0000..<0x8000:
         CartridgeWrite(address: address, value: value);
     case 0x8000..<0xA000:
-        PPUStateInstance.vram[Int(address) - 0x8000] = value;
+        PPUStateInstance.vram[Int(address &- 0x8000)] = value;
     case 0xA000..<0xC000:
         CartridgeWrite(address: address, value: value);
     case 0xC000..<0xE000:

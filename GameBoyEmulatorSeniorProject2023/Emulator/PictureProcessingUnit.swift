@@ -93,7 +93,7 @@ struct PPUState {
     var currentFrame: UInt32 = 0;
     var lineTicks: UInt32 = 0;
     var FIFOInstance: FIFO = FIFO();
-    var videoBuffer: [SKColor] = Array(repeating: GreenColors[0], count: 168 * 144);
+    var videoBuffer: [SKColor] = Array(repeating: GreenColors[0], count: 160 * 144);
 }
 
 var PPUStateInstance = PPUState();
@@ -139,68 +139,103 @@ func PPUOAMread(address: UInt16) -> UInt8 {
         exit(-5);
     }
 }
+
+func OAM() -> Void {
+    //print("Inoam")
+    if PPUStateInstance.lineTicks >= 80 {
+        LCDStateInstance.SetLCDStatusMode(LCDmode: LCDMode.XFER.rawValue);
+        PPUStateInstance.FIFOInstance.currentFIFOStep = .GetTile;
+        PPUStateInstance.FIFOInstance.lineX = 0;
+        PPUStateInstance.FIFOInstance.fetchX = 0;
+        PPUStateInstance.FIFOInstance.pushedX = 0;
+        PPUStateInstance.FIFOInstance.FIFOX = 0;
+    }
+}
+func XFER() -> Void {
+    //print("Inxfer")
+    PipelinePrcess();
+    //print("exited pipelien process")
+    //print(PPUStateInstance.FIFOInstance.pushedX)
+    //print(PPUStateInstance.FIFOInstance.totalElements, "total elements in queuue")
+    //print(LCDStateInstance.xScroll)
+    //print(PPUStateInstance.FIFOInstance.lineX, "Linex")
+    if PPUStateInstance.FIFOInstance.pushedX >= 160 {
+        //print("za")
+        PipelineFIFOReset();
+        LCDStateInstance.SetLCDStatusMode(LCDmode: LCDMode.HBLANK.rawValue);
+        if LCDStateInstance.LCDStatus & StatSRC.HBlANK.rawValue != 0 {
+            RequestInterrupt(InterruptTypes: .LCDSTAT);
+        }
+    }
+}
+
+func VBLANLK() {
+    //print("vblank")
+    if PPUStateInstance.lineTicks >= 456{
+       // print("vblankif")
+        IncLY();
+        if LCDStateInstance.LY >= 154 {
+            LCDStateInstance.SetLCDStatusMode(LCDmode: LCDMode.OAM.rawValue);
+            LCDStateInstance.LY = 0;
+        }
+        PPUStateInstance.lineTicks = 0;
+    }
+}
+func HBLANK() {
+    if PPUStateInstance.lineTicks >= 456 {
+        IncLY();
+        if LCDStateInstance.LY >= 144 {
+            LCDStateInstance.SetLCDStatusMode(LCDmode: LCDMode.VBLANK.rawValue);
+            RequestInterrupt(InterruptTypes: .VBLANK);
+            if (LCDStateInstance.LCDStatus & StatSRC.VBLANK.rawValue) != 0 {
+                RequestInterrupt(InterruptTypes: .LCDSTAT);
+            }
+        } else {
+            LCDStateInstance.SetLCDStatusMode(LCDmode: LCDMode.OAM.rawValue);
+    }
+    PPUStateInstance.lineTicks = 0;
+    }
+}
 func PPUTick() -> Void {
     PPUStateInstance.lineTicks += 1;
     switch LCDStateInstance.LCDStatus & 0b11 {
+    //case 0:
     case LCDMode.OAM.rawValue:
-        if PPUStateInstance.lineTicks >= 80 {
-            LCDStateInstance.SetLCDStatusMode(LCDMode: .XFER);
-            PPUStateInstance.FIFOInstance.currentFIFOStep = .GetTile;
-            PPUStateInstance.FIFOInstance.lineX = 0;
-            PPUStateInstance.FIFOInstance.fetchX = 0;
-            PPUStateInstance.FIFOInstance.pushedX = 0;
-            PPUStateInstance.FIFOInstance.FIFOX = 0;
-        }
+       // print("o")
+        OAM();
         break;
+    //case 1:
     case LCDMode.XFER.rawValue:
-        PipelinePrcess()
-        if PPUStateInstance.FIFOInstance.pushedX >= 160 {
-            PipelineFIFOReset();
-            LCDStateInstance.SetLCDStatusMode(LCDMode: .HBLANK);
-            if LCDStateInstance.LCDStatus & StatSRC.HBlANK.rawValue != 0 {
-                RequestInterrupt(InterruptTypes: .LCDSTAT);
-            }
-        }
+       // print("x")
+        XFER();
+        
         break;
+   // case 2:
     case LCDMode.VBLANK.rawValue:
-        if PPUStateInstance.lineTicks >= 456{
-            LCDStateInstance.LY += 1;
-            if LCDStateInstance.LY == LCDStateInstance.LYCompare {
-                LCDStateInstance.LCDStatus |= (1 << 2);
-            } else {
-                LCDStateInstance.LCDStatus &= ~(1 << 2);
-            }
-            if LCDStateInstance.LY >= 154 {
-                LCDStateInstance.SetLCDStatusMode(LCDMode: .OAM);
-                LCDStateInstance.LY = 0;
-            }
-            PPUStateInstance.lineTicks = 0;
-        }
+        //print("v")
+        VBLANLK()
         break;
+    //case 3:
     case LCDMode.HBLANK.rawValue:
-        if PPUStateInstance.lineTicks >= 456 {
-            LCDStateInstance.LY += 1;
-            if LCDStateInstance.LY == LCDStateInstance.LYCompare {
-                LCDStateInstance.LCDStatus |= (1 << 2);
-            } else {
-                LCDStateInstance.LCDStatus &= ~(1 << 2);
-            }
-            if LCDStateInstance.LY >= 144 {
-                LCDStateInstance.SetLCDStatusMode(LCDMode: .VBLANK);
-                RequestInterrupt(InterruptTypes: .VBLANK);
-                if (LCDStateInstance.LCDStatus & StatSRC.VBLANK.rawValue) != 0 {
-                    RequestInterrupt(InterruptTypes: .LCDSTAT)
-                }
-                PPUStateInstance.currentFrame += 1;
-            }
-        } else {
-            LCDStateInstance.SetLCDStatusMode(LCDMode: .OAM);
-        }
-        PPUStateInstance.lineTicks = 0;
+      //  print("H")
+        HBLANK();
         break;
     default:
-        print("Inval pputick")
+        //print("Inval pputick")
         exit(-5);
+    }
+}
+
+func IncLY() {
+    //print("IncLY execut")
+    LCDStateInstance.LY += 1;
+    if LCDStateInstance.LY == LCDStateInstance.LYCompare {
+        LCDStateInstance.LCDStatus |= (1 << 2);
+        if LCDStateInstance.LCDStatus & StatSRC.LYC.rawValue != 0 {
+            RequestInterrupt(InterruptTypes: .LCDSTAT);
+        }
+    } else {
+        LCDStateInstance.LCDStatus &= ~(1 << 2);
     }
 }
 

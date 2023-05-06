@@ -32,7 +32,7 @@ func DMATick() -> Void {
         DMAStateInstance.startDelay -= 1;
         return;
     }
-    PPUOAMWrite(address: UInt16(DMAStateInstance.byte), value: BusRead(address: UInt16( ( UInt16(DMAStateInstance.value) * 0x100) + UInt16(DMAStateInstance.byte))) );
+    PPUOAMWrite(address: UInt16(DMAStateInstance.byte), value: BusRead(address: UInt16( ( UInt16(DMAStateInstance.value) &* 0x100) &+ UInt16(DMAStateInstance.byte))) );
     DMAStateInstance.byte += 1;
     DMAStateInstance.active = DMAStateInstance.byte < 0xA0;
 }

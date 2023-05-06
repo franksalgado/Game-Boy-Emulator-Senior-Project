@@ -25,17 +25,36 @@ class GameScene: SKScene {
        }
 
     func createTileMap() {
-        var x = -80;
-        var y = 72;
+        /*
+        var x = 0;
+        var y = 0;
         var tileIndex:UInt16 = 0;
-        while y != -120 {
-            x = -80;
-            while x != 48 {
+        while y != -144 {
+            x = 0;
+            while x != 160 {
                 createTile(atPoint: CGPoint(x: x, y: y), tileIndex: tileIndex);
                 tileIndex += 1;
                 x += 8;
             }
             y -= 8;
+        }
+         */
+        var x = 0;
+        var y = 0;
+        var tileIndex:UInt16 = 0;
+        while y != -144 {
+            x = 0;
+            while x != 160 {
+                let pixelColor: SKColor = getPixelColor(value: 0);
+                let pixelNode = SKSpriteNode(color: pixelColor, size: CGSize(width: 1, height: 1));
+                pixelNode.position = CGPoint(x: x, y:  y);
+                pixelNode.zPosition = -0.1;
+                pixelNodes.append(pixelNode);
+                self.addChild(pixelNode);
+                tileIndex += 1;
+                x += 1;
+            }
+            y -= 1;
         }
     }
     func createTile(atPoint pos : CGPoint, tileIndex: UInt16) {
@@ -99,25 +118,36 @@ class GameScene: SKScene {
     }
     
     func renderTile( tileIndex: UInt16) {
+    /*
        // let tileSize = CGSize(width: 8, height: 8);
         // Loop through each pixel in the tile and set its color based on the UInt8 value
         for y in 0..<8 {
+            /*
             let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);
             let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);
             let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
+             */
             for x in 0..<8 {
-                let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
+                //let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
                 let index = (y * 8) + x + (Int(tileIndex) * 64);
-                pixelNodes[index].color = pixelColor;
+                pixelNodes[index].color = PPUStateInstance.videoBuffer[index];
             }
         }
+     */
     }
     
     func renderTilemap() {
+        /*
         var tileIndex:UInt16 = 0;
         while tileIndex * 64 < pixelNodes.count {
             renderTile(tileIndex: tileIndex);
             tileIndex += 1;
+        }*/
+        var i = 0;
+        //print(PPUStateInstance.videoBuffer.count)
+        while i < pixelNodes.count {
+            pixelNodes[i].color = PPUStateInstance.videoBuffer[i];
+            i += 1;
         }
     }
     

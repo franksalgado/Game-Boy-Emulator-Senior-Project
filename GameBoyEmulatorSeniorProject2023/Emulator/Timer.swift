@@ -49,7 +49,6 @@ func TimerTick() -> Void {
     }
 }
 
-
 func TimerRead(address: UInt16) -> UInt8 {
     switch(address) {
     case 0xFF04:

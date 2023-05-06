@@ -13,7 +13,6 @@
 		705DD03A29F5C48500BE421D /* LiquidCrystalDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705DD03929F5C48500BE421D /* LiquidCrystalDisplay.swift */; };
 		70656E8D29FB7200000D86AB /* PixelFIFO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70656E8C29FB7200000D86AB /* PixelFIFO.swift */; };
 		70B256C129D93F4D00DF5324 /* Interrupts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C029D93F4D00DF5324 /* Interrupts.swift */; };
-		70B256C529D9554200DF5324 /* IO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C429D9554200DF5324 /* IO.swift */; };
 		70B256C729D963A900DF5324 /* TestRoms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C629D963A900DF5324 /* TestRoms.swift */; };
 		70B256C929D968C400DF5324 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B256C829D968C400DF5324 /* Timer.swift */; };
 		70D639B229A5A08200D0855D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639B129A5A08200D0855D /* AppDelegate.swift */; };
@@ -59,7 +58,6 @@
 		705DD03929F5C48500BE421D /* LiquidCrystalDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidCrystalDisplay.swift; sourceTree = "<group>"; };
 		70656E8C29FB7200000D86AB /* PixelFIFO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelFIFO.swift; sourceTree = "<group>"; };
 		70B256C029D93F4D00DF5324 /* Interrupts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interrupts.swift; sourceTree = "<group>"; };
-		70B256C429D9554200DF5324 /* IO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
 		70B256C629D963A900DF5324 /* TestRoms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRoms.swift; sourceTree = "<group>"; };
 		70B256C829D968C400DF5324 /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		70D639AE29A5A08200D0855D /* GameBoyEmulatorSeniorProject2023.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBoyEmulatorSeniorProject2023.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,7 +172,6 @@
 				7020846029B81B7900D13C4D /* Scraps.rtf */,
 				70E247DC29CD280300BC828C /* Stack.swift */,
 				70B256C029D93F4D00DF5324 /* Interrupts.swift */,
-				70B256C429D9554200DF5324 /* IO.swift */,
 				70B256C629D963A900DF5324 /* TestRoms.swift */,
 				70B256C829D968C400DF5324 /* Timer.swift */,
 				701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */,
@@ -336,7 +333,6 @@
 				70656E8D29FB7200000D86AB /* PixelFIFO.swift in Sources */,
 				70D639E829A5A13D00D0855D /* Instructions.swift in Sources */,
 				70D639E429A5A0AE00D0855D /* Cartridge.swift in Sources */,
-				70B256C529D9554200DF5324 /* IO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
