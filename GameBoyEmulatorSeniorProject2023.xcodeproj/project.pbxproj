@@ -32,6 +32,8 @@
 		70D639EC29A5A1AA00D0855D /* Emulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D639EB29A5A1AA00D0855D /* Emulator.swift */; };
 		70DBF75E29F52753004091FB /* DirectMemoryAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */; };
 		70E247DD29CD280300BC828C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E247DC29CD280300BC828C /* Stack.swift */; };
+		70F69FFC2A0B110600BC9369 /* Joypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F69FFB2A0B110600BC9369 /* Joypad.swift */; };
+		70F69FFE2A0B1E0000BC9369 /* BitFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F69FFD2A0B1E0000BC9369 /* BitFunctions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,8 @@
 		70D639EB29A5A1AA00D0855D /* Emulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emulator.swift; sourceTree = "<group>"; };
 		70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectMemoryAccess.swift; sourceTree = "<group>"; };
 		70E247DC29CD280300BC828C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		70F69FFB2A0B110600BC9369 /* Joypad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joypad.swift; sourceTree = "<group>"; };
+		70F69FFD2A0B1E0000BC9369 /* BitFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,7 @@
 		70D639E229A5A08D00D0855D /* Emulator */ = {
 			isa = PBXGroup;
 			children = (
+				70F69FFD2A0B1E0000BC9369 /* BitFunctions.swift */,
 				70D639E329A5A0AE00D0855D /* Cartridge.swift */,
 				70D639E529A5A10E00D0855D /* CPU.swift */,
 				70D639E729A5A13D00D0855D /* Instructions.swift */,
@@ -174,11 +179,12 @@
 				70B256C029D93F4D00DF5324 /* Interrupts.swift */,
 				70B256C629D963A900DF5324 /* TestRoms.swift */,
 				70B256C829D968C400DF5324 /* Timer.swift */,
-				701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */,
 				70DBF75D29F52753004091FB /* DirectMemoryAccess.swift */,
+				701A276029DE4DDC00842E99 /* PictureProcessingUnit.swift */,
 				705DD03929F5C48500BE421D /* LiquidCrystalDisplay.swift */,
 				70656E8C29FB7200000D86AB /* PixelFIFO.swift */,
 				700934D629F9ECFF009430A2 /* Audio.swift */,
+				70F69FFB2A0B110600BC9369 /* Joypad.swift */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -328,11 +334,13 @@
 				700934D729F9ECFF009430A2 /* Audio.swift in Sources */,
 				70B256C129D93F4D00DF5324 /* Interrupts.swift in Sources */,
 				70E247DD29CD280300BC828C /* Stack.swift in Sources */,
+				70F69FFC2A0B110600BC9369 /* Joypad.swift in Sources */,
 				70B256C729D963A900DF5324 /* TestRoms.swift in Sources */,
 				70B256C929D968C400DF5324 /* Timer.swift in Sources */,
 				70656E8D29FB7200000D86AB /* PixelFIFO.swift in Sources */,
 				70D639E829A5A13D00D0855D /* Instructions.swift in Sources */,
 				70D639E429A5A0AE00D0855D /* Cartridge.swift in Sources */,
+				70F69FFE2A0B1E0000BC9369 /* BitFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

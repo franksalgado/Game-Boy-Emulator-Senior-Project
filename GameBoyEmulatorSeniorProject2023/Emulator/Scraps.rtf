@@ -68,11 +68,6 @@ for debugging\
 \f1\b0 \cf4 ;\
 \}\
 \
-\
-\
-\
-\
-\
 \cf8 //print(UInt16(truncatingIfNeeded: UInt16(Int(537) + Int(Int8(bitPattern: BusRead(address: 537))))))\cf4 \
 \cf10 print\cf4 (\cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 518\cf4 )))\
 \cf9 UInt16\cf4 (\cf9 truncatingIfNeeded\cf4 : \cf9 Int\cf4 (\cf6 519\cf4 ) + \cf9 Int\cf4 ( \cf9 Int8\cf4 (\cf10 bitPattern\cf4 : BusRead(address: \cf6 518\cf4 )) ) )\
@@ -311,9 +306,6 @@ ppu scraps\
 \f1\b0 \cf4  CartridgeState;\
 \}\
 \
-\
-\
-\
  
 \f0\b \cf2 override
 \f1\b0 \cf4  
@@ -340,15 +332,6 @@ ppu scraps\
 \cf8         self.addChild(pixelNodea);\cf4 \
 \cf8          */\cf4 \
     \}\
-\
-\
-\
-\
-\
-\
-\
-\
-\
 \
 
 \f0\b \cf2 func
@@ -418,8 +401,6 @@ ppu scraps\
         \cf10 exit\cf4 (-\cf6 5\cf4 )\
     \}\
 \}\
-\
-\
 \
 class GameScene: SKScene \{\
     \
@@ -534,8 +515,6 @@ class GameScene: SKScene \{\
             \cf10 exit\cf4 (-\cf6 5\cf4 );\
             \}\
         \}\
-\
-\
 \
 \
 \
@@ -726,9 +705,6 @@ class GameScene: SKScene \{\
 \fs32 \
 \pard\tx791\pardeftab791\pardirnatural\partightenfactor0
 \cf4 \
-\
-\
-\
 \pard\tx593\pardeftab593\pardirnatural\partightenfactor0
 
 \fs24 \cf4  
@@ -859,9 +835,7 @@ class GameScene: SKScene \{\
             \}\
         \}\
     \}\
-    \
-    \
-    \
+  \
     
 \f0\b \cf2 func
 \f1\b0 \cf4  \cf11 renderTilemap\cf4 () \{\
@@ -884,6 +858,9 @@ class GameScene: SKScene \{\
                 \cf7 renderTile\cf4 (\cf7 tileIndex\cf4 : tileIndex);\
                 tileIndex += \cf6 1\cf4 ;\
                 x += \cf6 8\cf4 ;\
+\
+\
+\
             \}\
             y -= \cf6 8\cf4 ;\
         \}\
@@ -1059,4 +1036,104 @@ class GameScene: SKScene \{\
 \pard\tx642\pardeftab642\pardirnatural\partightenfactor0
 
 \fs32 \cf4 \
+\
+\
+\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
+
+\fs26 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 touchDown\cf4 (\cf11 atPoint\cf4  pos : \cf9 CGPoint\cf4 ) \{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  n = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
+\f0\b \cf2 as
+\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+            n.\cf13 position\cf4  = pos\
+            n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 green\cf4 \
+            
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 addChild\cf4 (n)\
+        \}\
+    \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 touchMoved\cf4 (\cf11 toPoint\cf4  pos : \cf9 CGPoint\cf4 ) \{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  n = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
+\f0\b \cf2 as
+\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+            n.\cf13 position\cf4  = pos\
+            n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 blue\cf4 \
+            
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 addChild\cf4 (n)\
+        \}\
+    \}\
+    \
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 touchUp\cf4 (\cf11 atPoint\cf4  pos : \cf9 CGPoint\cf4 ) \{\
+        
+\f0\b \cf2 if
+\f1\b0 \cf4  
+\f0\b \cf2 let
+\f1\b0 \cf4  n = 
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
+\f0\b \cf2 as
+\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+            n.\cf13 position\cf4  = pos\
+            n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 red\cf4 \
+            
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf10 addChild\cf4 (n)\
+        \}\
+    \}\
+    \
+    
+\f0\b \cf2 override
+\f1\b0 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 mouseDown\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+        
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf7 touchDown\cf4 (\cf7 atPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
+\f0\b \cf2 self
+\f1\b0 \cf4 ))\
+    \}\
+    \
+    
+\f0\b \cf2 override
+\f1\b0 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 mouseDragged\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+        
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf7 touchMoved\cf4 (\cf7 toPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
+\f0\b \cf2 self
+\f1\b0 \cf4 ))\
+    \}\
+    \
+    
+\f0\b \cf2 override
+\f1\b0 \cf4  
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 mouseUp\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+        
+\f0\b \cf2 self
+\f1\b0 \cf4 .\cf7 touchUp\cf4 (\cf7 atPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
+\f0\b \cf2 self
+\f1\b0 \cf4 ))\
+    \}
+\fs32 \
 }

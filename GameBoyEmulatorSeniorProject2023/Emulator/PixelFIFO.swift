@@ -15,13 +15,13 @@ case GetTile,
     Sleep,
     Push
 }
-struct FIFO {
+class FIFO {
     private var pixels: [UInt8] = [];
     
-    mutating func enqueue(pixel: UInt8) {
+    func enqueue(pixel: UInt8) {
         pixels.append(pixel);
     }
-    mutating func dequeue() -> UInt8 {
+    func dequeue() -> UInt8 {
         guard !pixels.isEmpty
         else {
             fatalError("empty queue");
@@ -57,6 +57,47 @@ struct FIFO {
     var tileY: UInt8 = 0;
     var FIFOX: UInt8 = 0;
 }
+struct OAMFIFO {
+    private var sprites: [SKSpriteNode] = [];
+    
+    mutating func enqueue(pixel: SKSpriteNode) {
+        sprites.append(pixel);
+    }
+    mutating func dequeue() -> SKSpriteNode {
+        guard !sprites.isEmpty
+        else {
+            fatalError("empty queue");
+        }
+        return sprites.removeFirst();
+    }
+    var head : SKSpriteNode {
+        guard let head = sprites.first
+        else {
+            fatalError("empty queue");
+        }
+        return head;
+    }
+    var tail : SKSpriteNode {
+        guard let head = sprites.last
+        else {
+            fatalError("empty queue");
+        }
+        return head;
+    }
+    var totalElements: Int {
+            return sprites.count
+        }
+    mutating func OAMFIFOReset() {
+        while self.totalElements > 0 {
+            _ = self.dequeue();
+        }
+    }
+    let maxSPritesPerScanline = 10;
+    var lineSpriteCount: UInt8 = 0;
+    var fetchedEnteryCount: UInt8 = 0;
+    var fetchedEnteries: [SKSpriteNode] = [];
+    let fetchedEnteriesLimit = 3;
+}
 
 let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
 func PipelineFIFOAdd() -> Bool {
@@ -85,11 +126,12 @@ func PipelineFIFOAdd() -> Bool {
 }
 
 func GetTile() {
+    //Determine starting area to get tiles from
     if isBitSet(bitPosition: 0, in: LCDStateInstance.LCDControl) {
         //print("GTif")
         var address: UInt16 {
             if isBitSet(bitPosition: 3, in: LCDStateInstance.LCDControl) {
-                return 0x9C00 + UInt16(PPUStateInstance.FIFOInstance.mapX / 8) + UInt16((PPUStateInstance.FIFOInstance.mapY / 8) * 32);
+                return UInt16( 0x9C00 + Int(PPUStateInstance.FIFOInstance.mapX / 8) + Int(Int(PPUStateInstance.FIFOInstance.mapY / 8) * 32) );
             }
             return UInt16( 0x9800 + Int(PPUStateInstance.FIFOInstance.mapX / 8) + Int(Int(PPUStateInstance.FIFOInstance.mapY / 8) * 32) );
         }

@@ -69,6 +69,8 @@ extension CPUState {
             self.registersState.pc += 1;
             //TestRomWrite();
             //TestRomRead();
+           // print(self.registersState)
+            //print(String(format: "0x%X", self.currentOpcode), self.InstructionsTable[Int(self.currentOpcode)].name)
             self.InstructionsTable[Int(self.currentOpcode)].instructionFunction();
         }
         else {

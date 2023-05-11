@@ -50,6 +50,10 @@ func BusRead(address: UInt16) -> UInt8 {
             //unusable
             break
         case 0xFF00..<0xFF80:
+            if address == 0xFF00 {
+                //print("reading from joypad", JoypadInstance.JoypadRead())
+                return JoypadInstance.JoypadRead();
+            }
             if address == 0xFF01 {
                 return SerialData[0];
             }
@@ -103,6 +107,10 @@ func BusWrite(address: UInt16, value: UInt8) {
         // unusable
         break;
     case 0xFF00..<0xFF80:
+        if address == 0xFF00 {
+            //print("writing to joypad", value)
+            JoypadInstance.JoypadWrite(value: value);
+        }
         if address == 0xFF01 {
             SerialData[0] = value;
         }

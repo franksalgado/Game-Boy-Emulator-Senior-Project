@@ -26,7 +26,7 @@ enum SelectPixelColors {
                 SKColor(red: 0.561, green: 0.765, blue: 0.561, alpha: 1.0),
                 SKColor(red: 0.278, green: 0.659, blue: 0.278, alpha: 1.0),
                 SKColor(red: 0.149, green: 0.357, blue: 0.149, alpha: 1.0)
-            ]
+            ];
             
         case .shadesOfBlue:
             return [
@@ -34,7 +34,7 @@ enum SelectPixelColors {
                 SKColor(red: 0.525, green: 0.631, blue: 0.718, alpha: 1.0),
                 SKColor(red: 0.349, green: 0.439, blue: 0.533, alpha: 1.0),
                 SKColor(red: 0.196, green: 0.267, blue: 0.353, alpha: 1.0)
-            ]
+            ];
             
         case .shadesOfBlackAndWhite:
             return [
@@ -42,7 +42,7 @@ enum SelectPixelColors {
                 SKColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1.0),
                 SKColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0),
                 SKColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
-            ]
+            ];
         }
     }
 }
@@ -51,41 +51,13 @@ let GreenColors = SelectPixelColors.shadesOfGreen.colors;
 let BlueColors = SelectPixelColors.shadesOfBlue.colors;
 let BlackAndWhiteColors = SelectPixelColors.shadesOfBlackAndWhite.colors;
 
-
-func isBitSet(bitPosition: UInt8, in value: UInt8) -> Bool {
-    let mask: UInt8 = 1 << bitPosition
-    return (value & mask) != 0
-}
-
-struct BitField {
-    var bit0: Bool = false
-    var bit1: Bool = false
-    var bit2: Bool = false
-    var bit3: Bool = false
-    
-    var rawValue: UInt8 {
-        var value: UInt8 = 0
-        if bit0 { value |= 0b0000_0001 }
-        if bit1 { value |= 0b0000_0010 }
-        if bit2 { value |= 0b0000_0100 }
-        if bit3 { value |= 0b0000_1000 }
-        return value
-    }
-    
-    init(rawValue: UInt8) {
-        self.bit0 = (rawValue & 0b0000_0001) != 0
-        self.bit1 = (rawValue & 0b0000_0010) != 0
-        self.bit2 = (rawValue & 0b0000_0100) != 0
-        self.bit3 = (rawValue & 0b0000_1000) != 0
-    }
-}
-
 struct OAMSpriteAttributes {
     var y: UInt8;
     var x: UInt8;
     var tileIndex: UInt8;
     var attributesAndFlags: UInt8;
 }
+//Make OAM QUEUE 
 
 struct PPUState {
     var OAMSprite: [OAMSpriteAttributes] = Array<OAMSpriteAttributes>(repeating: OAMSpriteAttributes(y: 0, x: 0, tileIndex: 0, attributesAndFlags: 0), count: 40);
@@ -94,6 +66,7 @@ struct PPUState {
     var lineTicks: UInt32 = 0;
     var FIFOInstance: FIFO = FIFO();
     var videoBuffer: [SKColor] = Array(repeating: GreenColors[0], count: 160 * 144);
+    var OAMFIFOInstance: OAMFIFO = OAMFIFO();
 }
 
 var PPUStateInstance = PPUState();
@@ -140,6 +113,24 @@ func PPUOAMread(address: UInt16) -> UInt8 {
     }
 }
 
+
+func LoadLineSprites() {
+    var OBJSize: UInt8 {
+        if isBitSet(bitPosition: 2, in: LCDStateInstance.LCDControl) {
+            return 1;
+        }
+        return 0;
+    }
+    for entry in PPUStateInstance.OAMSprite {
+        if PPUStateInstance.OAMFIFOInstance.lineSpriteCount >= 10 {
+            break;
+        }
+        if entry.y <= LCDStateInstance.LY + 16 && entry.y + OBJSize > LCDStateInstance.LY + 16 {
+            
+        }
+    }
+}
+
 func OAM() -> Void {
     //print("Inoam")
     if PPUStateInstance.lineTicks >= 80 {
@@ -149,6 +140,13 @@ func OAM() -> Void {
         PPUStateInstance.FIFOInstance.fetchX = 0;
         PPUStateInstance.FIFOInstance.pushedX = 0;
         PPUStateInstance.FIFOInstance.FIFOX = 0;
+        PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount = 0;
+        PPUStateInstance.OAMFIFOInstance.OAMFIFOReset();
+    }
+    if PPUStateInstance.lineTicks == 1 {
+        PPUStateInstance.OAMFIFOInstance.OAMFIFOReset();
+        PPUStateInstance.OAMFIFOInstance.lineSpriteCount = 0;
+        LoadLineSprites();
     }
 }
 func XFER() -> Void {

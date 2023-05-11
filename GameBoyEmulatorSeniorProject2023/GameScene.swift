@@ -57,6 +57,7 @@ class GameScene: SKScene {
             y -= 1;
         }
     }
+    
     func createTile(atPoint pos : CGPoint, tileIndex: UInt16) {
        // let tileSize = CGSize(width: 8, height: 8);
         // Loop through each pixel in the tile and set its color based on the UInt8 value
@@ -117,23 +118,21 @@ class GameScene: SKScene {
         return PPUStateInstance.vram[Int(address)];
     }
     
+    
+    //Only used for viewing tiles in memory
     func renderTile( tileIndex: UInt16) {
-    /*
-       // let tileSize = CGSize(width: 8, height: 8);
+        //let tileSize = CGSize(width: 8, height: 8);
         // Loop through each pixel in the tile and set its color based on the UInt8 value
         for y in 0..<8 {
-            /*
-            let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);
-            let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);
-            let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
-             */
+            //let firstByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y);
+            //let secondByte: UInt8 = tileByteCalculaion(tileIndex: tileIndex, y: y + 1);
+            //let colorValue: [UInt8] = GetTileLineBytes(firstByte: firstByte, secondByte: secondByte);
             for x in 0..<8 {
                 //let pixelColor: SKColor = getPixelColor(value: colorValue[x]);
                 let index = (y * 8) + x + (Int(tileIndex) * 64);
                 pixelNodes[index].color = PPUStateInstance.videoBuffer[index];
             }
         }
-     */
     }
     
     func renderTilemap() {
@@ -145,62 +144,70 @@ class GameScene: SKScene {
         }*/
         var i = 0;
         //print(PPUStateInstance.videoBuffer.count)
-        while i < pixelNodes.count {
+        while i < PPUStateInstance.videoBuffer.count {
             pixelNodes[i].color = PPUStateInstance.videoBuffer[i];
             i += 1;
         }
     }
     
-    
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func mouseDown(with event: NSEvent) {
-        self.touchDown(atPoint: event.location(in: self))
-    }
-    
-    override func mouseDragged(with event: NSEvent) {
-        self.touchMoved(toPoint: event.location(in: self))
-    }
-    
-    override func mouseUp(with event: NSEvent) {
-        self.touchUp(atPoint: event.location(in: self))
-    }
+    /*
+     Bit 7 - Not used
+     Bit 6 - Not used
+     Bit 5 - P15 Select Action buttons    (0=Select)
+     Bit 4 - P14 Select Direction buttons (0=Select)
+     Bit 3 - P13 Input: Down  or Start    (0=Pressed) (Read Only)
+     Bit 2 - P12 Input: Up    or Select   (0=Pressed) (Read Only)
+     Bit 1 - P11 Input: Left  or B        (0=Pressed) (Read Only)
+     Bit 0 - P10 Input: Right or A        (0=Pressed) (Read Only)
+
+     */
     
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
-        case 0x31:
-            if let label = self.label {
-                label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-            }
+        case GameBoyButtons.DOWN.rawValue:
+            JoypadInstance.buttons.down = true;
+        case GameBoyButtons.UP.rawValue:
+            JoypadInstance.buttons.up = true;
+        case GameBoyButtons.LEFT.rawValue:
+            JoypadInstance.buttons.left = true;
+        case GameBoyButtons.RIGHT.rawValue:
+            JoypadInstance.buttons.right = true;
+        case GameBoyButtons.START.rawValue:
+            JoypadInstance.buttons.start = true;
+        case GameBoyButtons.SELECT.rawValue:
+            JoypadInstance.buttons.select = true;
+        case GameBoyButtons.A.rawValue:
+            JoypadInstance.buttons.a = true;
+        case GameBoyButtons.B.rawValue:
+            JoypadInstance.buttons.b = true;
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         }
     }
-    
+
+    override func keyUp(with event: NSEvent) {
+        switch event.keyCode {
+        case GameBoyButtons.DOWN.rawValue:
+            JoypadInstance.buttons.down = false;
+        case GameBoyButtons.UP.rawValue:
+            JoypadInstance.buttons.up = false;
+        case GameBoyButtons.LEFT.rawValue:
+            JoypadInstance.buttons.left = false;
+        case GameBoyButtons.RIGHT.rawValue:
+            JoypadInstance.buttons.right = false;
+        case GameBoyButtons.START.rawValue:
+            JoypadInstance.buttons.start = false;
+        case GameBoyButtons.SELECT.rawValue:
+            JoypadInstance.buttons.select = false;
+        case GameBoyButtons.A.rawValue:
+            JoypadInstance.buttons.a = false;
+        case GameBoyButtons.B.rawValue:
+            JoypadInstance.buttons.b = false;
+        default:
+            break
+        }
+    }
+
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
