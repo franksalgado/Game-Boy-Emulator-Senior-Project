@@ -165,21 +165,21 @@ class GameScene: SKScene {
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
         case GameBoyButtons.DOWN.rawValue:
-            JoypadInstance.buttons.down = true;
+            JoypadInstance.DPadArray[3] = 0;
         case GameBoyButtons.UP.rawValue:
-            JoypadInstance.buttons.up = true;
+            JoypadInstance.DPadArray[2] = 0;
         case GameBoyButtons.LEFT.rawValue:
-            JoypadInstance.buttons.left = true;
+            JoypadInstance.DPadArray[1] = 0;
         case GameBoyButtons.RIGHT.rawValue:
-            JoypadInstance.buttons.right = true;
+            JoypadInstance.DPadArray[0] = 0;
         case GameBoyButtons.START.rawValue:
-            JoypadInstance.buttons.start = true;
+            JoypadInstance.buttonsArray[3] = 0;
         case GameBoyButtons.SELECT.rawValue:
-            JoypadInstance.buttons.select = true;
-        case GameBoyButtons.A.rawValue:
-            JoypadInstance.buttons.a = true;
+            JoypadInstance.buttonsArray[2] = 0;
         case GameBoyButtons.B.rawValue:
-            JoypadInstance.buttons.b = true;
+            JoypadInstance.buttonsArray[1] = 0;
+        case GameBoyButtons.A.rawValue:
+            JoypadInstance.buttonsArray[0] = 0;
         default:
             print("keyDown: \(event.characters!) keyCode: \(event.keyCode)")
         }
@@ -188,21 +188,21 @@ class GameScene: SKScene {
     override func keyUp(with event: NSEvent) {
         switch event.keyCode {
         case GameBoyButtons.DOWN.rawValue:
-            JoypadInstance.buttons.down = false;
+            JoypadInstance.DPadArray[3] = (1 << 3);
         case GameBoyButtons.UP.rawValue:
-            JoypadInstance.buttons.up = false;
+            JoypadInstance.DPadArray[2] = (1 << 2);
         case GameBoyButtons.LEFT.rawValue:
-            JoypadInstance.buttons.left = false;
+            JoypadInstance.DPadArray[1] = (1 << 1);
         case GameBoyButtons.RIGHT.rawValue:
-            JoypadInstance.buttons.right = false;
+            JoypadInstance.DPadArray[0] = 1;
         case GameBoyButtons.START.rawValue:
-            JoypadInstance.buttons.start = false;
+            JoypadInstance.buttonsArray[3] = (1 << 3);
         case GameBoyButtons.SELECT.rawValue:
-            JoypadInstance.buttons.select = false;
-        case GameBoyButtons.A.rawValue:
-            JoypadInstance.buttons.a = false;
+            JoypadInstance.buttonsArray[2] = (1 << 2);
         case GameBoyButtons.B.rawValue:
-            JoypadInstance.buttons.b = false;
+            JoypadInstance.buttonsArray[1] = (1 << 1);
+        case GameBoyButtons.A.rawValue:
+            JoypadInstance.buttonsArray[0] = 1;
         default:
             break
         }

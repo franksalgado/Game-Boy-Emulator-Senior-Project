@@ -115,6 +115,8 @@ func PPUOAMread(address: UInt16) -> UInt8 {
 
 
 func LoadLineSprites() {
+    //PPUStateInstance.OAMFIFOInstance.OAMFIFOReset();
+    var arrayToBeSorted: [OAMSpriteAttributes] = [];
     var OBJSize: UInt8 {
         if isBitSet(bitPosition: 2, in: LCDStateInstance.LCDControl) {
             return 1;
@@ -122,12 +124,20 @@ func LoadLineSprites() {
         return 0;
     }
     for entry in PPUStateInstance.OAMSprite {
+        if entry.x == 0 {
+            continue;
+        }
         if PPUStateInstance.OAMFIFOInstance.lineSpriteCount >= 10 {
             break;
         }
         if entry.y <= LCDStateInstance.LY + 16 && entry.y + OBJSize > LCDStateInstance.LY + 16 {
-            
+            PPUStateInstance.OAMFIFOInstance.lineSpriteCount += 1;
         }
+        arrayToBeSorted.append(entry);
+    }
+    arrayToBeSorted.sort(by: { $0.x < $1.x });
+    for entry in arrayToBeSorted {
+        PPUStateInstance.OAMFIFOInstance.enqueue(pixel: entry);
     }
 }
 

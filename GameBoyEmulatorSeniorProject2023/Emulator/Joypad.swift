@@ -32,65 +32,36 @@ enum GameBoyButtons: CUnsignedShort {
  
  */
 
-
-struct JoypadButtons {
-    var up = false;
-    var down = false;
-    var left = false;
-    var right = false;
-    var a = false;
-    var b = false;
-    var select = false;
-    var start = false;
-}
-
 class Joypad {
-    let bitMask:UInt8 = 0x30
     var registerValue: UInt8 = 0xCF
-    var temp: UInt8 = 0x0;
+    var buttonsArray: [UInt8] = [1, (1 << 1), (1 << 2), (1 << 3)];
+    var DPadArray: [UInt8] = [1, (1 << 1), (1 << 2), (1 << 3)];
     var buttonSelect: Bool = false;
     var DPadSelect: Bool = false;
-    var buttons = JoypadButtons();
     func JoypadWrite(value: UInt8) {
         self.buttonSelect = isBitSet(bitPosition: 5, in: value);
         self.DPadSelect = isBitSet(bitPosition: 4, in: value);
-        //print(self.registerValue, value & self.bitMask)
-        //self.registerValue |= value & 0x30;
     }
     func JoypadRead() -> UInt8 {
         self.registerValue = 0xCF;
         if !self.buttonSelect {
-            //print( self.registerValue, self.temp, (self.registerValue) ^ self.temp)
-            //self.registerValue ^= self.temp;
-            if buttons.start {
-                self.setBitJoypad(bitPosition: 3, bitValue: 0);
-            }
-            if buttons.select {
-                self.setBitJoypad(bitPosition: 2, bitValue: 0);
-            }
-            if buttons.b {
-                self.setBitJoypad(bitPosition: 1, bitValue: 0);
-            }
-            if buttons.a {
-                self.setBitJoypad(bitPosition: 0, bitValue: 0);
+            var i: UInt8 = 0;
+            for button in buttonsArray{
+                if button == 0{
+                    self.setBitJoypad(bitPosition: i, bitValue: 0);
+                }
+                i += 1;
             }
         }
         if !self.DPadSelect {
-            //self.registerValue ^= self.temp;
-            if buttons.down {
-                self.setBitJoypad(bitPosition: 3, bitValue: 0);
-            }
-            if buttons.up {
-                self.setBitJoypad(bitPosition: 2, bitValue: 0);
-            }
-            if buttons.left {
-                self.setBitJoypad(bitPosition: 1, bitValue: 0);
-            }
-            if buttons.right {
-                self.setBitJoypad(bitPosition: 0, bitValue: 0);
+            var i: UInt8 = 0;
+            for button in DPadArray{
+                if button == 0{
+                    self.setBitJoypad(bitPosition: i, bitValue: button);
+                }
+                i += 1;
             }
         }
-        //print("before return", self.registerValue)
         return self.registerValue;
     }
     

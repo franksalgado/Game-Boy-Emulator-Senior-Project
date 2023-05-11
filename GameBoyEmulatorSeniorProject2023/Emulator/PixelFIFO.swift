@@ -16,26 +16,26 @@ case GetTile,
     Push
 }
 class FIFO {
-    private var pixels: [UInt8] = [];
+    private var pixels: [SKColor] = [];
     
-    func enqueue(pixel: UInt8) {
+    func enqueue(pixel: SKColor) {
         pixels.append(pixel);
     }
-    func dequeue() -> UInt8 {
+    func dequeue() -> SKColor {
         guard !pixels.isEmpty
         else {
             fatalError("empty queue");
         }
         return pixels.removeFirst();
     }
-    var head : UInt8 {
+    var head : SKColor {
         guard let head = pixels.first
         else {
             fatalError("empty queue");
         }
         return head;
     }
-    var tail : UInt8 {
+    var tail : SKColor {
         guard let head = pixels.last
         else {
             fatalError("empty queue");
@@ -58,26 +58,26 @@ class FIFO {
     var FIFOX: UInt8 = 0;
 }
 struct OAMFIFO {
-    private var sprites: [SKSpriteNode] = [];
+    private var sprites: [OAMSpriteAttributes] = [];
     
-    mutating func enqueue(pixel: SKSpriteNode) {
+    mutating func enqueue(pixel: OAMSpriteAttributes) {
         sprites.append(pixel);
     }
-    mutating func dequeue() -> SKSpriteNode {
+    mutating func dequeue() -> OAMSpriteAttributes {
         guard !sprites.isEmpty
         else {
             fatalError("empty queue");
         }
         return sprites.removeFirst();
     }
-    var head : SKSpriteNode {
+    var head : OAMSpriteAttributes {
         guard let head = sprites.first
         else {
             fatalError("empty queue");
         }
         return head;
     }
-    var tail : SKSpriteNode {
+    var tail : OAMSpriteAttributes {
         guard let head = sprites.last
         else {
             fatalError("empty queue");
@@ -92,10 +92,10 @@ struct OAMFIFO {
             _ = self.dequeue();
         }
     }
-    let maxSPritesPerScanline = 10;
+    let maxSpritesPerScanline = 10;
     var lineSpriteCount: UInt8 = 0;
     var fetchedEnteryCount: UInt8 = 0;
-    var fetchedEnteries: [SKSpriteNode] = [];
+    var fetchedEnteries: [OAMSpriteAttributes] = [];
     let fetchedEnteriesLimit = 3;
 }
 
@@ -115,9 +115,9 @@ func PipelineFIFOAdd() -> Bool {
         if PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[1] & binaryNumbers[i] != 0 {
             number |= 1;
         }
-        //let pixel = LCDStateInstance.backGroundColors[number];
+        let pixel = LCDStateInstance.backGroundColors[Int(number)];
         if x >= 0 {
-            PPUStateInstance.FIFOInstance.enqueue(pixel: number);
+            PPUStateInstance.FIFOInstance.enqueue(pixel: pixel);
             PPUStateInstance.FIFOInstance.FIFOX += 1;
         }
         i += 1;
@@ -200,7 +200,7 @@ func PipelinePushPixel() {
         let pixelColor = PPUStateInstance.FIFOInstance.dequeue();
         if PPUStateInstance.FIFOInstance.lineX >= (LCDStateInstance.xScroll % 8) {
             //print("pushpixelif2")
-            PPUStateInstance.videoBuffer[Int(PPUStateInstance.FIFOInstance.pushedX) + Int(LCDStateInstance.LY) * 160] = LCDStateInstance.backGroundColors[Int(pixelColor)];
+            PPUStateInstance.videoBuffer[Int(PPUStateInstance.FIFOInstance.pushedX) + Int(LCDStateInstance.LY) * 160] = pixelColor; //LCDStateInstance.backGroundColors[Int(pixelColor)];
             PPUStateInstance.FIFOInstance.pushedX += 1;
         }
         PPUStateInstance.FIFOInstance.lineX += 1;
