@@ -99,6 +99,45 @@ struct OAMFIFO {
     let fetchedEnteriesLimit = 3;
 }
 
+func FetchSpritePixels(backGroundColor: UInt8, color: SKColor) -> SKColor {
+    var newColor = color;
+    for entry in 0..<PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount {
+        let spriteX = (PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].x - 8) + LCDStateInstance.xScroll % 8;
+        if spriteX + 8 < PPUStateInstance.FIFOInstance.FIFOX {
+            continue;
+        }
+        let offset = PPUStateInstance.FIFOInstance.FIFOX - spriteX;
+        if offset < 0 || offset > 7 {
+            continue;
+        }
+        var bit = 7 - offset;
+        if isBitSet(bitPosition: 5, in: PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].attributesAndFlags) {
+            bit = offset;
+        }
+        var number: UInt8 = 0;
+        if PPUStateInstance.FIFOInstance.fetchEntryData[Int(entry) * 2] & (1 << bit) != 0 {
+            number |= 1;
+        }
+        if PPUStateInstance.FIFOInstance.fetchEntryData[(Int(entry) * 2) + 1] & (1 << bit) != 0 {
+            number |= (1 << 1);
+        }
+        if number == 0 {
+            continue;
+        }
+        if !isBitSet(bitPosition: 7, in: PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].attributesAndFlags) || backGroundColor == 0 {
+                if isBitSet(bitPosition: 4, in: PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].attributesAndFlags) {
+                    newColor =  LCDStateInstance.Sprite2Colors[Int(number)];
+                } else {
+                    newColor =  LCDStateInstance.Sprite1Colors[Int(number)];
+                }
+            if number != 0 {
+                break;
+            }
+        }
+    }
+    return newColor;
+}
+
 let binaryNumbers: [UInt8] = [0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001];
 func PipelineFIFOAdd() -> Bool {
     if PPUStateInstance.FIFOInstance.totalElements > 8 {
@@ -115,7 +154,13 @@ func PipelineFIFOAdd() -> Bool {
         if PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[1] & binaryNumbers[i] != 0 {
             number |= 1;
         }
-        let pixel = LCDStateInstance.backGroundColors[Int(number)];
+        var pixel = LCDStateInstance.backGroundColors[Int(number)];
+        if !isBitSet(bitPosition: 0, in: LCDStateInstance.LCDControl) {
+            pixel = LCDStateInstance.backGroundColors[0];
+        }
+        if isBitSet(bitPosition: 1, in: LCDStateInstance.LCDControl) {
+            pixel = FetchSpritePixels(backGroundColor: number, color: pixel);
+        }
         if x >= 0 {
             PPUStateInstance.FIFOInstance.enqueue(pixel: pixel);
             PPUStateInstance.FIFOInstance.FIFOX += 1;
@@ -123,6 +168,18 @@ func PipelineFIFOAdd() -> Bool {
         i += 1;
     }
     return true;
+}
+
+func PipelineLoadSpriteTile() {
+    while PPUStateInstance.OAMFIFOInstance.totalElements != 0 {
+        let spriteX = (PPUStateInstance.OAMFIFOInstance.head.x - 8) + (LCDStateInstance.xScroll % 8);
+        if (spriteX >= PPUStateInstance.FIFOInstance.fetchX && spriteX < PPUStateInstance.FIFOInstance.fetchX + 8) || (
+            (spriteX + 8) >= PPUStateInstance.FIFOInstance.fetchX && spriteX + 8 <  PPUStateInstance.FIFOInstance.fetchX + 8) {
+            PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount)] = PPUStateInstance.OAMFIFOInstance.dequeue();
+                PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount += 1;
+        }
+        if PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount >= 3 { break;}
+    }
 }
 
 func GetTile() {
@@ -140,6 +197,9 @@ func GetTile() {
             PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[0] &+= 128;
         }
     }
+    if isBitSet(bitPosition: 1, in: LCDStateInstance.LCDControl) && PPUStateInstance.OAMFIFOInstance.totalElements != 0 {
+        PipelineLoadSpriteTile();
+    }
     PPUStateInstance.FIFOInstance.fetchX += 8;
     PPUStateInstance.FIFOInstance.currentFIFOStep = .GetTileDataLow;
 }
@@ -152,6 +212,7 @@ func GetTileDataLow() {
         return UInt16( 0x8800 + Int(PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[0]) * 16 + Int(PPUStateInstance.FIFOInstance.tileY) );
     }
     PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[1] = BusRead(address: address);
+    PipelineLoadSpriteData(offset: 0);
     PPUStateInstance.FIFOInstance.currentFIFOStep = .GetTileDataHigh;
 }
 func GetTileDataHigh() {
@@ -162,12 +223,34 @@ func GetTileDataHigh() {
         return UInt16(0x8800 + Int(PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[0] ) * 16 + Int(PPUStateInstance.FIFOInstance.tileY + 1) );
     }
     PPUStateInstance.FIFOInstance.BackgroundWindowFetchData[2] = BusRead(address: address);
+    PipelineLoadSpriteData(offset: 1);
     PPUStateInstance.FIFOInstance.currentFIFOStep = .Sleep;
 }
 
+func PipelineLoadSpriteData(offset: Int) {
+    var spriteHeight: UInt8 {
+        if isBitSet(bitPosition: 2, in: LCDStateInstance.LCDControl) {
+            return 16;
+        }
+        return 8;
+    }
+    for entry in 0..<PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount {
+        var tileY = ((LCDStateInstance.LY + 16) - PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].y) * 2;
+        if isBitSet(bitPosition: 6, in: PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].attributesAndFlags) {
+            tileY = ((spriteHeight * 2) - 2) - tileY;
+        }
+        var tileIndex = PPUStateInstance.OAMFIFOInstance.fetchedEnteries[Int(entry)].tileIndex;
+        if spriteHeight == 16 {
+            tileIndex &= ~(1);
+        }
+        let calculation: UInt16 = UInt16(0x8000 + (Int(tileIndex) * 16) + Int(tileY) + offset);
+        PPUStateInstance.FIFOInstance.fetchEntryData[(Int(entry) * 2) + offset] = BusRead(address: calculation);
+    }
+}
 func PipelineFetch() {
     switch PPUStateInstance.FIFOInstance.currentFIFOStep {
     case .GetTile:
+        PPUStateInstance.OAMFIFOInstance.fetchedEnteryCount = 0
         //print("gt")
         GetTile();
         break;
