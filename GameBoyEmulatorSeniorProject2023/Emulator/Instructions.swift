@@ -270,17 +270,17 @@ func IsValueEqualToZero(value: UInt8) -> UInt8 {
     return 0;
 }
 
-//set upper bits of carry flag
+//set upper bits of flags register
 func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
     let flagsArray: [UInt8] = [z, n, h, c];
     var index: Int = 7;
     for bit in flagsArray {
         if bit == 1 {
             CPUStateInstance.registersState.f |= (1 << index);
+            index -= 1;
+            continue;
         }
-        else if bit == 0 {
-            CPUStateInstance.registersState.f &= ~(1 << index);
-        }
+        CPUStateInstance.registersState.f &= ~(1 << index);
         index -= 1;
     }
 }
