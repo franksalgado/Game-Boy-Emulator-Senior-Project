@@ -277,10 +277,10 @@ func SetFlagsRegister(z: UInt8, n: UInt8, h: UInt8, c: UInt8) -> Void {
     for bit in flagsArray {
         if bit == 1 {
             CPUStateInstance.registersState.f |= (1 << index);
-            index -= 1;
-            continue;
         }
-        CPUStateInstance.registersState.f &= ~(1 << index);
+        else if bit == 0 {
+            CPUStateInstance.registersState.f &= ~(1 << index);
+        }
         index -= 1;
     }
 }

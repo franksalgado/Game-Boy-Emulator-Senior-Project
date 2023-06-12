@@ -3,11 +3,13 @@
 {\colortbl;\red255\green255\blue255;\red252\green95\blue163;\red31\green31\blue36;\red255\green255\blue255;
 \red103\green183\blue164;\red208\green191\blue105;\red103\green183\blue164;\red108\green121\blue134;\red208\green168\blue255;
 \red161\green103\blue230;\red65\green161\blue192;\red252\green106\blue93;\red161\green103\blue230;\red158\green241\blue221;
-\red84\green130\blue255;\red208\green168\blue255;\red0\green0\blue0;}
+\red84\green130\blue255;\red208\green168\blue255;\red0\green0\blue0;\red93\green216\blue255;\red158\green241\blue221;
+}
 {\*\expandedcolortbl;;\csgenericrgb\c98839\c37355\c63833;\csgenericrgb\c12054\c12284\c14131;\csgenericrgb\c100000\c100000\c100000\c85000;
 \csgenericrgb\c40538\c71705\c64209;\csgenericrgb\c81498\c74939\c41233;\csgenericrgb\c40392\c71765\c64314;\csgenericrgb\c42394\c47462\c52518;\csgenericrgb\c81681\c65692\c99927;
 \csgenericrgb\c63137\c40392\c90196;\csgenericrgb\c25490\c63137\c75294;\csgenericrgb\c98912\c41558\c36568;\csgenericrgb\c63232\c40219\c90115;\csgenericrgb\c62145\c94386\c86819;
-\csgenericrgb\c33019\c51127\c99859;\csgenericrgb\c81569\c65882\c100000;\csgray\c0\c0;}
+\csgenericrgb\c33019\c51127\c99859;\csgenericrgb\c81569\c65882\c100000;\csgray\c0\c0;\csgenericrgb\c36295\c84643\c99897;\csgenericrgb\c61961\c94510\c86667;
+}
 \margl1440\margr1440\vieww9000\viewh8400\viewkind0
 \deftab593
 \pard\tx593\pardeftab593\pardirnatural\partightenfactor0
@@ -1051,7 +1053,7 @@ class GameScene: SKScene \{\
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
 \f0\b \cf2 as
-\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+\f1\b0 \cf4 ! \cf16 SKShapeNode\cf4 ? \{\
             n.\cf13 position\cf4  = pos\
             n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 green\cf4 \
             
@@ -1071,7 +1073,7 @@ class GameScene: SKScene \{\
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
 \f0\b \cf2 as
-\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+\f1\b0 \cf4 ! \cf16 SKShapeNode\cf4 ? \{\
             n.\cf13 position\cf4  = pos\
             n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 blue\cf4 \
             
@@ -1091,7 +1093,7 @@ class GameScene: SKScene \{\
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf5 spinnyNode\cf4 ?.\cf10 copy\cf4 () 
 \f0\b \cf2 as
-\f1\b0 \cf4 ! \cf16 \cb3 SKShapeNode\cf4 \cb3 ? \{\
+\f1\b0 \cf4 ! \cf16 SKShapeNode\cf4 ? \{\
             n.\cf13 position\cf4  = pos\
             n.\cf13 strokeColor\cf4  = \cf9 SKColor\cf4 .\cf13 red\cf4 \
             
@@ -1104,7 +1106,7 @@ class GameScene: SKScene \{\
 \f0\b \cf2 override
 \f1\b0 \cf4  
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 mouseDown\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+\f1\b0 \cf4  \cf11 mouseDown\cf4 (\cf11 with\cf4  event: \cf16 NSEvent\cf4 ) \{\
         
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf7 touchDown\cf4 (\cf7 atPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
@@ -1116,7 +1118,7 @@ class GameScene: SKScene \{\
 \f0\b \cf2 override
 \f1\b0 \cf4  
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 mouseDragged\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+\f1\b0 \cf4  \cf11 mouseDragged\cf4 (\cf11 with\cf4  event: \cf16 NSEvent\cf4 ) \{\
         
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf7 touchMoved\cf4 (\cf7 toPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
@@ -1128,12 +1130,115 @@ class GameScene: SKScene \{\
 \f0\b \cf2 override
 \f1\b0 \cf4  
 \f0\b \cf2 func
-\f1\b0 \cf4  \cf11 mouseUp\cf4 (\cf11 with\cf4  event: \cf16 \cb3 NSEvent\cf4 \cb3 ) \{\
+\f1\b0 \cf4  \cf11 mouseUp\cf4 (\cf11 with\cf4  event: \cf16 NSEvent\cf4 ) \{\
         
 \f0\b \cf2 self
 \f1\b0 \cf4 .\cf7 touchUp\cf4 (\cf7 atPoint\cf4 : event.\cf10 location\cf4 (\cf10 in\cf4 : 
 \f0\b \cf2 self
 \f1\b0 \cf4 ))\
-    \}
-\fs32 \
+    \}\
+\
+\
+\
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+
+\fs28 \cf8 \cb3 //\cf4 \cb3 \
+\cf8 \cb3 //  Stack.swift\cf4 \cb3 \
+\cf8 \cb3 //  GameBoyEmulatorSeniorProject2023\cf4 \cb3 \
+\cf8 \cb3 //\cf4 \cb3 \
+\cf8 \cb3 //  Created by Frank Salgado on 3/23/23.\cf4 \cb3 \
+\cf8 \cb3 //\cf4 \cb3 \
+\
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+
+\f0\b \cf2 import
+\f1\b0 \cf4  Foundation\
+\
+
+\f0\b \cf2 class
+\f1\b0 \cf4  \cf18 \cb3 Stack\cf4 \cb3  \{\
+    
+\f0\b \cf2 private
+\f1\b0 \cf4  
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 stack\cf4 : [\cf9 UInt8\cf4 ] = [];\
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 push\cf4 (\cf11 number\cf4 : \cf9 UInt8\cf4 ) \{\
+        \cf5 stack\cf4 .\cf10 append\cf4 (number);\
+    \}\
+    
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 pop\cf4 () -> \cf9 UInt8\cf4  \{\
+        
+\f0\b \cf2 guard
+\f1\b0 \cf4  !\cf5 stack\cf4 .\cf13 \cb3 isEmpty\cf4 \cb3 \
+        
+\f0\b \cf2 else
+\f1\b0 \cf4  \{\
+            \cf10 fatalError\cf4 (\cf12 "empty queue"\cf4 );\
+        \}\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 stack\cf4 .\cf10 removeLast\cf4 ();\
+    \}\
+    
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 totalElements\cf4 : \cf9 Int\cf4  \{\
+        
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 stack\cf4 .\cf13 \cb3 count\cf4 \cb3 \
+    \}\
+\}\
+
+\f0\b \cf2 var
+\f1\b0 \cf4  \cf11 StackInstance\cf4  = \cf19 \cb3 Stack\cf4 \cb3 ();\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 StackPush\cf4 (\cf11 data\cf4 : \cf9 UInt8\cf4 ) -> \cf9 Void\cf4  \{\
+    \cf5 CPUStateInstance\cf4 .\cf5 registersState\cf4 .\cf5 sp\cf4  &-= \cf6 1\cf4 ;\
+    \cf5 StackInstance\cf4 .\cf7 \cb3 push\cf4 \cb3 (\cf7 \cb3 number\cf4 \cb3 : data);\
+\}\
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+\cf8 \cb3 //First we push the high byte to the stack so we just shift right 8 bits and convert to UInt8.\cf4 \cb3 \
+\cf8 \cb3 //Next we shift the bottom 8 bits of data to the right 8 and back 8. This gives us 8 0s in the high byte and the low byte.\cf4 \cb3 \
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 StackPush16Bit\cf4 (\cf11 data\cf4 : \cf9 UInt16\cf4 ) -> \cf9 Void\cf4  \{\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  highByte = \cf9 UInt8\cf4 (data >> \cf6 8\cf4 );\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  lowByte = \cf9 UInt8\cf4 ( (data << \cf6 8\cf4 ) >> \cf6 8\cf4  )\
+    \cf5 StackInstance\cf4 .\cf7 \cb3 push\cf4 \cb3 (\cf7 \cb3 number\cf4 \cb3 : highByte);\
+    \cf5 StackInstance\cf4 .\cf7 \cb3 push\cf4 \cb3 (\cf7 \cb3 number\cf4 \cb3 : lowByte);\
+\}\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 StackPop\cf4 () -> \cf9 UInt8\cf4  \{\
+    \cf5 CPUStateInstance\cf4 .\cf5 registersState\cf4 .\cf5 sp\cf4  += \cf6 1\cf4 ;\
+    
+\f0\b \cf2 return
+\f1\b0 \cf4  \cf5 StackInstance\cf4 .\cf7 \cb3 pop\cf4 \cb3 ()\
+\}\
+\
+
+\f0\b \cf2 func
+\f1\b0 \cf4  \cf11 StackPop16Bit\cf4 () -> \cf9 UInt16\cf4  \{\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  lowByte: \cf9 UInt16\cf4  = \cf9 UInt16\cf4 (\cf5 StackInstance\cf4 .\cf7 \cb3 pop\cf4 \cb3 ());\
+    
+\f0\b \cf2 let
+\f1\b0 \cf4  highByte: \cf9 UInt16\cf4  = \cf9 UInt16\cf4 (\cf5 StackInstance\cf4 .\cf7 \cb3 pop\cf4 \cb3 ()) << \cf6 8\cf4 ;\
+    
+\f0\b \cf2 return
+\f1\b0 \cf4  highByte | lowByte;\
+\}\
+\pard\tx642\pardeftab642\pardirnatural\partightenfactor0
+
+\fs32 \cf4 \
 }
